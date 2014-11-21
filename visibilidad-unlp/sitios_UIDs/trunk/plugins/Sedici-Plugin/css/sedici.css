@@ -1,0 +1,33 @@
+p.conditionally-loaded {
+    padding: 6px 8px;
+    min-width: 200px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+p.description{
+	color:#444 !important;
+}
+
+
+
+p.conditionally-filtro {
+    padding: 6px 8px;
+    min-width: 200px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+p.mostrarfiltro{
+	color:#444 !important;
+}
+
+
+
+p.conditionally-autor {
+    padding: 6px 8px;
+    min-width: 200px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+p.mostrar-autor{
+	color:#444 !important;
+}
