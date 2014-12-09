@@ -1,6 +1,6 @@
 <?php
 class Vista {
-	function todos($vector, $descripcion, $fecha, $resultado,$mostrar) {
+	function todos($vector, $descripcion, $fecha,$mostrar) {
 		/*
 		 * Es la vista para todos los resultados
 		*/
@@ -9,6 +9,7 @@ class Vista {
 		<?php 
 		foreach ( $vector as $feed ) {
 			foreach ($feed as $item){
+				$link = $item->get_link ();
 			?>
 	
 	
@@ -46,7 +47,7 @@ class Vista {
 			<published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
 			<?php } ?>
 			<?php if ($descripcion == "description") { 
-				?><summary type="text">Descripci&oacute;n:<?php 
+				?><summary type="text">Resumen: <?php 
 					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
 					print (htmlspecialchars_decode($des[0]['data']));
 					?></summary>
@@ -72,8 +73,8 @@ class Vista {
 			
 			</ol>
 		<?php 
-			return;
-		}
+		return ;
+			}
 	
 	
 	
@@ -151,7 +152,7 @@ class Vista {
 			<br />
 			<?php } ?>
 			<?php if ($descripcion == "description") { 
-				?><summary type="text">Descripci&oacute;n:<?php 
+				?><summary type="text">Resumen: <?php 
 					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
 					print (htmlspecialchars_decode($des[0]['data']));
 					?></summary>
@@ -235,7 +236,7 @@ class Vista {
 		<published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
 		<?php } ?>
 		<?php if ($descripcion == "description") { 
-			?><summary type="text">Descripci&oacute;n:<?php 
+			?><summary type="text">Resumen: <?php 
 				$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
 				print (htmlspecialchars_decode($des[0]['data']));
 				?></summary>
