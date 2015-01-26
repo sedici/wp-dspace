@@ -18,8 +18,8 @@ function plugin_sedici($atts) {
 		return "Ingrese un type y un context";
 	}
 	$type = $a ['type'];
-	if ((strcmp ( $type, "handle" ) !== 0) && (strcmp ( $type, "autor" ) !== 0)) {
-		return "El type debe ser handle o autor";
+	if ((strcmp ( $type, "handle" ) !== 0) && (strcmp ( $type, "author" ) !== 0)) {
+		return "El type debe ser handle o author";
 	}
 
 	$descripcion = $a ['description'] === 'true' ? true : false;
@@ -100,7 +100,7 @@ function plugin_sedici($atts) {
 				// $key tiene la clave de vectorAgrupar, es decir, el tipo de documento
 				
 				// coleccion tiene para cada filtro, los entrys a mostrar y su url
-				if ($type == 'autor') {
+				if ($type == 'author') {
 					$coleccion = array (
 							'vista' => $val,
 							'filtro' => $key 
@@ -120,7 +120,7 @@ function plugin_sedici($atts) {
 	}
 	
 	
-	if ($type == 'autor') {
+	if ($type == 'author') {
 		if ($all) {
 			return ($vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar ));
 		} else {
