@@ -5,13 +5,15 @@ function plugin_sedici($atts) {
 			'context' => null,
 			'max_results' => 20,
 			'all' => false,
-			'articulo' => false,
-			'Libro' => false,
 			'description' => false,
 			'date' => false,
-			'show_author'=>false,
-			'cache' => 604800 
+			'show_author' => false,
+			'cache' => 604800,
+			'article' => false,
+			'book' => false,
+			'thesis' => false 
 	), $atts );
+	
 	if ((is_null ( $a ['type'] )) && (is_null ( $a ['context'] ))) {
 		return "Ingrese un type y un context";
 	}
@@ -19,14 +21,17 @@ function plugin_sedici($atts) {
 	if ((strcmp ( $type, "handle" ) !== 0) && (strcmp ( $type, "autor" ) !== 0)) {
 		return "El type debe ser handle o autor";
 	}
+	
 	$cache = $a ['cache'];
 	$context = $a ['context'];
+	$all = $a ['all'] === 'true' ? true : false;
+	$max_results = $a ['max_results'];
+	
 	$vectorAgrupar = array ();
 	$model = new SimplepieSedici ();
 	$vista = new Vista ();
 	$filtro = new Filtros ();
-	$all = $a ['all'] === 'true' ? true : false;
-	$max_results = $a ['max_results'];
+	$util = new Consulta ();
 	$opciones = $filtro->vectorPublicaciones ();
 	/* Opciones es un vector que tiene todos los filtros, es decir, articulos, tesis, etc */
 	
@@ -37,36 +42,33 @@ function plugin_sedici($atts) {
 		/*
 		 * Itera sobre opciones, y compara con las opciones marcadas del usuario. Si esta en ON, entonces, guarda el nombre en filtros ($o) y en vectorAgrupar pone $o como clave
 		 */
-		$filtro_minuscula =  strtolower($o);
-		
-		if ('true' === $a [$filtro_minuscula]) {
+		$valor = $filtro->convertirEspIng ( $o );
+		if ('true' === $a [$valor]) {
 			array_push ( $filtros, $o );
 			$vectorAgrupar [$o] = array ();
 		}
 	}
-	$cantidadFiltros = count ( $filtros );
+	$tesis = $a ['thesis'] === 'true' ? true : false;
+	if ($tesis) {
+		$vectorTesis = $filtro->vectorTesis ();
+		foreach ( $vectorTesis as $o ) {
+			array_push ( $filtros, $o );
+			$vectorAgrupar [$o] = array ();
+		}
+	}
+	
 	$start = 0; // la variable start es para paginar la consulta
 	$enviar = array (); // es un array que tendra la informacion para la vista
 	$cantidad = 0;
 	do {
 		if ($type == "handle") {
 			if ($all) {
-				$consulta = "http://sedici.unlp.edu.ar/open-search/discover?rpp=100&format=atom&sort_by=0&order=desc&scope=" . $context . "&start=" . $start;
+				$consulta = $util->armarConsultaAllHandle ( $start, $context );
 			} else {
-				$i = 1;
-				$consulta = "http://sedici.unlp.edu.ar/open-search/discover?rpp=100&format=atom&sort_by=0&order=desc&scope=". $context . "&start=" . $start . "&query=sedici.subtype:";
-				// en este for, se arma la consulta
-				foreach ( $filtros as $f ) {
-					$consulta .= "\"" . $f . "\"";
-					if ($i != $cantidadFiltros) {
-						$consulta .= "%20OR%20sedici.subtype:";
-						// concateno los filtros en la consulta
-					}
-					$i ++;
-				}
+				$consulta = $util->armarConsultaHandle ( $start, $context, $filtros );
 			}
 		} else {
-			$consulta = "http://sedici.unlp.edu.ar/open-search/discover?rpp=100&format=atom&sort_by=0&order=desc&start=" . $start . "&query=sedici.creator.person:\"$context\"";
+			$consulta = $util->armarConsultaAutor ( $start, $context );
 		}
 		$xpath = $model->cargarPath ( $consulta, $cache );
 		$cantidad += $model->cantidadResultados ( $xpath ); // cantidad tiene el numero de entrys resultados
@@ -79,8 +81,10 @@ function plugin_sedici($atts) {
 		} else {
 			foreach ( $entry as $e ) {
 				$subtipo = $model->tipo ( $e ); // el metodo tipo retorna el subtipo de documento
-				array_push ( $vectorAgrupar [$subtipo], $e );
-				// agrego el documento en vectorAgrupar dependiendo el tipo de documento
+				if (array_key_exists ( $subtipo, $vectorAgrupar )) {
+					array_push ( $vectorAgrupar [$subtipo], $e );
+					// agrego el documento en vectorAgrupar dependiendo el tipo de documento
+				}
 			}
 		}
 	} while ( $cantidad < $totalResultados );
@@ -99,7 +103,7 @@ function plugin_sedici($atts) {
 							'filtro' => $key 
 					);
 				} else {
-					$url = $vista->armarUrl ( $key, $context );
+					$url = $util->armarUrl ( $key, $context );
 					$coleccion = array (
 							'vista' => $val,
 							'url' => $url,
@@ -113,13 +117,14 @@ function plugin_sedici($atts) {
 	}
 	
 	$descripcion = $a ['description'] === 'true' ? true : false;
-	$fecha  = $a ['date'] === 'true' ? true : false;
+	$fecha = $a ['date'] === 'true' ? true : false;
 	$mostrar = $a ['show_author'] === 'true' ? true : false;
+	
 	if ($type == 'autor') {
 		if ($all) {
 			return ($vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar ));
 		} else {
-			return ($vista->autor (  $enviar, $descripcion, $fecha, $max_results, $mostrar ));
+			return ($vista->autor ( $enviar, $descripcion, $fecha, $max_results, $mostrar, $context ));
 		}
 	} else { // es un handle
 		
@@ -127,7 +132,7 @@ function plugin_sedici($atts) {
 			$mostrar = true;
 			return ($vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar ));
 		} else {
-			return ($vista->articulos (  $enviar, $descripcion, $fecha, $max_results ));
+			return ($vista->articulos ( $enviar, $descripcion, $fecha, $max_results ));
 		}
 	}
 }
