@@ -212,7 +212,7 @@ class Vista {
 				
 			
 		<?php if ($fecha) { ?>
-		<br /><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
+		<published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
 		<?php } ?>
 		<?php if ($descripcion == "description") { 
 			?><summary type="text">Resumen: <?php 
