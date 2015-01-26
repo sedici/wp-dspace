@@ -21,7 +21,10 @@ function plugin_sedici($atts) {
 	if ((strcmp ( $type, "handle" ) !== 0) && (strcmp ( $type, "autor" ) !== 0)) {
 		return "El type debe ser handle o autor";
 	}
-	
+
+	$descripcion = $a ['description'] === 'true' ? true : false;
+	$fecha = $a ['date'] === 'true' ? true : false;
+	$mostrar = $a ['show_author'] === 'true' ? true : false;
 	$cache = $a ['cache'];
 	$context = $a ['context'];
 	$all = $a ['all'] === 'true' ? true : false;
@@ -116,9 +119,6 @@ function plugin_sedici($atts) {
 		}
 	}
 	
-	$descripcion = $a ['description'] === 'true' ? true : false;
-	$fecha = $a ['date'] === 'true' ? true : false;
-	$mostrar = $a ['show_author'] === 'true' ? true : false;
 	
 	if ($type == 'autor') {
 		if ($all) {
