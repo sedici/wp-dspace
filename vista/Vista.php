@@ -44,7 +44,7 @@ class Vista {
 					
 				
 			<?php if ($fecha) { ?>
-			<published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
+			<br /><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
 			<?php } ?>
 			<?php if ($descripcion == "description") { 
 				?><summary type="text">Resumen: <?php 
@@ -78,28 +78,6 @@ class Vista {
 	
 	
 	
-	function armarUrl($filtro, $handle) {
-		/*
-		 * Esta funcion, arma la url para el "ir a sedici" dependiendo de cada filtro. Ejemplo: http://sedici.unlp.edu.ar/handle/10915/25293/discover?fq=type_filter%3Atesis%5C+de%5C+doctorado%5C%7C%5C%7C%5C%7CTesis%5C+de%5C+doctorado
-		*/
-		$filtro = strtolower($filtro);//lo convierto todo a minuscula
-		$palabras = explode ( " ", $filtro ); // palabras es un array que tiene cada palabra del filtro
-		$url = "http://sedici.unlp.edu.ar/handle/" . $handle . "/discover?fq=type_filter%3A";
-		$cant = count ( $palabras ); // cant tiene la cantidad de elementos de palabras
-		$url = $url . $palabras [0]; // concateno la primera palabra
-		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . "%5C+" . $palabras [$i]; // concateno el resto de las palabras, si es que existen, anteponiendo %5c+
-		}
-		$mayuscula = ucfirst ( $filtro );
-		$palabras = explode ( " ", $mayuscula );
-		$url = $url . "%5C%7C%5C%7C%5C%7C";
-		$cant = count ( $palabras );
-		$url = $url . $palabras [0];
-		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . "%5C+" . $palabras [$i];
-		}
-		return $url;
-	}
 	function articulos($feed, $descripcion, $fecha, $resultado) {
 		/*
 		 * Es la vista para los articulos
@@ -146,10 +124,9 @@ class Vista {
 					?>
 					
 				
-			<br />
+			
 			<?php if ($fecha) { ?>
-			<published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
-			<br />
+			<br /><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
 			<?php } ?>
 			<?php if ($descripcion == "description") { 
 				?><summary type="text">Resumen: <?php 
@@ -175,20 +152,22 @@ class Vista {
 				?>
 				</ol>
 	<a href='<?php echo $i[url]; ?>'>Ir a SEDICI</a>
-	<br />
+	<br /><br/>
 	<?php
-			}
+			} ?>  <?php 
 			return;
 		}
 	
-	function autor($feed, $descripcion, $fecha, $resultado,$mostrar) {
+	function autor($feed, $descripcion, $fecha, $resultado,$mostrar, $context) {
 		/*
 		 * Es la vista para los articulos
-		 */
+		 */?> 
+		 <?php 
+		echo "<h1> $context </h1>";
 		foreach ( $feed as $i ) {
 			?>
 
-<h1><?php $filtro= ucfirst ($i [filtro]); echo $filtro;?></h1>
+<h2><?php $filtro= ucfirst ($i [filtro]); echo $filtro;?></h2>
 <ol>
 <?php
 			
@@ -233,7 +212,7 @@ class Vista {
 				
 			
 		<?php if ($fecha) { ?>
-		<published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
+		<br /><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
 		<?php } ?>
 		<?php if ($descripcion == "description") { 
 			?><summary type="text">Resumen: <?php 
@@ -259,7 +238,7 @@ class Vista {
 			?>
 			</ol>
 <?php
-		}
+		} ?>  <?php 
 		return;
 	}
 } // end de la class

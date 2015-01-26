@@ -4,7 +4,8 @@
  */
 require_once 'shortcodeSedici.php';
 require_once 'vista/Vista.php';
-require_once 'filtro/Filtros.php';
+require_once 'util/Filtros.php';
+require_once 'util/Consulta.php';
 require_once 'modelo/SimplepieSedici.php';
 function my_styles_sedici() {
 	// incluye el estilo sedici.css
@@ -27,6 +28,7 @@ class Sedici extends WP_Widget {
 	protected $model;
 	protected $filtro;
 	protected $vista;
+	protected $util;
 	
 	/**
 	 * constructor
@@ -36,6 +38,7 @@ class Sedici extends WP_Widget {
 		$this->model = new SimplepieSedici ();
 		$this->filtro = new Filtros ();
 		$this->vista = new Vista ();
+		$this->util = new Consulta();
 		$opciones = array (
 				'description' => 'Plugin Sedici' 
 		);
@@ -80,31 +83,19 @@ class Sedici extends WP_Widget {
 			
 			$agrupar_publicaciones = array (); // es un array que tendra la informacion para la vista
 			
-			$cantidadFiltros = count ( $filtros ); // cantidadFiltros tiene la el numero de filtros marcados por el usuario
 			$cantidad = 0;
 			
 			do {
-				if ($tipo == 'autor') {
-					$consulta = "http://sedici.unlp.edu.ar/open-search/discover?rpp=100&format=atom&sort_by=0&order=desc&start=" . $start . "&query=sedici.creator.person:\"$filtro\"";
-				} else { // es un handle
+				if ($tipo == "handle") {
 					if ($mostrar_todos) {
-						// La consulta tendra todas las publicaciones
-						$consulta = "http://sedici.unlp.edu.ar/open-search/discover?rpp=100&format=atom&sort_by=0&order=desc&scope=" . $filtro . "&start=" . $start;
+						$consulta = $this->util->armarConsultaAllHandle ( $start, $filtro );
 					} else {
-						// Se arma una consulta, dependiendo los tipos de archivos marcados
-						$i = 1;
-						$consulta = "http://sedici.unlp.edu.ar/open-search/discover?rpp=100&format=atom&sort_by=0&order=desc&scope=" . $filtro . "&start=" . $start . "&query=sedici.subtype:";
-						// en este for, se arma la consulta
-						foreach ( $filtros as $f ) {
-							$consulta .= "\"" . $f . "\"";
-							if ($i != $cantidadFiltros) {
-								$consulta .= "%20OR%20sedici.subtype:";
-								// concateno los filtros en la consulta
-							}
-							$i ++;
-						}
+						$consulta = $this->util->armarConsultaHandle ( $start, $filtro, $filtros );
 					}
+				} else {
+					$consulta = $this->util->armarConsultaAutor ( $start, $filtro );
 				}
+				
 				$xpath = $this->model->cargarPath ( $consulta, $duracion ); // cargo la consulta con cache=duracion
 				$cantidad += $this->model->cantidadResultados ( $xpath ); // cantidad tiene el numero de entrys resultados
 				$totalResultados = $this->model->totalResults ( $xpath ); // Numero total de todas las publicaciones
@@ -116,8 +107,11 @@ class Sedici extends WP_Widget {
 				} else {
 					foreach ( $entry as $e ) {
 						$subtipo = $this->model->tipo ( $e ); // el metodo tipo retorna el subtipo de documento
-						array_push ( $vectorAgrupar [$subtipo], $e );
-						// agrego el documento en vectorAgrupar dependiendo el tipo de documento
+						
+						if (array_key_exists($subtipo, $vectorAgrupar)) {
+							array_push ( $vectorAgrupar [$subtipo], $e );
+							// agrego el documento en vectorAgrupar dependiendo el tipo de documento
+						}
 					}
 				}
 				$start += 100;
@@ -138,7 +132,7 @@ class Sedici extends WP_Widget {
 									'filtro' => $key 
 							);
 						} else {
-							$url = $this->vista->armarUrl ( $key, $filtro );
+							$url = $this->util->armarUrl ( $key, $filtro );
 							$coleccion = array (
 									'vista' => $val,
 									'url' => $url,
@@ -166,7 +160,7 @@ class Sedici extends WP_Widget {
 				if ($mostrar_todos) {
 					$this->vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar_autor );
 				} else {
-					$this->vista->autor ( $agrupar_publicaciones, $descripcion, $fecha, $resultado, $mostrar_autor );
+					$this->vista->autor ( $agrupar_publicaciones, $descripcion, $fecha, $resultado, $mostrar_autor,$filtro );
 				}
 			} else { // es un handle
 				
@@ -334,7 +328,7 @@ class Sedici extends WP_Widget {
 		?> </p>
 <!-- Imput para cantidad de resultados a mostrar (si no esta marcada la opcion de mostrar_todos) -->
 <p class="conditionally-filtro"
-	<?php echo checked($instance['mostrarfiltro'], 'on') === '' ? '' : 'style="display: none;"'; ?>>
+	<?php echo checked($instance['mostrar_todos'], 'on') === '' ? '' : 'style="display: none;"'; ?>>
 	<label for="<?php echo $this->get_field_id('text'); ?>">Cantidad de
 		Resultados por filtro: <select class='widefat'
 		id="<?php echo $this->get_field_id('resultado'); ?>"
