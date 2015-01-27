@@ -10,7 +10,13 @@ function plugin_sedici($atts) {
 			'show_author' => false,
 			'cache' => 604800,
 			'article' => false,
+			'preprint' => false,
 			'book' => false,
+			'working_paper'=>false,
+			'technical_report'=>false,
+			'conference_object'=>false,
+			'revision'=>false,
+			'work_specialization'=>false,
 			'thesis' => false 
 	), $atts );
 	

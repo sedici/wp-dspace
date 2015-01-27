@@ -5,7 +5,6 @@ class Filtros {
 				"Documento de trabajo",
 				"Articulo",
 				"Contribucion a revista",
-				"Documento de trabajo",
 				"Informe tecnico",
 				"Libro",
 				"Objeto de conferencia",
@@ -18,15 +17,14 @@ class Filtros {
 		);
 		return ($array);
 	}
-	public function vectorTesis (){
-		$array = array (
+	public function vectorTesis() {
+		$vector = array (
 				"Tesis de doctorado",
 				"Tesis de grado",
-				"Tesis de maestria"
+				"Tesis de maestria" 
 		);
-		return ($array);
+		return ($vector);
 	}
-	
 	public function convertirEspIng($filtro) {
 		switch ($filtro) {
 			case "Articulo" :
@@ -34,6 +32,24 @@ class Filtros {
 				break;
 			case "Libro" :
 				$valor = "book";
+				break;
+			case "Preprint" :
+				$valor = "preprint";
+				break;
+			case "Documento de trabajo" :
+				$valor = "working_paper";
+				break;
+			case "Informe tecnico" :
+				$valor = "technical_report";
+				break;
+			case "Objeto de conferencia" :
+				$valor = "conference_object";
+				break;
+			case "Revision" :
+				$valor = "revision";
+				break;
+			case "Trabajo de especializacion" :
+				$valor = "work_specialization";
 				break;
 		}
 		return ($valor);
