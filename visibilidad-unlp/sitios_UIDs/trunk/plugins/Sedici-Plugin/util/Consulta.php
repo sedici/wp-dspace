@@ -71,7 +71,103 @@ class Consulta {
 			$consulta .= $start . "&query=sedici.creator.person:\"$context\"";
 			return $consulta;
 		}
+	function agruparSubtipos($type,$all,$context,$filtros,$vectorAgrupar){
+		$start = 0; // la variable start es para paginar la consulta
+		$cantidad = 0;
+		$model = new SimplepieSedici ();
+		do {
+			if ($type == "handle") {
+				if ($all) {
+					$consulta = $this->armarConsultaAllHandle ( $start, $context );
+				} else {
+					$consulta = $this->armarConsultaHandle ( $start, $context, $filtros );
+				}
+			} else {
+				$consulta = $this->armarConsultaAutor ( $start, $context );
+			}
+			$xpath = $model->cargarPath ( $consulta, $cache );
+			$cantidad += $model->cantidadResultados ( $xpath ); // cantidad tiene el numero de entrys resultados
+			$totalResultados = $model->totalResults ( $xpath );
+			$entry = $model->entry ( $xpath ); // entry tiene todos los documentos
+			$start += 100;
 		
+			if ($all) {
+				array_push ( $vectorAgrupar, $entry );
+			} else {
+				foreach ( $entry as $e ) {
+					$subtipo = $model->tipo ( $e ); // el metodo tipo retorna el subtipo de documento
+					if (array_key_exists ( $subtipo, $vectorAgrupar )) {
+						array_push ( $vectorAgrupar [$subtipo], $e );
+						// agrego el documento en vectorAgrupar dependiendo el tipo de documento
+					}
+				}
+			}
+		} while ( $cantidad < $totalResultados );
+		return ($vectorAgrupar);
+	}	
+	
+	function armarVista($vectorAgrupar,$context){
+		$enviar = array (); // es un array que tendra la informacion para la vista
+			while ( list ( $key, $val ) = each ( $vectorAgrupar ) ) {
+				// $val tiene las publicaciones de un tipo
+				$elementos = count ( $val );
+				if ($elementos > 0) {
+					// $key tiene la clave de vectorAgrupar, es decir, el tipo de documento
+		
+					// coleccion tiene para cada filtro, los entrys a mostrar y su url
+					if ($type == 'handle') {
+						$url = $this->armarUrl ( $key, $context );
+						$coleccion = array (
+								'vista' => $val,
+								'url' => $url,
+								'filtro' => $key
+						);
+					} else {// es autor
+						$coleccion = array (
+								'vista' => $val,
+								'filtro' => $key
+						);
+					}
+					array_push ( $enviar, $coleccion );
+					// $enviar es el vector para iterar en la vista
+				}
+			}
+		return ($enviar);
+	}
+	function agruparAtributos($descripcion,$fecha,$mostrar,$max_results,$context){
+		$atributos = array (
+				'descripcion' => $descripcion,
+				'mostrar' => $mostrar,
+				'max_results' => $max_results,
+				'context' => $context,
+				'fecha' => $fecha
+		);
+		return $atributos;
+	}
+	
+	function render($type,$all,$vectorAgrupar,$atributos,$enviar){
+		$vista= new Vista();
+		$descripcion=$atributos['descripcion'];
+		$fecha=$atributos['fecha'];
+		$mostrar=$atributos['mostrar'];
+		$max_results=$atributos['max_results'];
+		$context=$atributos['context'];
+		if ($type == 'handle') {
+			if ($all) {
+				$mostrar = true;
+				return ($vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar ));
+			} else {
+				return ($vista->articulos ( $enviar, $descripcion, $fecha, $max_results ));
+			}
+		} else { 
+			// es un autor
+			if ($all) {
+				return ($vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar ));
+			} else {
+				return ($vista->autor ( $enviar, $descripcion, $fecha, $max_results, $mostrar, $context ));
+			}
+		}
+	}
 	
 }
 ?>

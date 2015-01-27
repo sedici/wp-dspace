@@ -25,9 +25,7 @@ function my_scripts_method_sedici() {
  * Sedici Class
  */
 class Sedici extends WP_Widget {
-	protected $model;
 	protected $filtro;
-	protected $vista;
 	protected $util;
 	
 	/**
@@ -35,10 +33,8 @@ class Sedici extends WP_Widget {
 	 */
 	function Sedici() {
 		// constructor
-		$this->model = new SimplepieSedici ();
 		$this->filtro = new Filtros ();
-		$this->vista = new Vista ();
-		$this->util = new Consulta();
+		$this->util = new Consulta ();
 		$opciones = array (
 				'description' => 'Plugin Sedici' 
 		);
@@ -46,27 +42,21 @@ class Sedici extends WP_Widget {
 	}
 	function widget($args, $instance) {
 		extract ( $args );
-		$filtro = apply_filters ( 'filtro', $instance ['filtro'] );
-		
-		if ($filtro != "") { // filtro no puede venir vacio
-			
+		$context = apply_filters ( 'filtro', $instance ['filtro'] );
+		if ($context != "") { // $context no puede venir vacio
 			$duracion = apply_filters ( 'cache', $instance ['cache'] ); // duracion en segundos de la cache
 			                                                            // por defecto, una semana
-			
-			$mostrar_todos = ('on' == $instance ['mostrar_todos']); // checkbox para mostrar todos los resultados
-			                                                        // si esta en "on", $mostrar_todos queda en true, sino en false
-			
-			$resultado = apply_filters ( 'resultado', $instance ['resultado'] );
-			// La variable resultado, es la cantidad de publicaciones para cada filtro que se desea mostrar.
+			$all = ('on' == $instance ['mostrar_todos']); // checkbox para mostrar todos los resultados
+			                                              // si esta en "on", $mostrar_todos queda en true, sino en false
+			$max_results = apply_filters ( 'resultado', $instance ['resultado'] );
+			// La variable $max_results, es la cantidad de publicaciones para cada filtro que se desea mostrar.
 			// por defecto, todos. Si es que el checkbox de mostrar_todos no esta en ON.
-			
 			$opciones = $this->filtro->vectorPublicaciones ();
 			/* Opciones es un vector que tiene todos los tipos de archivos, es decir, articulos, tesis, etc */
-			
 			$filtros = array (); // tendra todos los tipos de archivos seleccionados
 			$vectorAgrupar = array ();
 			/* vectorAgrupar, agrupara todas las publicaciones mediante su tipo */
-			
+			$agrupar_publicaciones = array ();
 			foreach ( $opciones as $o ) {
 				/*
 				 * Itera sobre opciones, y compara con las opciones marcadas del usuario. Si esta en ON, entonces, guarda el nombre en filtros ($o) y en vectorAgrupar pone $o como clave
@@ -76,75 +66,11 @@ class Sedici extends WP_Widget {
 					$vectorAgrupar [$o] = array ();
 				}
 			}
-			
-			$tipo = apply_filters ( 'tipo', $instance ['tipo'] ); // contiene el autor o el handle
-			
-			$start = 0; // la variable start es para paginar la consulta
-			
-			$agrupar_publicaciones = array (); // es un array que tendra la informacion para la vista
-			
-			$cantidad = 0;
-			
-			do {
-				if ($tipo == "handle") {
-					if ($mostrar_todos) {
-						$consulta = $this->util->armarConsultaAllHandle ( $start, $filtro );
-					} else {
-						$consulta = $this->util->armarConsultaHandle ( $start, $filtro, $filtros );
-					}
-				} else {
-					$consulta = $this->util->armarConsultaAutor ( $start, $filtro );
-				}
-				
-				$xpath = $this->model->cargarPath ( $consulta, $duracion ); // cargo la consulta con cache=duracion
-				$cantidad += $this->model->cantidadResultados ( $xpath ); // cantidad tiene el numero de entrys resultados
-				$totalResultados = $this->model->totalResults ( $xpath ); // Numero total de todas las publicaciones
-				$entry = $this->model->entry ( $xpath ); // entry tiene todos los documentos de la consulta
-				
-				if ($mostrar_todos) {
-					// si muestro todos los resultados, no agrupo por tipo de archivo
-					array_push ( $vectorAgrupar, $entry );
-				} else {
-					foreach ( $entry as $e ) {
-						$subtipo = $this->model->tipo ( $e ); // el metodo tipo retorna el subtipo de documento
-						
-						if (array_key_exists($subtipo, $vectorAgrupar)) {
-							array_push ( $vectorAgrupar [$subtipo], $e );
-							// agrego el documento en vectorAgrupar dependiendo el tipo de documento
-						}
-					}
-				}
-				$start += 100;
-			} while ( $cantidad < $totalResultados );
-			// itera mientras que la cantidad de resultados que levante sea menor que la cantidad total de resultados
-			
-			if (! $mostrar_todos) {
-				while ( list ( $key, $val ) = each ( $vectorAgrupar ) ) {
-					// $val tiene las publicaciones de un tipo
-					$elementos = count ( $val ); // elementos tiene la cantidad de resultados dado un tipo de archivo
-					if ($elementos > 0) {
-						// $key tiene la clave de vectorAgrupar, es decir, el tipo de documento
-						
-						// coleccion tiene para cada filtro, los entrys a mostrar y su url
-						if ($tipo == 'autor') {
-							$coleccion = array (
-									'vista' => $val,
-									'filtro' => $key 
-							);
-						} else {
-							$url = $this->util->armarUrl ( $key, $filtro );
-							$coleccion = array (
-									'vista' => $val,
-									'url' => $url,
-									'filtro' => $key 
-							);
-						}
-						array_push ( $agrupar_publicaciones, $coleccion );
-						// $agrupar_publicaciones es el vector para iterar en la vista
-					}
-				}
+			$type = apply_filters ( 'tipo', $instance ['tipo'] ); // contiene el autor o el handle
+			$vectorAgrupar = $this->util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar );
+			if (! $all) {
+				$agrupar_publicaciones = $this->util->armarVista ( $vectorAgrupar, $context );
 			}
-			
 			If ('on' == $instance ['descripcion']) {
 				if ('on' == $instance ['summary']) {
 					$descripcion = "summary"; // si esta en on el checkbox de la descripcion y summary
@@ -156,23 +82,10 @@ class Sedici extends WP_Widget {
 			// siDescripción esta marcado el checkbox de fecha, $fecha esta en TRUE
 			$mostrar_autor = ('on' == $instance ['mostrar_autor']);
 			// si esta marcado el checkbox de mostrar_autor, $mostrar_autor esta en TRUE
-			if ($tipo == 'autor') {
-				if ($mostrar_todos) {
-					$this->vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar_autor );
-				} else {
-					$this->vista->autor ( $agrupar_publicaciones, $descripcion, $fecha, $resultado, $mostrar_autor,$filtro );
-				}
-			} else { // es un handle
-				
-				if ($mostrar_todos) {
-					$mostrar_autor = true;
-					$this->vista->todos ( $vectorAgrupar, $descripcion, $fecha, $mostrar_autor );
-				} else {
-					$this->vista->articulos ( $agrupar_publicaciones, $descripcion, $fecha, $resultado );
-				}
-			}
+			$atributos = $this->util->agruparAtributos ( $descripcion, $fecha, $max_results, $max_results, $context );
+			$this->util->render ( $type, $all, $vectorAgrupar, $atributos, $agrupar_publicaciones );
 		} else {
-			// no se ingreso un
+			// no se ingreso un autor o handle
 			echo "Ingrese un filtro";
 		}
 	}
