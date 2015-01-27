@@ -54,5 +54,6 @@ class Filtros {
 		}
 		return ($valor);
 	}
+	
 }
 ?>
