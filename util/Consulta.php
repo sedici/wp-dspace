@@ -3,11 +3,19 @@ define('RPP', '100');
 define('FORMAT', 'atom');
 define('SORTBY', '0');
 define('ORDER', 'desc');
-
+define (CONECTOR2 , '%5C');
+define (CONECTOR3 , '%7C');
 define(_PROTOCOL,"http://");
 define(_DOMAIN , "sedici.unlp.edu.ar");
 define(_BASE_PATH,"/open-search/discover");
 
+function conector(){
+	return CONECTOR2.'+';
+}
+
+function get_conector(){
+	return (CONECTOR2.CONECTOR3.CONECTOR2.CONECTOR3.CONECTOR2.CONECTOR3);
+}
 function get_base_url() {
 	return _PROTOCOL._DOMAIN._BASE_PATH;
 }
@@ -22,6 +30,26 @@ class Consulta {
 		$this->consulta= get_base_url()."?rpp=" . RPP ."&format=".FORMAT."&sort_by=".SORTBY."&order=".ORDER."&start=";
 	}
 	
+	public function valores_cache(){
+		$atributos = array (
+				'604801' => '7',
+				'86400' => '1',
+				'259200' => '3',
+				'1209600' => '14'
+		);
+		return $atributos;
+	}
+	public function cantidad_resultados(){
+		$atributos = array (
+				'0' ,
+				'10',
+				'25',
+				'50' ,
+				'100'
+		);
+		return $atributos;
+	}
+	
 	function armarUrl($filtro, $handle) {
 		/*
 		 * Esta funcion, arma la url para el "ir a sedici" dependiendo de cada filtro. Ejemplo: http://sedici.unlp.edu.ar/handle/10915/25293/discover?fq=type_filter%3Atesis%5C+de%5C+doctorado%5C%7C%5C%7C%5C%7CTesis%5C+de%5C+doctorado
@@ -32,15 +60,15 @@ class Consulta {
 		$cant = count ( $palabras ); // cant tiene la cantidad de elementos de palabras
 		$url = $url . $palabras [0]; // concateno la primera palabra
 		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . "%5C+" . $palabras [$i]; // concateno el resto de las palabras, si es que existen, anteponiendo %5c+
+			$url = $url . conector() . $palabras [$i]; // concateno el resto de las palabras, si es que existen, anteponiendo %5c+
 		}
 		$mayuscula = ucfirst ( $filtro );
 		$palabras = explode ( " ", $mayuscula );
-		$url = $url . "%5C%7C%5C%7C%5C%7C";
+		$url = $url . get_conector();
 		$cant = count ( $palabras );
 		$url = $url . $palabras [0];
 		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . "%5C+" . $palabras [$i];
+			$url = $url . conector() . $palabras [$i];
 		}
 		return $url;
 	}
