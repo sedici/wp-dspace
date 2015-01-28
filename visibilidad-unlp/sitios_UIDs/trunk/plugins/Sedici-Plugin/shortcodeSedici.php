@@ -46,7 +46,7 @@ function plugin_sedici($atts) {
 	/* vectorAgrupar, agrupara todas las publicaciones mediante su tipo */
 	foreach ( $opciones as $o ) {
 		/*
-		 * Itera sobre opciones, y compara con las opciones marcadas del usuario. Si esta en ON, entonces, guarda el nombre en filtros ($o) y en vectorAgrupar pone $o como clave
+		 * Itera sobre opciones, y compara con las opciones marcadas del usuario. Si esta en true, entonces, guarda el nombre en filtros ($o) y en vectorAgrupar pone $o como clave
 		 */
 		$valor = $filtro->convertirEspIng ( $o );
 		if ('true' === $a [$valor]) {
@@ -57,6 +57,7 @@ function plugin_sedici($atts) {
 	$tesis = $a ['thesis'] === 'true' ? true : false;
 	if ($tesis) {
 		$vectorTesis = $filtro->vectorTesis ();
+		//vectorTesis tiene todos los subtipos de tesis. Los agrego para la busqueda
 		foreach ( $vectorTesis as $o ) {
 			array_push ( $filtros, $o );
 			$vectorAgrupar [$o] = array ();

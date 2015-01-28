@@ -195,17 +195,14 @@ class Sedici extends WP_Widget {
 		cache: <select class='widefat' type="text"
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
-			<option value='604800'
-				<?php echo ($duracion=='604800')?'selected':''; ?>>Duración en días
-			</option>
-			<option value='86400'
-				<?php echo ($duracion=='86400')?'selected':''; ?>>1 día</option>
-			<option value='259200'
-				<?php echo ($duracion=='259200')?'selected':''; ?>>3 días</option>
-			<option value='604801'
-				<?php echo ($duracion=='604800')?'selected':''; ?>>7 días</option>
-			<option value='1209600'
-				<?php echo ($duracion=='1209600')?'selected':''; ?>>14 días</option>
+		<?php $dias = $this->util->valores_cache();
+		
+		while ( list ( $key, $val ) = each ( $dias ) ) {
+		
+		?>
+			<option value=<?php echo $key;?>
+				<?php echo ($duracion==$key)?'selected':''; ?>><?php echo $val;?> días</option>
+		<?php } //end while?>
 	</select>
 	</label>
 </p>
@@ -246,12 +243,18 @@ class Sedici extends WP_Widget {
 		Resultados por filtro: <select class='widefat'
 		id="<?php echo $this->get_field_id('resultado'); ?>"
 		name="<?php echo $this->get_field_name('resultado'); ?>" type="text">
-			<option value='0' <?php echo ($resultado=='0')?'selected':''; ?>>Todos
+		
+		<?php $cantidad = $this->util->cantidad_resultados();
+		
+		foreach ($cantidad as $c){
+		
+		?>
+		
+			<option value=<?php echo $c;?> <?php echo ($resultado==$c)?'selected':''; ?>>
+			<?php  echo ($c==0) ? "Todos":$c; ?>
 			</option>
-			<option value='10' <?php echo ($resultado=='10')?'selected':''; ?>>10</option>
-			<option value='25' <?php echo ($resultado=='25')?'selected':''; ?>>25</option>
-			<option value='50' <?php echo ($resultado=='50')?'selected':''; ?>>50</option>
-			<option value='100' <?php echo ($resultado=='100')?'selected':''; ?>>100</option>
+		<?php } 
+		//end for ?>
 	</select>
 	</label>
 <p>
