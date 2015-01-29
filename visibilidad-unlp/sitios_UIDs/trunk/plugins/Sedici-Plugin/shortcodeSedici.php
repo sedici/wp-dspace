@@ -57,7 +57,7 @@ function plugin_sedici($atts) {
 	$tesis = $a ['thesis'] === 'true' ? true : false;
 	if ($tesis) {
 		$vectorTesis = $filtro->vectorTesis ();
-		//vectorTesis tiene todos los subtipos de tesis. Los agrego para la busqueda
+		// vectorTesis tiene todos los subtipos de tesis. Los agrego para la busqueda
 		foreach ( $vectorTesis as $o ) {
 			array_push ( $filtros, $o );
 			$vectorAgrupar [$o] = array ();
@@ -66,7 +66,7 @@ function plugin_sedici($atts) {
 	
 	$vectorAgrupar = $util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar );
 	if (! $all) {
-		$enviar = $util->armarVista ( $vectorAgrupar, $context );
+		$enviar = $util->armarVista ( $vectorAgrupar, $type, $context );
 	}
 	$atributos = $util->agruparAtributos ( $descripcion, $fecha, $mostrar, $max_results, $context );
 	$util->render ( $type, $all, $vectorAgrupar, $atributos, $enviar );
