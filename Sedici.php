@@ -69,7 +69,7 @@ class Sedici extends WP_Widget {
 			$type = apply_filters ( 'tipo', $instance ['tipo'] ); // contiene el autor o el handle
 			$vectorAgrupar = $this->util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar );
 			if (! $all) {
-				$agrupar_publicaciones = $this->util->armarVista ( $vectorAgrupar, $context );
+				$agrupar_publicaciones = $this->util->armarVista ( $vectorAgrupar, $type ,$context );
 			}
 			If ('on' == $instance ['descripcion']) {
 				if ('on' == $instance ['summary']) {
@@ -82,7 +82,7 @@ class Sedici extends WP_Widget {
 			// siDescripción esta marcado el checkbox de fecha, $fecha esta en TRUE
 			$mostrar_autor = ('on' == $instance ['mostrar_autor']);
 			// si esta marcado el checkbox de mostrar_autor, $mostrar_autor esta en TRUE
-			$atributos = $this->util->agruparAtributos ( $descripcion, $fecha, $max_results, $max_results, $context );
+			$atributos = $this->util->agruparAtributos ( $descripcion, $fecha, $mostrar_autor, $max_results, $context );
 			$this->util->render ( $type, $all, $vectorAgrupar, $atributos, $agrupar_publicaciones );
 		} else {
 			// no se ingreso un autor o handle
@@ -146,7 +146,7 @@ class Sedici extends WP_Widget {
 		id="<?php echo $this->get_field_id('mostrar_autor'); ?>"
 		name="<?php echo $this->get_field_name('mostrar_autor'); ?>" /> <label
 		for="<?php echo $this->get_field_id('mostrar_autor'); ?>">Mostrar
-		Autor</label>
+		Autores</label>
 </p>
 
 
@@ -195,11 +195,13 @@ class Sedici extends WP_Widget {
 		cache: <select class='widefat' type="text"
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
-		<?php $dias = $this->util->valores_cache();
+		<?php
+		
+$dias = $this->util->valores_cache ();
 		
 		while ( list ( $key, $val ) = each ( $dias ) ) {
-		
-		?>
+			
+			?>
 			<option value=<?php echo $key;?>
 				<?php echo ($duracion==$key)?'selected':''; ?>><?php echo $val;?> días</option>
 		<?php } //end while?>
@@ -243,18 +245,19 @@ class Sedici extends WP_Widget {
 		Resultados por filtro: <select class='widefat'
 		id="<?php echo $this->get_field_id('resultado'); ?>"
 		name="<?php echo $this->get_field_name('resultado'); ?>" type="text">
+		<?php
 		
-		<?php $cantidad = $this->util->cantidad_resultados();
-		
-		foreach ($cantidad as $c){
-		
-		?>
-		
-			<option value=<?php echo $c;?> <?php echo ($resultado==$c)?'selected':''; ?>>
+$cantidad = $this->util->cantidad_resultados ();
+		foreach ( $cantidad as $c ) {
+			?>
+			<option value=<?php echo $c;?>
+				<?php echo ($resultado==$c)?'selected':''; ?>>
 			<?php  echo ($c==0) ? "Todos":$c; ?>
 			</option>
-		<?php } 
-		//end for ?>
+		<?php
+		
+}
+		// end for		?>
 	</select>
 	</label>
 <p>

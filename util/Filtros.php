@@ -1,6 +1,7 @@
 <?php
 class Filtros {
 	public function vectorPublicaciones() {
+		//Contiene los subtipos de publicaciones
 		$array = array (
 				"Documento de trabajo",
 				"Articulo",
@@ -18,6 +19,7 @@ class Filtros {
 		return ($array);
 	}
 	public function vectorTesis() {
+		//Esta funcion es utilizada para el shortcode, cuando thesis=true, son los 3 subtipos
 		$vector = array (
 				"Tesis de doctorado",
 				"Tesis de grado",
@@ -26,6 +28,7 @@ class Filtros {
 		return ($vector);
 	}
 	public function convertirEspIng($filtro) {
+		//Pasa los subtipos al ingles para la comparacion con el shortcode
 		switch ($filtro) {
 			case "Articulo" :
 				$valor = "article";
@@ -54,6 +57,5 @@ class Filtros {
 		}
 		return ($valor);
 	}
-	
 }
 ?>
