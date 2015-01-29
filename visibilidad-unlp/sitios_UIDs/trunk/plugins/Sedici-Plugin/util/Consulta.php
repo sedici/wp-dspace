@@ -179,7 +179,7 @@ class Consulta {
 		if ($type == 'handle') {
 			if ($all) {
 				$mostrar = true;
-				return ($vista->todos ( $vectorAgrupar, $a ['descripcion'], $a ['fecha'], $a ['mostrar'] ));
+				return ($vista->todos ( $vectorAgrupar, $a ['descripcion'], $a ['fecha'], $mostrar ));
 			} else {
 				return ($vista->articulos ( $enviar, $a ['descripcion'], $a ['fecha'], $a ['max_results'] ));
 			}
