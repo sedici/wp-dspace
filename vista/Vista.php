@@ -29,6 +29,7 @@ class Vista {
 					Autor:
 					
 					<?php
+					$cantidad = count($autores); $i = 1;
 					foreach ( $autores as $a ) {
 						?>
 					<author> <name>	
@@ -37,7 +38,8 @@ class Vista {
 					</author>
 			
 					<?php
-						echo " - ";
+						if ($i != $cantidad) echo " - ";
+						$i ++;
 					}
 					}
 					?>
@@ -111,6 +113,7 @@ class Vista {
 					Autor:
 					
 					<?php
+					$cantidad = count($autores); $i = 1;
 					foreach ( $autores as $a ) {
 						?>
 					<author> <name>	
@@ -119,7 +122,8 @@ class Vista {
 					</author>
 			
 					<?php
-						echo " - ";
+						if ($i != $cantidad) echo " - ";
+						$i ++;
 					}
 					?>
 					
@@ -197,6 +201,7 @@ class Vista {
 				Autor:
 				
 				<?php
+				$cantidad = count($autores); $i = 1;
 				foreach ( $autores as $a ) {
 					?>
 				<author> <name>	
@@ -205,7 +210,8 @@ class Vista {
 				</author>
 		
 				<?php
-					echo " - ";
+					if ($i != $cantidad) echo " - ";
+						$i ++;
 				}
 				}
 				?>
