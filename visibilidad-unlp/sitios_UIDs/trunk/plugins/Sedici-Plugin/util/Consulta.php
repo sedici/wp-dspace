@@ -173,22 +173,23 @@ class Consulta {
 		);
 		return $atributos;
 	}
-	function render($type, $all, $vectorAgrupar, $a, $enviar) {
+	function render($type, $all, $vectorAgrupar, $atributos, $enviar) {
 		//Dependiendo si es handle/autor o si son todos los resultado, llama a determinada vista
 		$vista = new Vista ();
 		if ($type == 'handle') {
 			if ($all) {
-				$mostrar = true;
-				return ($vista->todos ( $vectorAgrupar, $a ['descripcion'], $a ['fecha'], $mostrar ));
+				$atributos['mostrar'] = TRUE;
+				return ($vista->todos ( $vectorAgrupar, $atributos ));
 			} else {
-				return ($vista->articulos ( $enviar, $a ['descripcion'], $a ['fecha'], $a ['max_results'] ));
+				$atributos['mostrar'] = TRUE;
+				return ($vista->publicaciones( $enviar, $atributos,$type ));
 			}
 		} else {
 			// es un autor
 			if ($all) {
-				return ($vista->todos ( $vectorAgrupar, $a ['descripcion'], $a ['fecha'], $a ['mostrar'] ));
+				return ($vista->todos ( $vectorAgrupar, $atributos ));
 			} else {
-				return ($vista->autor ( $enviar, $a['descripcion'], $a['fecha'], $a ['max_results'], $a ['mostrar'], $a ['context'] ));
+				return ($vista->publicaciones ( $enviar, $atributos,$type ));
 			}
 		}
 	}

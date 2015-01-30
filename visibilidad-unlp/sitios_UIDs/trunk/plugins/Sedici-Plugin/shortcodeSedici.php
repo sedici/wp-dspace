@@ -28,7 +28,7 @@ function plugin_sedici($atts) {
 		return "El type debe ser handle o author";
 	}
 	
-	$descripcion = $a ['description'] === 'true' ? true : false;
+	$descripcion = $a ['description'] === 'true' ? "description" : false;
 	$fecha = $a ['date'] === 'true' ? true : false;
 	$mostrar = $a ['show_author'] === 'true' ? true : false;
 	$cache = $a ['cache'];

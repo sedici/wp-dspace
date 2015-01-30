@@ -48,6 +48,7 @@ class Sedici extends WP_Widget {
 			                                                            // por defecto, una semana
 			$all = ('on' == $instance ['mostrar_todos']); // checkbox para mostrar todos los resultados
 			                                              // si esta en "on", $mostrar_todos queda en true, sino en false
+			
 			$max_results = apply_filters ( 'resultado', $instance ['resultado'] );
 			// La variable $max_results, es la cantidad de publicaciones para cada filtro que se desea mostrar.
 			// por defecto, todos. Si es que el checkbox de mostrar_todos no esta en ON.
