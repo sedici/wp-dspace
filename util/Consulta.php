@@ -179,14 +179,14 @@ class Consulta {
 		if ($type == 'handle') {
 			$atributos['mostrar'] = TRUE;
 			if ($all) {
-				return ($vista->todos ( $vectorAgrupar, $atributos ));
+				return ($vista->todos ( $vectorAgrupar, $atributos,$type ));
 			} else {
 				return ($vista->publicaciones( $enviar, $atributos,$type ));
 			}
 		} else {
 			// es un autor
 			if ($all) {
-				return ($vista->todos ( $vectorAgrupar, $atributos ));
+				return ($vista->todos ( $vectorAgrupar, $atributos,$type ));
 			} else {
 				return ($vista->publicaciones ( $enviar, $atributos,$type ));
 			}
