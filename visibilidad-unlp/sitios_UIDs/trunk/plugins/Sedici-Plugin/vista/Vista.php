@@ -1,4 +1,11 @@
 <?php
+define ( URL, 'http://sedici.unlp.edu.ar/handle/' );
+define (FILTER , '/discover?fq=author_filter%3A');
+define (CON1 , '%2C');
+define (CON2, '\+');
+define (SEPARADOR, '\|\|\|');
+
+
 class Vista {
 	public function subtipo($sub){
 		return ucfirst($sub);
@@ -11,8 +18,30 @@ class Vista {
 	public function html_especial_chars($texto){
 		return (htmlspecialchars_decode($texto));
 	}
+	public function minuscula($cadena){
+		return strtolower(implode(CON2, $cadena));
+	}
+	public function mayuscula($cadena){
+		$cadena = implode(" ", $cadena);
+		$cadena = ucwords($cadena);
+		$cadena = explode ( " ", $cadena );
+		return implode(CON2, $cadena);
+	}
+	public function link_autor($context, $autor){
+		$link = URL.$context.FILTER;
+		$nombreCompleto = explode ( ",", $autor );
+		$apellido = explode(" ", $nombreCompleto[0]);
+		$nombre = explode(" ", $nombreCompleto[1]);
+		$link .= $this->minuscula($apellido).CON1;
+		$link.=$this->minuscula($nombre).SEPARADOR;
+		$link .= $this->mayuscula($apellido).CON1.$this->mayuscula($nombre);
+		?>
+				<a href="<?php echo $link; ?>"> <?php echo $autor;?></a>
+		<?php 
+				return;
+			}
 	
-	function autores($autores){
+	public function autores($autores,$context,$type){
 		?>
 					Autor:
 					<?php
@@ -20,7 +49,11 @@ class Vista {
 					foreach ( $autores as $au ) {
 						?>
 					<author> <name>	
-						<?php echo $au->get_name (); ?>
+						<?php 
+						if ($type =='handle'){
+							$this->link_autor($context, $au->get_name ());
+						}
+						else { echo $au->get_name (); }?>
 					</name>
 					</author>
 					<?php
@@ -48,8 +81,8 @@ class Vista {
 		return;
 	}
 	
-	public function articulo($item,$a){
-		$link = $item->get_link ();
+	public function articulo($item,$a,$type){
+		$link = $item->get_link ();	
 		?>
 		<article>
 			<header>
@@ -59,7 +92,7 @@ class Vista {
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
 			</a></li>
 				<?php 
-				if ($a['mostrar']){ $this->autores($item->get_authors ()); }
+				if ($a['mostrar']){ $this->autores($item->get_authors (),$a['context'],$type); }
 				if ($a['fecha']) { ?>
 				<br /><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
 				<?php } //end if fecha  
@@ -81,7 +114,7 @@ class Vista {
 				$lista = $i ['vista']; $j=0;
 				$fin = $this->cantidad($a['max_results'], $lista);//fin tiene la cantidad de resultados a mostrar
 				foreach ( $lista as $item ) {
-					$this->articulo($item,$a);
+					$this->articulo($item,$a,$type);
 					$j++;
 					if($j == $fin) break;
 				}
@@ -94,7 +127,7 @@ class Vista {
 		return;
 	}
 	
-	function todos($vector, $a) {
+	function todos($vector, $a,$type) {
 		/*
 		 * Es la vista para todos los resultados
 		*/
@@ -102,7 +135,7 @@ class Vista {
 			<?php 
 			foreach ( $vector as $feed ) {
 				foreach ($feed as $item){
-					$this->articulo($item, $a);
+					$this->articulo($item, $a,$type);
 					}
 			}
 			?>

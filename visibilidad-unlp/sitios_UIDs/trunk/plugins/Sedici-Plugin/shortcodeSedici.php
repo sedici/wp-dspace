@@ -3,7 +3,7 @@ function plugin_sedici($atts) {
 	$a = shortcode_atts ( array (
 			'type' => null,
 			'context' => null,
-			'max_results' => 20,
+			'max_results' => 0,
 			'all' => false,
 			'description' => false,
 			'date' => false,
