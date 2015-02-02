@@ -98,7 +98,7 @@ class Consulta {
 		$consulta .= $start . "&query=sedici.creator.person:\"$context\"";
 		return $consulta;
 	}
-	function agruparSubtipos($type, $all, $context, $filtros, $vectorAgrupar) {
+	function agruparSubtipos($type, $all, $context, $filtros, $vectorAgrupar,$cache) {
 		/*
 		 * Esta funcion agrupa las publicaciones mediante subtipos, en el caso de ser todos los resultados solo realiza las consultas paginando
 		*/
@@ -177,11 +177,10 @@ class Consulta {
 		//Dependiendo si es handle/autor o si son todos los resultado, llama a determinada vista
 		$vista = new Vista ();
 		if ($type == 'handle') {
+			$atributos['mostrar'] = TRUE;
 			if ($all) {
-				$atributos['mostrar'] = TRUE;
 				return ($vista->todos ( $vectorAgrupar, $atributos ));
 			} else {
-				$atributos['mostrar'] = TRUE;
 				return ($vista->publicaciones( $enviar, $atributos,$type ));
 			}
 		} else {

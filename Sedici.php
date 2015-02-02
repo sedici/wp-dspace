@@ -44,7 +44,7 @@ class Sedici extends WP_Widget {
 		extract ( $args );
 		$context = apply_filters ( 'filtro', $instance ['filtro'] );
 		if ($context != "") { // $context no puede venir vacio
-			$duracion = apply_filters ( 'cache', $instance ['cache'] ); // duracion en segundos de la cache
+			$cache = apply_filters ( 'cache', $instance ['cache'] ); // duracion en segundos de la cache
 			                                                            // por defecto, una semana
 			$all = ('on' == $instance ['mostrar_todos']); // checkbox para mostrar todos los resultados
 			                                              // si esta en "on", $mostrar_todos queda en true, sino en false
@@ -68,7 +68,7 @@ class Sedici extends WP_Widget {
 				}
 			}
 			$type = apply_filters ( 'tipo', $instance ['tipo'] ); // contiene el autor o el handle
-			$vectorAgrupar = $this->util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar );
+			$vectorAgrupar = $this->util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar, $cache );
 			if (! $all) {
 				$agrupar_publicaciones = $this->util->armarVista ( $vectorAgrupar, $type ,$context );
 			}
