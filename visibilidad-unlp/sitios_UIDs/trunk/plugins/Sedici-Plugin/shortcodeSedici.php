@@ -64,7 +64,7 @@ function plugin_sedici($atts) {
 		}
 	}
 	
-	$vectorAgrupar = $util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar );
+	$vectorAgrupar = $util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar,$cache );
 	if (! $all) {
 		$enviar = $util->armarVista ( $vectorAgrupar, $type, $context );
 	}
