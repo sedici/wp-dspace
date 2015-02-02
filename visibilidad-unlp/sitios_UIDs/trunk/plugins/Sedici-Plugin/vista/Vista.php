@@ -1,5 +1,5 @@
 <?php
-define ( URL, 'http://sedici.unlp.edu.ar/handle/' );
+define ( URL, 'http://sedici.unlp.edu.ar' );
 define (FILTER , '/discover?fq=author_filter%3A');
 define (CON1 , '%2C');
 define (CON2, '\+');
@@ -27,8 +27,8 @@ class Vista {
 		$cadena = explode ( " ", $cadena );
 		return implode(CON2, $cadena);
 	}
-	public function link_autor($context, $autor){
-		$link = URL.$context.FILTER;
+	public function link_autor( $autor){
+		$link = URL.FILTER;
 		$nombreCompleto = explode ( ",", $autor );
 		$apellido = explode(" ", $nombreCompleto[0]);
 		$nombre = explode(" ", $nombreCompleto[1]);
@@ -41,7 +41,7 @@ class Vista {
 				return;
 			}
 	
-	public function autores($autores,$context,$type){
+	public function autores($autores){
 		?>
 					Autor:
 					<?php
@@ -50,10 +50,8 @@ class Vista {
 						?>
 					<author> <name>	
 						<?php 
-						if ($type =='handle'){
-							$this->link_autor($context, $au->get_name ());
-						}
-						else { echo $au->get_name (); }?>
+							$this->link_autor($au->get_name ());
+						?>
 					</name>
 					</author>
 					<?php
@@ -81,7 +79,7 @@ class Vista {
 		return;
 	}
 	
-	public function articulo($item,$a,$type){
+	public function articulo($item,$a){
 		$link = $item->get_link ();	
 		?>
 		<article>
@@ -92,7 +90,7 @@ class Vista {
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
 			</a></li>
 				<?php 
-				if ($a['mostrar']){ $this->autores($item->get_authors (),$a['context'],$type); }
+				if ($a['mostrar']){ $this->autores($item->get_authors ()); }
 				if ($a['fecha']) { ?>
 				<br /><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
 				<?php } //end if fecha  
@@ -114,7 +112,7 @@ class Vista {
 				$lista = $i ['vista']; $j=0;
 				$fin = $this->cantidad($a['max_results'], $lista);//fin tiene la cantidad de resultados a mostrar
 				foreach ( $lista as $item ) {
-					$this->articulo($item,$a,$type);
+					$this->articulo($item,$a);
 					$j++;
 					if($j == $fin) break;
 				}
