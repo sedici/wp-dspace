@@ -101,9 +101,13 @@ class Vista {
 		return;
 	}
 	
+	public function nombre_autor($type, $nombre){
+		if ($type != 'handle') echo "<h1> $nombre </h1>";//El nombre del autor
+		return;
+	}
 	
 	function publicaciones($feed, $a, $type) {
-		if ($type != 'handle') echo "<h1> {$a['context']} </h1>";//El nombre del autor
+		$this->nombre_autor($type, $a['context']);
 		foreach ( $feed as $i ) {
 			?>
 		<h1><?php echo $this->subtipo($i ['filtro']);?></h1><!-- El subtipo de publicacion -->
@@ -129,11 +133,12 @@ class Vista {
 		/*
 		 * Es la vista para todos los resultados
 		*/
+		$this->nombre_autor($type, $a['context']);
 		?><ol>
 			<?php 
 			foreach ( $vector as $feed ) {
 				foreach ($feed as $item){
-					$this->articulo($item, $a,$type);
+					$this->articulo($item, $a);
 					}
 			}
 			?>
