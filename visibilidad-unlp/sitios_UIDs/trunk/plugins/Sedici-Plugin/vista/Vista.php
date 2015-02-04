@@ -4,9 +4,14 @@ define (FILTER , '/discover?fq=author_filter%3A');
 define (CON1 , '%2C');
 define (CON2, '\+');
 define (SEPARADOR, '\|\|\|');
-
-
 class Vista {
+	function Vista() {
+		// Register style sheet.
+		wp_register_style ( 'Vista', plugins_url ( 'Sedici-Plugin/css/sedici.css' ) );
+		
+		wp_enqueue_style ( 'Vista' );
+	}
+
 	public function subtipo($sub){
 		return ucfirst($sub);
 	}
@@ -110,8 +115,8 @@ class Vista {
 		$this->nombre_autor($type, $a['context']);
 		foreach ( $feed as $i ) {
 			?>
-		<h1><?php echo $this->subtipo($i ['filtro']);?></h1><!-- El subtipo de publicacion -->
-		<ol>
+		<h2><?php echo $this->subtipo($i ['filtro']);?></h1><!-- El subtipo de publicacion -->
+		<ol class="sedici-style">
 		<?php
 				$lista = $i ['vista']; $j=0;
 				$fin = $this->cantidad($a['max_results'], $lista);//fin tiene la cantidad de resultados a mostrar
@@ -122,9 +127,8 @@ class Vista {
 				}
 		?>
 		</ol>
-		<?php if ($type == 'handle'){ ?> <a href='<?php echo $i[url]; ?>'>Ir a SEDICI</a><?php }?>
-		<br/><br>
-		<?php
+		<?php if ($type == 'handle'){ ?> <a href='<?php echo $i[url]; ?>'>Ir a SEDICI</a>
+		<?php }
 			} 
 		return;
 	}
@@ -134,7 +138,7 @@ class Vista {
 		 * Es la vista para todos los resultados
 		*/
 		$this->nombre_autor($type, $a['context']);
-		?><ol>
+		?><ol class="sedici-style">
 			<?php 
 			foreach ( $vector as $feed ) {
 				foreach ($feed as $item){
@@ -148,4 +152,6 @@ class Vista {
 				}
 	
 } // end de la class
+
 ?>
+

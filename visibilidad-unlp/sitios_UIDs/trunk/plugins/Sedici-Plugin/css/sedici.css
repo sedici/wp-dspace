@@ -20,7 +20,10 @@ p.mostrarfiltro{
 	color:#444 !important;
 }
 
-
+.sedici-style{
+  font-family: arial !important;
+  font-size: 10px !important;
+}
 
 p.conditionally-autor {
     padding: 6px 8px;
