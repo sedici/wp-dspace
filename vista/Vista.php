@@ -127,7 +127,7 @@ class Vista {
 				}
 		?>
 		</ol>
-		<?php if ($type == 'handle'){ ?> <a href='<?php echo $i[url]; ?>'>Ir a SEDICI</a>
+		<?php if ($type == 'handle'){ ?> <a href='<?php echo $i[url]; ?>'>Ir a SEDICI</a><br>
 		<?php }
 			} 
 		return;
