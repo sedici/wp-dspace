@@ -1,14 +1,32 @@
+.go-to{
+	font-size: 14px;
+}
+
+.title{
+	font-style: italic;
+}
+.summary{
+	text-align: justify;
+	width: 100%;
+    text-justify: inter-word;
+}
+.sedici-style{
+  font-family: arial;
+  font-size: 12px;
+}
+
+
+
+p.description{
+	color:#444 !important;
+}
+
 p.conditionally-loaded {
     padding: 6px 8px;
     min-width: 200px;
     border-radius: 4px;
     border: 1px solid #ccc;
 }
-p.description{
-	color:#444 !important;
-}
-
-
 
 p.conditionally-filtro {
     padding: 6px 8px;
@@ -18,11 +36,6 @@ p.conditionally-filtro {
 }
 p.mostrarfiltro{
 	color:#444 !important;
-}
-
-.sedici-style{
-  font-family: arial !important;
-  font-size: 12px !important;
 }
 
 p.conditionally-autor {

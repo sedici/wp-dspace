@@ -1,6 +1,13 @@
 <?php
-/*
- * Plugin Name: Sedici Plugin URI: http://sedici.unlp.edu.ar/ Description: Este plugin permite mostrar publicaciones de un autor/handle en SEDICI al sitio Version: 1.0 Author: SEDICI - Paula Salamone Lacunza Author URI: http://sedici.unlp.edu.ar/ License:
+/**
+ * Plugin Name: Sedici-Plugin
+ * Plugin URI: http://sedici.unlp.edu.ar/
+ * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
+ * Version: 1.0
+ * Author: SEDICI - Paula Salamone Lacunza
+ * Author URI: http://sedici.unlp.edu.ar/
+ * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
 require_once 'shortcodeSedici.php';
 require_once 'vista/Vista.php';
@@ -45,7 +52,7 @@ class Sedici extends WP_Widget {
 		$context = apply_filters ( 'filtro', $instance ['filtro'] );
 		if ($context != "") { // $context no puede venir vacio
 			$cache = apply_filters ( 'cache', $instance ['cache'] ); // duracion en segundos de la cache
-			                                                            // por defecto, una semana
+			                                                         // por defecto, una semana
 			$all = ('on' == $instance ['mostrar_todos']); // checkbox para mostrar todos los resultados
 			                                              // si esta en "on", $mostrar_todos queda en true, sino en false
 			
@@ -70,7 +77,7 @@ class Sedici extends WP_Widget {
 			$type = apply_filters ( 'tipo', $instance ['tipo'] ); // contiene el autor o el handle
 			$vectorAgrupar = $this->util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar, $cache );
 			if (! $all) {
-				$agrupar_publicaciones = $this->util->armarVista ( $vectorAgrupar, $type ,$context );
+				$agrupar_publicaciones = $this->util->armarVista ( $vectorAgrupar, $type, $context );
 			}
 			If ('on' == $instance ['descripcion']) {
 				if ('on' == $instance ['summary']) {
@@ -198,7 +205,7 @@ class Sedici extends WP_Widget {
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
 		
-$dias = $this->util->valores_cache ();
+		$dias = $this->util->valores_cache ();
 		
 		while ( list ( $key, $val ) = each ( $dias ) ) {
 			
@@ -248,7 +255,7 @@ $dias = $this->util->valores_cache ();
 		name="<?php echo $this->get_field_name('resultado'); ?>" type="text">
 		<?php
 		
-$cantidad = $this->util->cantidad_resultados ();
+		$cantidad = $this->util->cantidad_resultados ();
 		foreach ( $cantidad as $c ) {
 			?>
 			<option value=<?php echo $c;?>
@@ -256,8 +263,7 @@ $cantidad = $this->util->cantidad_resultados ();
 			<?php  echo ($c==0) ? "Todos":$c; ?>
 			</option>
 		<?php
-		
-}
+		}
 		// end for		?>
 	</select>
 	</label>
