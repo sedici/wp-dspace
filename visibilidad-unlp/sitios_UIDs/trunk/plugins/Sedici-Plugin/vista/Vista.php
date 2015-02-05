@@ -48,7 +48,7 @@ class Vista {
 	
 	public function autores($autores){
 		?>
-					Autor:
+					<span class="title">Autor:</span>
 					<?php
 					$cantidad = count($autores); $i = 1;
 					foreach ( $autores as $au ) {
@@ -65,57 +65,84 @@ class Vista {
 					}//end foreach autores
 		return;
 	}
-	public function descripcion($descripcion,$item){
+	public function is_description($des){
+		return  ( ($des == "description" || $des == "summary"  ));
+	}
+	public function show_description ($descripcion,$item){
 		if ($descripcion == "description") {
-		?>
-			<summary type="text">Resumen: <?php
+			?>
+			<span class="title">Resumen:</span> <?php
 					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
 					echo $this->html_especial_chars($des[0]['data']);
 					?>
-			</summary>
 			<?php 
 		}else if($descripcion == "summary") {
 			?>
-			 <summary type="text">Sumario: <?php 
+			 <span class="title">Sumario:</span> <?php 
 			 echo $this->html_especial_chars($item->get_description ());
+				}
 			 ?> 
-			 </summary>
-		<?php }
+	<?php 
+		return;
+	}
+	
+	
+	public function descripcion($descripcion,$item){
+		if($this->is_description($descripcion)){
+			?>
+			<div class="summary">
+			<summary>
+			<?php $this->show_description($descripcion, $item); ?>
+			</summary>
+			</div>
+		<?php 
+		}
 		return;
 	}
 	
 	public function articulo($item,$a){
 		$link = $item->get_link ();	
 		?>
-		<article>
+		<li><article>
 			<header>
 				<title><?php echo $item->get_title ();?></title>
 			</header>
-			<li>T&iacute;tulo: <a href="<?php echo $link; ?>">
+			<span class="title">T&iacute;tulo:</span> <a href="<?php echo $link; ?>">
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
-			</a></li>
+			</a><br>
 				<?php 
 				if ($a['mostrar']){ $this->autores($item->get_authors ()); }
 				if ($a['fecha']) { ?>
-				<br /><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published><br />
+				<br><span class="title"><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
 				<?php } //end if fecha  
 				$this->descripcion($a['descripcion'], $item);
 				 ?>
-		</article>
+		</article></li>
 		<?php 
 		return;
 	}
+	public function is_handle($type){
+		return ($type == 'handle');
+	}
 	
 	public function nombre_autor($type, $nombre){
-		if ($type != 'handle') echo "<h1> $nombre </h1>";//El nombre del autor
+		if (!$this->is_handle($type)){ ?>
+			 <h2> <?php echo $nombre;?> </h2>
+		<?php 	 
+		}	 
 		return;
+	}
+	public function go_to_sedici($type,$url){
+		if ($this->is_handle($type)){ ?> 
+		<span class="go-to"> <a href='<?php echo $url; ?>'>Ir a SEDICI</a></span>
+		<?php }
 	}
 	
 	function publicaciones($feed, $a, $type) {
 		$this->nombre_autor($type, $a['context']);
 		foreach ( $feed as $i ) {
 			?>
-		<h2><?php echo $this->subtipo($i ['filtro']);?></h1><!-- El subtipo de publicacion -->
+		<h3><?php echo $this->subtipo($i ['filtro']);?></h3><!-- El subtipo de publicacion -->
 		<ol class="sedici-style">
 		<?php
 				$lista = $i ['vista']; $j=0;
@@ -127,8 +154,8 @@ class Vista {
 				}
 		?>
 		</ol>
-		<?php if ($type == 'handle'){ ?> <a href='<?php echo $i[url]; ?>'>Ir a SEDICI</a><br/><br/>
-		<?php }
+		<?php 
+			$this->go_to_sedici($type, $i['url']);
 			} 
 		return;
 	}
