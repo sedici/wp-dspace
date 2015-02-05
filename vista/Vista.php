@@ -134,7 +134,7 @@ class Vista {
 	}
 	public function go_to_sedici($type,$url){
 		if ($this->is_handle($type)){ ?> 
-		<span class="go-to"> <a href='<?php echo $url; ?>'>Ir a SEDICI</a></span><br>
+		<span class="go-to"> <a href='<?php echo $url; ?>'>Ir a SEDICI</a></span><br><br>
 		<?php }
 	}
 	
