@@ -48,7 +48,7 @@ class Vista {
 	
 	public function autores($autores){
 		?>
-					<span class="title">Autor:</span>
+					<span class="title sedici-style">Autor:</span>
 					<?php
 					$cantidad = count($autores); $i = 1;
 					foreach ( $autores as $au ) {
@@ -71,14 +71,14 @@ class Vista {
 	public function show_description ($descripcion,$item){
 		if ($descripcion == "description") {
 			?>
-			<span class="title">Resumen:</span> <?php
+			<span class="title sedici-style">Resumen:</span> <?php
 					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
 					echo $this->html_especial_chars($des[0]['data']);
 					?>
 			<?php 
 		}else if($descripcion == "summary") {
 			?>
-			 <span class="title">Sumario:</span> <?php 
+			 <span class="title sedici-style">Sumario:</span> <?php 
 			 echo $this->html_especial_chars($item->get_description ());
 				}
 			 ?> 
@@ -107,13 +107,13 @@ class Vista {
 			<header>
 				<title><?php echo $item->get_title ();?></title>
 			</header>
-			<span class="title">T&iacute;tulo:</span> <a href="<?php echo $link; ?>">
+			<span class="title sedici-style">T&iacute;tulo:</span> <a href="<?php echo $link; ?>">
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
 			</a><br>
 				<?php 
 				if ($a['mostrar']){ $this->autores($item->get_authors ()); }
 				if ($a['fecha']) { ?>
-				<br><span class="title"><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
+				<br><span class="title sedici-style"><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
 				<?php } //end if fecha  
 				$this->descripcion($a['descripcion'], $item);
 				 ?>
@@ -134,7 +134,7 @@ class Vista {
 	}
 	public function go_to_sedici($type,$url){
 		if ($this->is_handle($type)){ ?> 
-		<span class="go-to"> <a href='<?php echo $url; ?>'>Ir a SEDICI</a></span>
+		<p><span class="go-to"> <a href='<?php echo $url; ?>'>Ir a SEDICI</a></span></p>
 		<?php }
 	}
 	
