@@ -1,31 +1,32 @@
 <?php
+
+/**
+ * Plugin Name: Sedici-Plugin
+ * Plugin URI: http://sedici.unlp.edu.ar/
+ * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
+ * Version: 1.0
+ * Author: SEDICI - Paula Salamone Lacunza
+ * Author URI: http://sedici.unlp.edu.ar/
+ * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ */
+
 class Filtros {
-	public function vectorPublicaciones() {
-		//Contiene los subtipos de publicaciones
-		$array = array (
-				"Documento de trabajo",
-				"Articulo",
-				"Contribucion a revista",
-				"Informe tecnico",
-				"Libro",
-				"Objeto de conferencia",
-				"Preprint",
-				"Revision",
-				"Tesis de doctorado",
-				"Tesis de grado",
-				"Tesis de maestria",
-				"Trabajo de especializacion" 
+	protected $subtipos;
+	protected $tesis;
+	public function Filtros(){
+		$this->subtipos = array ("Documento de trabajo","Articulo","Contribucion a revista",
+				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision",
+				"Tesis de doctorado","Tesis de grado","Tesis de maestria","Trabajo de especializacion" 
 		);
-		return ($array);
+		$this->tesis= array ( "Tesis de doctorado",	"Tesis de grado","Tesis de maestria" );
+	}
+	
+	public function vectorPublicaciones() {
+		return $this->subtipos;
 	}
 	public function vectorTesis() {
-		//Esta funcion es utilizada para el shortcode, cuando thesis=true, son los 3 subtipos
-		$vector = array (
-				"Tesis de doctorado",
-				"Tesis de grado",
-				"Tesis de maestria" 
-		);
-		return ($vector);
+		return $this->tesis;
 	}
 	public function convertirEspIng($filtro) {
 		//Pasa los subtipos al ingles para la comparacion con el shortcode

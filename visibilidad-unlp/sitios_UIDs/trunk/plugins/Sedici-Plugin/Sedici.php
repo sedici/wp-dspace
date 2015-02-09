@@ -87,10 +87,18 @@ class Sedici extends WP_Widget {
 				}
 			}
 			$fecha = ('on' == $instance ['fecha']);
+			if ('on' == $instance ['limitar']){
+				$maxlenght = $instance ['maxlenght'];
+				if ($maxlenght == ""){
+					$maxlenght = 150;
+				}
+			} else {
+				$maxlenght =0;
+			}
 			// siDescripción esta marcado el checkbox de fecha, $fecha esta en TRUE
 			$mostrar_autor = ('on' == $instance ['mostrar_autor']);
 			// si esta marcado el checkbox de mostrar_autor, $mostrar_autor esta en TRUE
-			$atributos = $this->util->agruparAtributos ( $descripcion, $fecha, $mostrar_autor, $max_results, $context );
+			$atributos = $this->util->agruparAtributos ( $descripcion, $fecha, $mostrar_autor, $max_results, $context  , $maxlenght);
 			$this->util->render ( $type, $all, $vectorAgrupar, $atributos, $agrupar_publicaciones );
 		} else {
 			// no se ingreso un autor o handle
@@ -107,6 +115,7 @@ class Sedici extends WP_Widget {
 		$instance = $old_instance;
 		$instance ['filtro'] = sanitize_text_field ( $new_instance ['filtro'] );
 		$instance ['tipo'] = sanitize_text_field ( $new_instance ['tipo'] );
+		$instance ['maxlenght'] = sanitize_text_field ( $new_instance ['maxlenght'] );
 		$instance ['descripcion'] = sanitize_text_field ( $new_instance ['descripcion'] );
 		$instance ['summary'] = sanitize_text_field ( $new_instance ['summary'] );
 		$instance ['fecha'] = sanitize_text_field ( $new_instance ['fecha'] );
@@ -114,7 +123,7 @@ class Sedici extends WP_Widget {
 		$instance ['resultado'] = sanitize_text_field ( $new_instance ['resultado'] );
 		$instance ['cache'] = sanitize_text_field ( $new_instance ['cache'] );
 		$instance ['mostrar_todos'] = sanitize_text_field ( $new_instance ['mostrar_todos'] );
-		
+		$instance ['limitar'] = sanitize_text_field ( $new_instance ['limitar'] );
 		foreach ( $tipos_archivos as $filtro ) {
 			$instance [$filtro] = sanitize_text_field ( $new_instance [$filtro] );
 		}
@@ -130,6 +139,7 @@ class Sedici extends WP_Widget {
 		$filtro = esc_attr ( $instance ['filtro'] ); // ingresa un autor o un handle
 		$duracion = esc_attr ( $instance ['cache'] ); // duracion de la cache
 		$tipos_archivos = $this->filtro->vectorPublicaciones (); // contiene los distintos tipos de archivos
+		$maxlenght = esc_attr($instance['maxlenght']);
 		?>
 
 <!-- Eleccion entre autor y handle -->
@@ -165,6 +175,23 @@ class Sedici extends WP_Widget {
 		id="<?php echo $this->get_field_id('filtro'); ?>"
 		name="<?php echo $this->get_field_name('filtro'); ?>" type="text"
 		value="<?php echo $filtro; ?>" /></label>
+</p>
+
+
+<p class="limitar">
+	<input class="checkbox" type="checkbox"
+		<?php checked($instance['limitar'], 'on'); ?>
+		id="<?php echo $this->get_field_id('limitar'); ?>"
+		name="<?php echo $this->get_field_name('limitar'); ?>" /> <label
+		for="<?php echo $this->get_field_id('limitar'); ?>">Limitar longitud del texto</label>
+</p>
+<p class="conditionally-limitar"
+	<?php echo checked($instance['limitar'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
+	<label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto:'); ?> 
+       <input class="widefat" type="number" onKeyPress="return justNumbers(event);"
+		id="<?php echo $this->get_field_id('maxlenght'); ?>"
+		name="<?php echo $this->get_field_name('maxlenght'); ?>" 
+		value="<?php echo $maxlenght; ?>" /></label>
 </p>
 
 
@@ -204,14 +231,12 @@ class Sedici extends WP_Widget {
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
-		
-		$dias = $this->util->valores_cache ();
-		
-		while ( list ( $key, $val ) = each ( $dias ) ) {
-			
+		$undia= $this->util->un_dia();
+		$dias = $this->util->dias_cache();
+		foreach ($dias as $d){
 			?>
-			<option value=<?php echo $key;?>
-				<?php echo ($duracion==$key)?'selected':''; ?>><?php echo $val;?> días</option>
+			<option value=<?php echo $d * $undia;?>
+				<?php echo ($duracion==($d * $undia))?'selected':''; ?>><?php echo $d;?> días</option>
 		<?php } //end while?>
 	</select>
 	</label>
