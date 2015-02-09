@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * Plugin Name: Sedici-Plugin
+ * Plugin URI: http://sedici.unlp.edu.ar/
+ * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
+ * Version: 1.0
+ * Author: SEDICI - Paula Salamone Lacunza
+ * Author URI: http://sedici.unlp.edu.ar/
+ * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ */
+
 define ( 'RPP', '100' );
 define ( 'FORMAT', 'atom' );
 define ( 'SORTBY', '0' );
@@ -22,29 +34,23 @@ function get_protocol_domain() {
 }
 class Consulta {
 	protected $consulta;
+	protected $un_dia;
+	protected $dias_cache;
+	protected $cantidad_resultado;	
 	public function Consulta() {
 		$this->consulta = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER . "&start=";
+		$this->dias_cache = array (7,1,3,14);
+		$this->un_dia = 86400;
+		$this->cantidad_resultado = array(0,10,25,50,100);
 	}
-	public function valores_cache() {
-		//Esta funcion contiene los valores para la eleccion de los dias en que se va a actualizar la cache para el widget
-		$atributos = array (
-				'604801' => '7',
-				'86400' => '1',
-				'259200' => '3',
-				'1209600' => '14' 
-		);
-		return $atributos;
+	public function un_dia(){
+		return $this->un_dia;
+	}
+	public function dias_cache(){
+		return $this->dias_cache;
 	}
 	public function cantidad_resultados() {
-		//Esta funcion contiene los valores para la eleccion de cantidad de resultados a mostrar por subtipo en el widget
-		$atributos = array (
-				'0',
-				'10',
-				'25',
-				'50',
-				'100' 
-		);
-		return $atributos;
+		return  $this->cantidad_resultado;
 	}
 	function armarUrl($filtro, $handle) {
 		/*
@@ -162,16 +168,16 @@ class Consulta {
 		}
 		return ($enviar);
 	}
-	function agruparAtributos($descripcion, $fecha, $mostrar, $max_results, $context) {
+	function agruparAtributos($descripcion, $fecha, $mostrar, $max_results, $context, $maxlenght) {
 		//Esta funcion agrupa los distintos valores en un array que serviran para tomar desiciones en las vistas
-		$atributos = array (
+		return ( array (
 				'descripcion' => $descripcion,
 				'mostrar' => $mostrar,
 				'max_results' => $max_results,
 				'context' => $context,
+				'max_lenght' => $maxlenght,
 				'fecha' => $fecha 
-		);
-		return $atributos;
+		));
 	}
 	function render($type, $all, $vectorAgrupar, $atributos, $enviar) {
 		//Dependiendo si es handle/autor o si son todos los resultado, llama a determinada vista

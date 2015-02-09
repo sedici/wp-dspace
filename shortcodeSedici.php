@@ -1,9 +1,22 @@
 <?php
+
+/**
+ * Plugin Name: Sedici-Plugin
+ * Plugin URI: http://sedici.unlp.edu.ar/
+ * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
+ * Version: 1.0
+ * Author: SEDICI - Paula Salamone Lacunza
+ * Author URI: http://sedici.unlp.edu.ar/
+ * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ */
+
 function plugin_sedici($atts) {
 	$a = shortcode_atts ( array (
 			'type' => null,
 			'context' => null,
 			'max_results' => 0,
+			'max_lenght' => 0,
 			'all' => false,
 			'description' => false,
 			'date' => false,
@@ -35,7 +48,7 @@ function plugin_sedici($atts) {
 	$context = $a ['context'];
 	$all = $a ['all'] === 'true' ? true : false;
 	$max_results = $a ['max_results'];
-	
+	$maxlenght = $a ['max_lenght'];
 	$filtro = new Filtros ();
 	$util = new Consulta ();
 	$opciones = $filtro->vectorPublicaciones ();
@@ -68,6 +81,6 @@ function plugin_sedici($atts) {
 	if (! $all) {
 		$enviar = $util->armarVista ( $vectorAgrupar, $type, $context );
 	}
-	$atributos = $util->agruparAtributos ( $descripcion, $fecha, $mostrar, $max_results, $context );
+	$atributos = $util->agruparAtributos ( $descripcion, $fecha, $mostrar, $max_results, $context ,$maxlenght );
 	$util->render ( $type, $all, $vectorAgrupar, $atributos, $enviar );
 }

@@ -1,4 +1,16 @@
 <?php
+
+/**
+ * Plugin Name: Sedici-Plugin
+ * Plugin URI: http://sedici.unlp.edu.ar/
+ * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
+ * Version: 1.0
+ * Author: SEDICI - Paula Salamone Lacunza
+ * Author URI: http://sedici.unlp.edu.ar/
+ * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ */
+
 define ( URL, 'http://sedici.unlp.edu.ar' );
 define (FILTER , '/discover?fq=author_filter%3A');
 define (CON1 , '%2C');
@@ -8,7 +20,6 @@ class Vista {
 	function Vista() {
 		// Register style sheet.
 		wp_register_style ( 'Vista', plugins_url ( 'Sedici-Plugin/css/sedici.css' ) );
-		
 		wp_enqueue_style ( 'Vista' );
 	}
 
@@ -68,31 +79,45 @@ class Vista {
 	public function is_description($des){
 		return  ( ($des == "description" || $des == "summary"  ));
 	}
-	public function show_description ($descripcion,$item){
+	public function acortar($text,$maxlenght){
+		return ($this->html_especial_chars(substr($text, 0, $maxlenght).'...'));
+	}
+	
+	public function show_description ($descripcion,$item,$maxlenght){
 		if ($descripcion == "description") {
 			?>
-			<span class="title sedici-style">Resumen:</span> <?php
+			<span class="title sedici-style">Resumen:</span> 
+			<?php
 					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
-					echo $this->html_especial_chars($des[0]['data']);
+					if ($maxlenght != 0){
+						echo $this->acortar($des[0]['data'],$maxlenght);
+					} else {
+						echo $this->html_especial_chars($des[0]['data']);
+					}
 					?>
 			<?php 
 		}else if($descripcion == "summary") {
 			?>
-			 <span class="title sedici-style">Sumario:</span> <?php 
-			 echo $this->html_especial_chars($item->get_description ());
+			 <span class="title sedici-style">Sumario:</span>
+			 <?php 
+			 if ($maxlenght != 0){
+				 echo $this->acortar($item->get_description (),$maxlenght);
+				} else {
+					echo $this->html_especial_chars($item->get_description ());
 				}
+			}
 			 ?> 
 	<?php 
 		return;
 	}
 	
 	
-	public function descripcion($descripcion,$item){
+	public function descripcion($descripcion,$item,$maxlenght){
 		if($this->is_description($descripcion)){
 			?>
 			<div class="summary">
 			<summary>
-			<?php $this->show_description($descripcion, $item); ?>
+			<?php $this->show_description($descripcion, $item,$maxlenght); ?>
 			</summary>
 			</div>
 		<?php 
@@ -115,7 +140,7 @@ class Vista {
 				if ($a['fecha']) { ?>
 				<br><span class="title sedici-style"><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
 				<?php } //end if fecha  
-				$this->descripcion($a['descripcion'], $item);
+				$this->descripcion($a['descripcion'], $item,$a['max_lenght']);
 				 ?>
 		</article></li>
 		<?php 
