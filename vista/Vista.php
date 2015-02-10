@@ -58,7 +58,7 @@ class Vista {
 			}
 	
 	public function autores($autores){
-		?>
+		?>			<br>
 					<span class="title sedici-style">Autor:</span>
 					<?php
 					$cantidad = count($autores); $i = 1;
@@ -129,12 +129,10 @@ class Vista {
 		$link = $item->get_link ();	
 		?>
 		<li><article>
-			<header>
-				<title><?php echo $item->get_title ();?></title>
-			</header>
+			<title><?php echo $item->get_title ();?></title>
 			<span class="title sedici-style">T&iacute;tulo:</span> <a href="<?php echo $link; ?>">
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
-			</a><br>
+			</a>
 				<?php 
 				if ($a['mostrar']){ $this->autores($item->get_authors ()); }
 				if ($a['fecha']) { ?>

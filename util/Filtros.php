@@ -12,18 +12,18 @@
  */
 
 class Filtros {
-	protected $subtipos;
+	protected $subtypes;
 	protected $tesis;
 	public function Filtros(){
-		$this->subtipos = array ("Documento de trabajo","Articulo","Contribucion a revista",
+		$this->subtypes = array ("Documento de trabajo","Articulo","Contribucion a revista",
 				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision",
 				"Tesis de doctorado","Tesis de grado","Tesis de maestria","Trabajo de especializacion" 
 		);
 		$this->tesis= array ( "Tesis de doctorado",	"Tesis de grado","Tesis de maestria" );
 	}
 	
-	public function vectorPublicaciones() {
-		return $this->subtipos;
+	public function subtypes() {
+		return $this->subtypes;
 	}
 	public function vectorTesis() {
 		return $this->tesis;

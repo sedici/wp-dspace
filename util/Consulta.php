@@ -33,15 +33,20 @@ function get_protocol_domain() {
 	return _PROTOCOL . _DOMAIN;
 }
 class Consulta {
+	protected $max_lenght_text;
 	protected $consulta;
 	protected $un_dia;
 	protected $dias_cache;
-	protected $cantidad_resultado;	
+	protected $total_results;	
 	public function Consulta() {
 		$this->consulta = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER . "&start=";
 		$this->dias_cache = array (7,1,3,14);
 		$this->un_dia = 86400;
-		$this->cantidad_resultado = array(0,10,25,50,100);
+		$this->total_results = array(0,10,25,50,100);
+		$this->max_lenght_text = 150;
+	}
+	public function max_lenght_text(){
+		return $this->max_lenght_text;
 	}
 	public function un_dia(){
 		return $this->un_dia;
@@ -49,8 +54,8 @@ class Consulta {
 	public function dias_cache(){
 		return $this->dias_cache;
 	}
-	public function cantidad_resultados() {
-		return  $this->cantidad_resultado;
+	public function total_results() {
+		return  $this->total_results;
 	}
 	function armarUrl($filtro, $handle) {
 		/*
@@ -104,7 +109,7 @@ class Consulta {
 		$consulta .= $start . "&query=sedici.creator.person:\"$context\"";
 		return $consulta;
 	}
-	function agruparSubtipos($type, $all, $context, $filtros, $vectorAgrupar,$cache) {
+	function group_subtypes($type, $all, $context, $filtros, $vectorAgrupar,$cache) {
 		/*
 		 * Esta funcion agrupa las publicaciones mediante subtipos, en el caso de ser todos los resultados solo realiza las consultas paginando
 		*/
@@ -141,7 +146,7 @@ class Consulta {
 		} while ( $cantidad < $totalResultados );
 		return ($vectorAgrupar);
 	}
-	function armarVista($vectorAgrupar, $type ,$context) {
+	function view_subtypes($vectorAgrupar, $type ,$context) {
 		$enviar = array (); // es un array que tendra la informacion para la vista
 		while ( list ( $key, $val ) = each ( $vectorAgrupar ) ) {
 			// $val tiene las publicaciones de un tipo
@@ -168,7 +173,7 @@ class Consulta {
 		}
 		return ($enviar);
 	}
-	function agruparAtributos($descripcion, $fecha, $mostrar, $max_results, $context, $maxlenght) {
+	function group_attributes($descripcion, $fecha, $mostrar, $max_results, $context, $maxlenght) {
 		//Esta funcion agrupa los distintos valores en un array que serviran para tomar desiciones en las vistas
 		return ( array (
 				'descripcion' => $descripcion,
@@ -179,24 +184,17 @@ class Consulta {
 				'fecha' => $fecha 
 		));
 	}
-	function render($type, $all, $vectorAgrupar, $atributos, $enviar) {
-		//Dependiendo si es handle/autor o si son todos los resultado, llama a determinada vista
+	function render($type, $all, $groups, $atributos) {
 		$vista = new Vista ();
 		if ($type == 'handle') {
 			$atributos['mostrar'] = TRUE;
+			
+		} 
 			if ($all) {
-				return ($vista->todos ( $vectorAgrupar, $atributos,$type ));
+				return ($vista->todos ( $groups, $atributos,$type ));
 			} else {
-				return ($vista->publicaciones( $enviar, $atributos,$type ));
-			}
-		} else {
-			// es un autor
-			if ($all) {
-				return ($vista->todos ( $vectorAgrupar, $atributos,$type ));
-			} else {
-				return ($vista->publicaciones ( $enviar, $atributos,$type ));
+				return ($vista->publicaciones ( $groups, $atributos,$type ));
 			}
 		}
-	}
 }
 ?>
