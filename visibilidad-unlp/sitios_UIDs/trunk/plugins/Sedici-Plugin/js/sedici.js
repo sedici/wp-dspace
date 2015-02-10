@@ -12,32 +12,32 @@
 
 jQuery(document).ready(function() {
 	// inicializacion
-	var conditionala = 'p.conditionally-autor';
-	var checka = 'p.mostrar-autor input:radio[value="autor"]';
-	// jQuery(conditionala).toggle(jQuery(checka).is(':checked'));
-	var conditional = 'p.conditionally-loaded';
-	var check = 'p.description input:checkbox';
-	// jQuery(conditional).toggle(jQuery(check).is(':checked'));
-	var conditionalf = 'p.conditionally-filtro';
-	var checkf = 'p.mostrarfiltro';
-	// jQuery(conditionalf).toggle(jQuery(checkf).is(':not(:checked)'));
-
-	var conditionall = 'p.conditionally-limitar';
-	var checkl = 'p.limitar';
-	jQuery(checkl).live('change', function() {
-		jQuery(conditionall).toggle();
-	});
+	var conditionalAuthor = 'p.conditionally-author';
+	var checkAuthor = 'p.show-author input:radio[value="author"]';
+	
+	var conditionaDescription = 'p.conditionally-description';
+	var description = 'p.description input:checkbox';
+	
+	var conditionalFilter = 'p.conditionally-filter';
+	var checkFilter = 'p.show-filter';
+	
+	var conditionalLimit = 'p.conditionally-limit';
+	var checkLimit = 'p.limit';
+	
 	
 	
 	// binding
-	jQuery('p.mostrar-autor input:radio').live('change', function() {
-		jQuery(conditionala).toggle(jQuery(checka).is(':checked'));
+	jQuery('p.show-author input:radio').live('change', function() {
+		jQuery(conditionalAuthor).toggle(jQuery(checkAuthor).is(':checked'));
 	});
-	jQuery(check).live('change', function() {
-		jQuery(conditional).toggle();
+	jQuery(description).live('change', function() {
+		jQuery(conditionaDescription).toggle();
 	});
-	jQuery(checkf).live('change', function() {
-		jQuery(conditionalf).toggle();
+	jQuery(checkFilter).live('change', function() {
+		jQuery(conditionalFilter).toggle();
+	});
+	jQuery(checkLimit).live('change', function() {
+		jQuery(conditionalLimit).toggle();
 	});
 
 });

@@ -51,7 +51,7 @@ function plugin_sedici($atts) {
 	$maxlenght = $a ['max_lenght'];
 	$filtro = new Filtros ();
 	$util = new Consulta ();
-	$opciones = $filtro->vectorPublicaciones ();
+	$opciones = $filtro->subtypes();
 	/* Opciones es un vector que tiene todos los filtros, es decir, articulos, tesis, etc */
 	
 	$filtros = array ();
@@ -77,10 +77,10 @@ function plugin_sedici($atts) {
 		}
 	}
 	
-	$vectorAgrupar = $util->agruparSubtipos ( $type, $all, $context, $filtros, $vectorAgrupar,$cache );
+	$vectorAgrupar = $util->group_subtypes ( $type, $all, $context, $filtros, $vectorAgrupar,$cache );
 	if (! $all) {
-		$enviar = $util->armarVista ( $vectorAgrupar, $type, $context );
+		$vectorAgrupar = $util->view_subtypes ( $vectorAgrupar, $type, $context );
 	}
-	$atributos = $util->agruparAtributos ( $descripcion, $fecha, $mostrar, $max_results, $context ,$maxlenght );
-	$util->render ( $type, $all, $vectorAgrupar, $atributos, $enviar );
+	$atributos = $util->group_attributes( $descripcion, $fecha, $mostrar, $max_results, $context ,$maxlenght );
+	$util->render ( $type, $all, $vectorAgrupar, $atributos );
 }
