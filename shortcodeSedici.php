@@ -33,7 +33,7 @@ function plugin_sedici($atts) {
 			'thesis' => false 
 	), $atts );
 	
-	if ((is_null ( $a ['type'] )) && (is_null ( $a ['context'] ))) {
+	if ((is_null ( $a ['type'] )) || (is_null ( $a ['context'] ))) {
 		return "Ingrese un type y un context";
 	}
 	$type = $a ['type'];
@@ -41,46 +41,45 @@ function plugin_sedici($atts) {
 		return "El type debe ser handle o author";
 	}
 	
-	$descripcion = $a ['description'] === 'true' ? "description" : false;
-	$fecha = $a ['date'] === 'true' ? true : false;
-	$mostrar = $a ['show_author'] === 'true' ? true : false;
+	$description = $a ['description'] === 'true' ? "description" : false;
+	$date = $a ['date'] === 'true' ? true : false;
+	$show_author = $a ['show_author'] === 'true' ? true : false;
 	$cache = $a ['cache'];
 	$context = $a ['context'];
 	$all = $a ['all'] === 'true' ? true : false;
 	$max_results = $a ['max_results'];
 	$maxlenght = $a ['max_lenght'];
-	$filtro = new Filtros ();
+	$filter = new Filtros ();
 	$util = new Consulta ();
-	$opciones = $filtro->subtypes();
-	/* Opciones es un vector que tiene todos los filtros, es decir, articulos, tesis, etc */
-	
-	$filtros = array ();
-	$vectorAgrupar = array ();
-	/* vectorAgrupar, agrupara todas las publicaciones mediante su tipo */
-	foreach ( $opciones as $o ) {
-		/*
-		 * Itera sobre opciones, y compara con las opciones marcadas del usuario. Si esta en true, entonces, guarda el nombre en filtros ($o) y en vectorAgrupar pone $o como clave
-		 */
-		$valor = $filtro->convertirEspIng ( $o );
-		if ('true' === $a [$valor]) {
-			array_push ( $filtros, $o );
-			$vectorAgrupar [$o] = array ();
+	$subtypes = $filter->subtypes();
+	// $subtypes: all names of subtypes
+	$selected_subtypes = array ();
+	$groups = array ();
+	// $groups: groups publications by subtype
+	foreach ( $subtypes as $o ) {
+		//compares the user marked subtypes, if TRUE, save the subtype.
+		$subtype = $filter->convertirEspIng ( $o );
+		if ('true' === $a [$subtype]) {
+			array_push ( $selected_subtypes, $o );
+			$groups [$o] = array ();
 		}
 	}
-	$tesis = $a ['thesis'] === 'true' ? true : false;
-	if ($tesis) {
-		$vectorTesis = $filtro->vectorTesis ();
-		// vectorTesis tiene todos los subtipos de tesis. Los agrego para la busqueda
-		foreach ( $vectorTesis as $o ) {
-			array_push ( $filtros, $o );
-			$vectorAgrupar [$o] = array ();
+	$thesis = $a ['thesis'] === 'true' ? true : false;
+	if ($thesis) {
+		//if thesis is true, save subtypes thesis
+		$all_thesis = $filter->vectorTesis ();
+		// $all_thesis: all subtypes thesis
+		foreach ( $all_thesis as $o ) {
+			array_push ( $selected_subtypes, $o );
+			$groups [$o] = array ();
 		}
 	}
-	
-	$vectorAgrupar = $util->group_subtypes ( $type, $all, $context, $filtros, $vectorAgrupar,$cache );
+	$groups = $util->group_subtypes ( $type, $all, $context, $selected_subtypes, $groups,$cache );
 	if (! $all) {
-		$vectorAgrupar = $util->view_subtypes ( $vectorAgrupar, $type, $context );
+		//elements to view publications by subtypes
+		$groups = $util->view_subtypes ( $groups, $type, $context );
 	}
-	$atributos = $util->group_attributes( $descripcion, $fecha, $mostrar, $max_results, $context ,$maxlenght );
-	$util->render ( $type, $all, $vectorAgrupar, $atributos );
+	$attribute = $util->group_attributes( $description, $date, $show_author, $max_results, $context ,$maxlenght );
+	$util->render ( $type, $all, $groups, $attribute );
+	return;
 }

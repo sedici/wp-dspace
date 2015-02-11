@@ -34,166 +34,154 @@ function get_protocol_domain() {
 }
 class Consulta {
 	protected $max_lenght_text;
-	protected $consulta;
-	protected $un_dia;
-	protected $dias_cache;
+	protected $query;
+	protected $one_day;
+	protected $cache_days;
 	protected $total_results;	
 	public function Consulta() {
-		$this->consulta = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER . "&start=";
-		$this->dias_cache = array (7,1,3,14);
-		$this->un_dia = 86400;
+		$this->query = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER . "&start=";
+		$this->cache_days = array (7,1,3,14);
+		$this->one_day = 86400;
 		$this->total_results = array(0,10,25,50,100);
 		$this->max_lenght_text = 150;
 	}
 	public function max_lenght_text(){
 		return $this->max_lenght_text;
 	}
-	public function un_dia(){
-		return $this->un_dia;
+	public function one_day(){
+		return $this->one_day;
 	}
-	public function dias_cache(){
-		return $this->dias_cache;
+	public function cache_days(){
+		return $this->cache_days;
 	}
 	public function total_results() {
 		return  $this->total_results;
 	}
-	function armarUrl($filtro, $handle) {
-		/*
-		 * Esta funcion, arma la url para el "ir a sedici" dependiendo de cada filtro. 
-		 * Ejemplo: http://sedici.unlp.edu.ar/handle/10915/25293/discover?fq=type_filter%3Atesis%5C+de%5C+doctorado%5C%7C%5C%7C%5C%7CTesis%5C+de%5C+doctorado
-		 */
-		$filtro = strtolower ( $filtro ); // lo convierto todo a minuscula
-		$palabras = explode ( " ", $filtro ); // palabras es un array que tiene cada palabra del filtro
+	function UrlSedici($filter, $handle) {
+		//URL : go to sedici by subtype and handle
+		$filter = strtolower ( $filter ); 
+		$word = explode ( " ", $filter ); 
 		$url = get_protocol_domain () . "/handle/" . $handle . "/discover?fq=type_filter%3A";
-		$cant = count ( $palabras ); // cant tiene la cantidad de elementos de palabras
-		$url = $url . $palabras [0]; // concateno la primera palabra
+		$cant = count ( $word ); 
+		$url = $url . $word [0]; 
 		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . conector () . $palabras [$i]; // concateno el resto de las palabras, si es que existen, anteponiendo %5c+
+			$url = $url . conector () . $word [$i];
 		}
-		$mayuscula = ucfirst ( $filtro );
-		$palabras = explode ( " ", $mayuscula );
+		$uppercase  = ucfirst ( $filter );
+		$word = explode ( " ", $uppercase  );
 		$url = $url . get_conector ();
-		$cant = count ( $palabras );
-		$url = $url . $palabras [0];
+		$cant = count ( $word );
+		$url = $url . $word [0];
 		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . conector () . $palabras [$i];
+			$url = $url . conector () . $word [$i];
 		}
 		return $url;
 	}
-	function armarConsultaAllHandle($start, $context) {
-		//Esta funcion arma la consulta opensearch para todos los resultados de un handle/autor
-		$consulta = $this->consulta;
-		$consulta .= $start . "&scope=" . $context;
-		return $consulta;
+	function queryAllHandle($start, $context) {
+		//all results of query handle
+		$query = $this->query;
+		$query .= $start . "&scope=" . $context;
+		return $query;
 	}
-	function armarConsultaHandle($start, $context, $filtros) {
-		//Esta funcion arma la consulta para las publicaciones de determinado subtipo de un handle
+	function queryHandle($start, $context, $subtypes) {
+		//weapon query handle for publications particular subtype
 		$i = 1;
-		$consulta = $this->consulta;
-		$consulta .= $start . "&scope=" . $context . "&query=sedici.subtype:";
-		// en este for, se arma la consulta
-		$cantidadFiltros = count ( $filtros );
-		foreach ( $filtros as $f ) {
-			$consulta .= "\"" . $f . "\"";
-			if ($i != $cantidadFiltros) {
-				$consulta .= "%20OR%20sedici.subtype:";
-				// concateno los filtros en la consulta
+		$query = $this->query;
+		$query .= $start . "&scope=" . $context . "&query=sedici.subtype:";
+		$count_filter = count ( $subtypes );
+		foreach ( $subtypes as $f ) {
+			$query .= "\"" . $f . "\"";
+			if ($i != $count_filter) {
+				$query .= "%20OR%20sedici.subtype:";
 			}
 			$i ++;
 		}
-		return $consulta;
+		return $query;
 	}
-	function armarConsultaAutor($start, $context) {
-		//Esta funcion arma la consulta opensearch para un autor
-		$consulta = $this->consulta;
+	function queryAuthor($start, $context) {
+		//query for author
+		$consulta = $this->query;
 		$consulta .= $start . "&query=sedici.creator.person:\"$context\"";
 		return $consulta;
 	}
-	function group_subtypes($type, $all, $context, $filtros, $vectorAgrupar,$cache) {
-		/*
-		 * Esta funcion agrupa las publicaciones mediante subtipos, en el caso de ser todos los resultados solo realiza las consultas paginando
-		*/
-		$start = 0; // la variable start es para paginar la consulta
-		$cantidad = 0;
+	function group_subtypes($type, $all, $context, $selected_subtypes, $groups,$cache) {
+		$start = 0; 
+		$count = 0;
 		$model = new SimplepieSedici ();
 		do {
 			if ($type == "handle") {
 				if ($all) {
-					$consulta = $this->armarConsultaAllHandle ( $start, $context );
+					$query = $this->queryAllHandle ( $start, $context );
 				} else {
-					$consulta = $this->armarConsultaHandle ( $start, $context, $filtros );
+					$query = $this->queryHandle ( $start, $context, $selected_subtypes );
 				}
 			} else {
-				$consulta = $this->armarConsultaAutor ( $start, $context );
+				$query = $this->queryAuthor ( $start, $context );
 			}
-			$xpath = $model->cargarPath ( $consulta, $cache );
-			$cantidad += $model->cantidadResultados ( $xpath ); // cantidad tiene el numero de entrys resultados
-			$totalResultados = $model->totalResults ( $xpath );
-			$entry = $model->entry ( $xpath ); // entry tiene todos los documentos
+			$xpath = $model->loadPath ( $query, $cache );
+			$count += $model->itemQuantity ( $xpath ); // number of entrys
+			$totalResults = $model->totalResults ( $xpath );
+			$entry = $model->entry ( $xpath ); //all documents
 			$start += 100;
 			
 			if ($all) {
-				array_push ( $vectorAgrupar, $entry );
+				array_push ( $groups, $entry );
 			} else {
 				foreach ( $entry as $e ) {
-					$subtipo = $model->tipo ( $e ); // el metodo tipo retorna el subtipo de documento
-					if (array_key_exists ( $subtipo, $vectorAgrupar )) {
-						array_push ( $vectorAgrupar [$subtipo], $e );
-						// agrego el documento en vectorAgrupar dependiendo el tipo de documento
+					$subtype = $model->type ( $e ); // document subtype
+					if (array_key_exists ( $subtype, $groups )) {
+						array_push ( $groups [$subtype], $e );
 					}
 				}
 			}
-		} while ( $cantidad < $totalResultados );
-		return ($vectorAgrupar);
+		} while ( $count < $totalResults );
+		return ($groups);
 	}
-	function view_subtypes($vectorAgrupar, $type ,$context) {
-		$enviar = array (); // es un array que tendra la informacion para la vista
-		while ( list ( $key, $val ) = each ( $vectorAgrupar ) ) {
-			// $val tiene las publicaciones de un tipo
-			$elementos = count ( $val );
-			if ($elementos > 0) {
-				// $key tiene la clave de vectorAgrupar, es decir, el tipo de documento
-				// coleccion tiene para cada filtro, los entrys a mostrar y su url
+	function view_subtypes($selected_subtypes, $type ,$context) {
+		$publications = array (); // documents for the view
+		while ( list ( $key, $val ) = each ( $selected_subtypes ) ) {
+			// $val: all documents by subtype
+			$elements = count ( $val );
+			if ($elements > 0) {
+				// $key: document subtype
 				if ($type == 'handle') {
-					$url = $this->armarUrl ( $key, $context );
-					$coleccion = array (
-							'vista' => $val,
+					$url = $this->UrlSedici ( $key, $context );
+					$colection = array (
+							'view' => $val,
 							'url' => $url,
-							'filtro' => $key 
+							'filter' => $key 
 					);
-				} else { // es autor
-					$coleccion = array (
-							'vista' => $val,
-							'filtro' => $key 
+				} else { // author
+					$colection = array (
+							'view' => $val,
+							'filter' => $key 
 					);
 				}
-				array_push ( $enviar, $coleccion );
-				// $enviar es el vector para iterar en la vista
+				array_push ( $publications, $colection );
 			}
 		}
-		return ($enviar);
+		return ($publications);
 	}
-	function group_attributes($descripcion, $fecha, $mostrar, $max_results, $context, $maxlenght) {
-		//Esta funcion agrupa los distintos valores en un array que serviran para tomar desiciones en las vistas
+	function group_attributes($description, $date, $show_author, $max_results, $context, $maxlenght) {
 		return ( array (
-				'descripcion' => $descripcion,
-				'mostrar' => $mostrar,
+				'description' => $description,
+				'show_author' => $show_author,
 				'max_results' => $max_results,
 				'context' => $context,
 				'max_lenght' => $maxlenght,
-				'fecha' => $fecha 
+				'date' => $date 
 		));
 	}
-	function render($type, $all, $groups, $atributos) {
-		$vista = new Vista ();
+	function render($type, $all, $groups, $attributes) {
+		$view = new Vista ();
 		if ($type == 'handle') {
-			$atributos['mostrar'] = TRUE;
+			$attributes['show_author'] = TRUE;
 			
 		} 
 			if ($all) {
-				return ($vista->todos ( $groups, $atributos,$type ));
+				return ($view->all_publications ( $groups, $attributes,$type ));
 			} else {
-				return ($vista->publicaciones ( $groups, $atributos,$type ));
+				return ($view-> publications( $groups, $attributes,$type ));
 			}
 		}
 }
