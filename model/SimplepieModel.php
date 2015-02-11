@@ -11,12 +11,16 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
 
-class SimplepieSedici {
+class SimplepieModel {
+	protected $cache;
+	public function SimplepieModel(){
+		$this->cache = "/cache";
+	}
 	public function loadPath($str,$duration) {
 		// declare the namespaces
 		require_once 'simplepie-master/autoloader.php';
 		$cache = dirname(__FILE__);
-		$cache .="/cacheS";
+		$cache .=$this->cache;
 		$feed = new SimplePie ();
 		$feed->set_feed_url ( $str );
 		$feed->set_cache_location ($cache);

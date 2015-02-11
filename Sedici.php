@@ -9,20 +9,20 @@
  * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
-require_once 'shortcodeSedici.php';
-require_once 'vista/Vista.php';
-require_once 'util/Filtros.php';
-require_once 'util/Consulta.php';
-require_once 'modelo/SimplepieSedici.php';
+require_once 'Shortcode.php';
+require_once 'view/View.php';
+require_once 'util/Filter.php';
+require_once 'util/Query.php';
+require_once 'model/SimplepieModel.php';
 function my_styles() {
 	//include the style
-	wp_register_style ( 'Sedici', plugins_url ( 'Sedici-Plugin/css/sedici.css' ) );
+	wp_register_style ( 'Sedici', plugins_url ( 'Sedici-Plugin/css/styles.css' ) );
 	wp_enqueue_style ( 'Sedici' );
 }
 function my_scripts_method() {
 	// include js archives
 	wp_enqueue_script ( 'jquery' );
-	wp_register_script ( 'sedici', plugins_url ( 'js/sedici.js', __FILE__ ), array ("jquery"), null, true );
+	wp_register_script ( 'sedici', plugins_url ( 'js/scrips.js', __FILE__ ), array ("jquery"), null, true );
 	wp_enqueue_script ( 'sedici' );
 }
 
@@ -31,8 +31,8 @@ class Sedici extends WP_Widget {
 	protected $util;
 
 	function Sedici() {
-		$this->filter = new Filtros ();
-		$this->util = new Consulta ();
+		$this->filter = new Filter();
+		$this->util = new Query();
 		$option = array ('description' => 'This plugin connects the repository SEDICI in wordpress');
 		parent::WP_Widget ( 'Sedici', 'Plugin Sedici', $option );
 	}

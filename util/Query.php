@@ -32,13 +32,13 @@ function get_base_url() {
 function get_protocol_domain() {
 	return _PROTOCOL . _DOMAIN;
 }
-class Consulta {
+class Query {
 	protected $max_lenght_text;
 	protected $query;
 	protected $one_day;
 	protected $cache_days;
 	protected $total_results;	
-	public function Consulta() {
+	public function Query() {
 		$this->query = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER . "&start=";
 		$this->cache_days = array (7,1,3,14);
 		$this->one_day = 86400;
@@ -107,7 +107,7 @@ class Consulta {
 	function group_subtypes($type, $all, $context, $selected_subtypes, $groups,$cache) {
 		$start = 0; 
 		$count = 0;
-		$model = new SimplepieSedici ();
+		$model = new SimplepieModel();
 		do {
 			if ($type == "handle") {
 				if ($all) {
@@ -173,7 +173,7 @@ class Consulta {
 		));
 	}
 	function render($type, $all, $groups, $attributes) {
-		$view = new Vista ();
+		$view = new View();
 		if ($type == 'handle') {
 			$attributes['show_author'] = TRUE;
 			

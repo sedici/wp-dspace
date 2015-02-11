@@ -16,10 +16,10 @@ define (FILTER , '/discover?fq=author_filter%3A');
 define (CON1 , '%2C');
 define (CON2, '\+');
 define (SEPARATOR, '\|\|\|');
-class Vista {
-	function Vista() {
+class View {
+	function View() {
 		// Register style sheet.
-		wp_register_style ( 'Vista', plugins_url ( 'Sedici-Plugin/css/sedici.css' ) );
+		wp_register_style ( 'Vista', plugins_url ( 'Sedici-Plugin/css/styles.css' ) );
 		wp_enqueue_style ( 'Vista' );
 	}
 

@@ -49,8 +49,8 @@ function plugin_sedici($atts) {
 	$all = $a ['all'] === 'true' ? true : false;
 	$max_results = $a ['max_results'];
 	$maxlenght = $a ['max_lenght'];
-	$filter = new Filtros ();
-	$util = new Consulta ();
+	$filter = new Filter();
+	$util = new Query();
 	$subtypes = $filter->subtypes();
 	// $subtypes: all names of subtypes
 	$selected_subtypes = array ();

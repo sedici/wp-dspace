@@ -11,10 +11,10 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
 
-class Filtros {
+class Filter {
 	protected $subtypes;
 	protected $tesis;
-	public function Filtros(){
+	public function Filter(){
 		$this->subtypes = array ("Documento de trabajo","Articulo","Contribucion a revista",
 				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision",
 				"Tesis de doctorado","Tesis de grado","Tesis de maestria","Trabajo de especializacion" 
