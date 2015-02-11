@@ -128,7 +128,6 @@ class Sedici extends WP_Widget {
 	function form($instance) {
 		$max_results = esc_attr ( $instance ['max_results'] );
 		$context = esc_attr ( $instance ['context'] ); 
-		$duracion = esc_attr ( $instance ['cache'] ); 
 		$maxlenght = esc_attr($instance['maxlenght']);
 		?>
 
@@ -207,19 +206,19 @@ class Sedici extends WP_Widget {
 		name="<?php echo $this->get_field_name('date'); ?>" /> <label
 		for="<?php echo $this->get_field_id('date'); ?>">Mostrar Fecha</label>
 </p>
-
+	<?php $duration = esc_attr ( $instance ['cache'] );  ?>
 <p>
 	<label for="<?php echo $this->get_field_id('text'); ?>">Duración de la
 		cache: <select class='widefat' type="text"
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
-		$undia= $this->util->un_dia();
-		$dias = $this->util->dias_cache();
-		foreach ($dias as $d){
+		$one_day= $this->util->one_day();
+		$all_days = $this->util->cache_days();
+		foreach ($all_days as $d){
 			?>
-			<option value=<?php echo $d * $undia;?>
-				<?php echo ($duracion==($d * $undia))?'selected':''; ?>><?php echo $d;?> días</option>
+			<option value=<?php echo $d * $one_day;?>
+				<?php echo ($duration==($d * $one_day))?'selected':''; ?>><?php echo $d;?> días</option>
 		<?php } //end while?>
 	</select>
 	</label>

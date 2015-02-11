@@ -15,7 +15,7 @@ define ( URL, 'http://sedici.unlp.edu.ar' );
 define (FILTER , '/discover?fq=author_filter%3A');
 define (CON1 , '%2C');
 define (CON2, '\+');
-define (SEPARADOR, '\|\|\|');
+define (SEPARATOR, '\|\|\|');
 class Vista {
 	function Vista() {
 		// Register style sheet.
@@ -23,55 +23,55 @@ class Vista {
 		wp_enqueue_style ( 'Vista' );
 	}
 
-	public function subtipo($sub){
+	public function subtype($sub){
 		return ucfirst($sub);
 	}
-	public function cantidad($cant,$lista){
-		if ($cant == 0){ return (count($lista)); }
+	public function max_results($cant,$list){
+		if ($cant == 0){ return (count($list)); }
 		else return $cant;
 	}
 	
 	public function html_especial_chars($texto){
 		return (htmlspecialchars_decode($texto));
 	}
-	public function minuscula($cadena){
-		return strtolower(implode(CON2, $cadena));
+	public function strtolower_text($text){
+		return strtolower(implode(CON2, $text));
 	}
-	public function mayuscula($cadena){
-		$cadena = implode(" ", $cadena);
-		$cadena = ucwords($cadena);
-		$cadena = explode ( " ", $cadena );
-		return implode(CON2, $cadena);
+	public function ucwords_text($text){
+		$text = implode(" ", $text);
+		$text = ucwords($text);
+		$text = explode ( " ", $text );
+		return implode(CON2, $text);
 	}
-	public function link_autor( $autor){
+	public function link_author( $author){
 		$link = URL.FILTER;
-		$nombreCompleto = explode ( ",", $autor );
-		$apellido = explode(" ", $nombreCompleto[0]);
-		$nombre = explode(" ", $nombreCompleto[1]);
-		$link .= $this->minuscula($apellido).CON1;
-		$link.=$this->minuscula($nombre).SEPARADOR;
-		$link .= $this->mayuscula($apellido).CON1.$this->mayuscula($nombre);
+		$fullname = explode ( ",", $author );
+		$lastname = explode(" ", $fullname[0]);
+		$name = explode(" ", $fullname[1]);
+		$link .= $this->strtolower_text($lastname).CON1;
+		$link.=$this->strtolower_text($name).SEPARATOR;
+		$link .= $this->ucwords_text($lastname).CON1.$this->ucwords_text($name);
 		?>
-				<a href="<?php echo $link; ?>"> <?php echo $autor;?></a>
+				<a href="<?php echo $link; ?>"> <?php echo $author;?></a>
 		<?php 
 				return;
 			}
 	
-	public function autores($autores){
+	public function author($authors){
 		?>			<br>
 					<span class="title sedici-style">Autor:</span>
 					<?php
-					$cantidad = count($autores); $i = 1;
-					foreach ( $autores as $au ) {
+					$count = count($authors); $i = 1;
+					foreach ( $authors as $au ) {
 						?>
 					<author> <name>	
 						<?php 
-							$this->link_autor($au->get_name ());
+							$this->link_author($au->get_name ());
 						?>
 					</name>
 					</author>
 					<?php
-						if ($i != $cantidad) echo " - ";
+						if ($i != $count) echo " - ";
 						$i ++;
 					}//end foreach autores
 		return;
@@ -79,29 +79,29 @@ class Vista {
 	public function is_description($des){
 		return  ( ($des == "description" || $des == "summary"  ));
 	}
-	public function acortar($text,$maxlenght){
+	public function shorten_text($text,$maxlenght){
 		return ($this->html_especial_chars(substr($text, 0, $maxlenght).'...'));
 	}
 	
-	public function show_description ($descripcion,$item,$maxlenght){
-		if ($descripcion == "description") {
+	public function show_description ($description,$item,$maxlenght){
+		if ($description == "description") {
 			?>
 			<span class="title sedici-style">Resumen:</span> 
 			<?php
 					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
 					if ($maxlenght != 0){
-						echo $this->acortar($des[0]['data'],$maxlenght);
+						echo $this->shorten_text($des[0]['data'],$maxlenght);
 					} else {
 						echo $this->html_especial_chars($des[0]['data']);
 					}
 					?>
 			<?php 
-		}else if($descripcion == "summary") {
+		}else if($description == "summary") {
 			?>
 			 <span class="title sedici-style">Sumario:</span>
 			 <?php 
 			 if ($maxlenght != 0){
-				 echo $this->acortar($item->get_description (),$maxlenght);
+				 echo $this->shorten_text($item->get_description (),$maxlenght);
 				} else {
 					echo $this->html_especial_chars($item->get_description ());
 				}
@@ -112,12 +112,12 @@ class Vista {
 	}
 	
 	
-	public function descripcion($descripcion,$item,$maxlenght){
-		if($this->is_description($descripcion)){
+	public function description($description,$item,$maxlenght){
+		if($this->is_description($description)){
 			?>
 			<div class="summary">
 			<summary>
-			<?php $this->show_description($descripcion, $item,$maxlenght); ?>
+			<?php $this->show_description($description, $item,$maxlenght); ?>
 			</summary>
 			</div>
 		<?php 
@@ -125,7 +125,7 @@ class Vista {
 		return;
 	}
 	
-	public function articulo($item,$a){
+	public function document($item,$a){
 		$link = $item->get_link ();	
 		?>
 		<li><article>
@@ -134,11 +134,11 @@ class Vista {
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
 			</a>
 				<?php 
-				if ($a['mostrar']){ $this->autores($item->get_authors ()); }
-				if ($a['fecha']) { ?>
+				if ($a['show_author']){ $this->author($item->get_authors ()); }
+				if ($a['date']) { ?>
 				<br><span class="title sedici-style"><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
 				<?php } //end if fecha  
-				$this->descripcion($a['descripcion'], $item,$a['max_lenght']);
+				$this->description($a['description'], $item,$a['max_lenght']);
 				 ?>
 		</article></li>
 		<?php 
@@ -148,9 +148,9 @@ class Vista {
 		return ($type == 'handle');
 	}
 	
-	public function nombre_autor($type, $nombre){
+	public function author_name($type, $name){
 		if (!$this->is_handle($type)){ ?>
-			 <h2> <?php echo $nombre;?> </h2>
+			 <h2> <?php echo $name;?> </h2>
 		<?php 	 
 		}	 
 		return;
@@ -161,19 +161,19 @@ class Vista {
 		<?php }
 	}
 	
-	function publicaciones($feed, $a, $type) {
-		$this->nombre_autor($type, $a['context']);
+	function publications($feed, $a, $type) {
+		$this->author_name($type, $a['context']);
 		foreach ( $feed as $i ) {
 			?>
-		<h3><?php echo $this->subtipo($i ['filtro']);?></h3><!-- El subtipo de publicacion -->
+		<h3><?php echo $this->subtype($i ['filter']);?></h3><!-- publication subtype -->
 		<ol class="sedici-style">
 		<?php
-				$lista = $i ['vista']; $j=0;
-				$fin = $this->cantidad($a['max_results'], $lista);//fin tiene la cantidad de resultados a mostrar
-				foreach ( $lista as $item ) {
-					$this->articulo($item,$a);
+				$list = $i ['view']; $j=0;
+				$totalresults = $this->max_results($a['max_results'], $list);
+				foreach ( $list as $item ) {
+					$this->document($item,$a);
 					$j++;
-					if($j == $fin) break;
+					if($j == $totalresults) break;
 				}
 		?>
 		</ol>
@@ -183,16 +183,13 @@ class Vista {
 		return;
 	}
 	
-	function todos($vector, $a,$type) {
-		/*
-		 * Es la vista para todos los resultados
-		*/
-		$this->nombre_autor($type, $a['context']);
+	function all_publications($groups, $a,$type) {
+		$this->author_name($type, $a['context']);
 		?><ol class="sedici-style">
 			<?php 
-			foreach ( $vector as $feed ) {
+			foreach ( $groups as $feed ) {
 				foreach ($feed as $item){
-					$this->articulo($item, $a);
+					$this->document($item, $a);
 					}
 			}
 			?>
@@ -201,7 +198,7 @@ class Vista {
 			return ;
 				}
 	
-} // end de la class
+} // end class
 
 ?>
 
