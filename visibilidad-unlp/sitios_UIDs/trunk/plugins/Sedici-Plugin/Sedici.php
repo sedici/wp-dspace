@@ -235,11 +235,11 @@ class Sedici extends WP_Widget {
 
 <hr>
 <hr>
+
 <p class="conditionally-filter"
 	<?php echo checked($instance['all'], 'on') === '' ? '' : 'style="display: none;"'; ?>>
-	<!-- Checkbox de opciones -->
-<?php
-		$subtypes = $this->filter->subtypes(); // contiene los distintos tipos de archivos
+	<?php
+		$subtypes = $this->filter->subtypes();
 		foreach ( $subtypes as $s ) {
 			?>
 	<input class="checkbox" type="checkbox"
@@ -250,9 +250,8 @@ class Sedici extends WP_Widget {
 	<br />
 <?php
 		}
-		?> </p>
-<p class="conditionally-filter"
-	<?php echo checked($instance['all'], 'on') === '' ? '' : 'style="display: none;"'; ?>>
+		?> 
+	<br>
 	<label for="<?php echo $this->get_field_id('text'); ?>">Cantidad de
 		Resultados por filtro: <select class='widefat'
 		id="<?php echo $this->get_field_id('max_results'); ?>"
@@ -271,11 +270,12 @@ class Sedici extends WP_Widget {
 		?>
 	</select>
 	</label>
-<p>
+</p>
 <?php
 	}
 }
 add_action ( 'admin_enqueue_scripts', 'my_scripts_method' );
 add_action ( 'admin_enqueue_scripts', 'my_styles' );
 add_action ( 'widgets_init', create_function ( '', 'return register_widget("Sedici");' ) );
-add_shortcode ( 'sedici', 'plugin_sedici' );
+add_shortcode ( 'get_publications_by_author', 'AuthorShortcode' );
+add_shortcode ( 'get_publications_by_handle', 'HandleShortcode' );
