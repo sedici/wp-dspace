@@ -13,20 +13,20 @@
 
 class Filter {
 	protected $subtypes;
-	protected $tesis;
+	protected $thesis;
 	public function Filter(){
 		$this->subtypes = array ("Documento de trabajo","Articulo","Contribucion a revista",
 				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision",
 				"Tesis de doctorado","Tesis de grado","Tesis de maestria","Trabajo de especializacion" 
 		);
-		$this->tesis= array ( "Tesis de doctorado",	"Tesis de grado","Tesis de maestria" );
+		$this->thesis= array ( "Tesis de doctorado",	"Tesis de grado","Tesis de maestria" );
 	}
 	
 	public function subtypes() {
 		return $this->subtypes;
 	}
 	public function vectorTesis() {
-		return $this->tesis;
+		return $this->thesis;
 	}
 	public function convertirEspIng($filtro) {
 		//Pasa los subtipos al ingles para la comparacion con el shortcode
