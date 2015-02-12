@@ -11,36 +11,28 @@
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
 
-function plugin_sedici($atts) {
-	$a = shortcode_atts ( array (
-			'type' => null,
-			'context' => null,
-			'max_results' => 0,
-			'max_lenght' => 0,
-			'all' => false,
-			'description' => false,
-			'date' => false,
-			'show_author' => false,
-			'cache' => 604800,
-			'article' => false,
-			'preprint' => false,
-			'book' => false,
-			'working_paper' => false,
-			'technical_report' => false,
-			'conference_object' => false,
-			'revision' => false,
-			'work_specialization' => false,
-			'thesis' => false 
-	), $atts );
-	
-	if ((is_null ( $a ['type'] )) || (is_null ( $a ['context'] ))) {
-		return "Ingrese un type y un context";
+function LoadShortcode($atts,$type) {
+	$shortcode = new Shortcode();
+	$shortcode->plugin_sedici($atts,$type);
+}
+
+function AuthorShortcode($atts) {
+	LoadShortcode($atts, 'author');
+}
+
+
+function HandleShortcode($atts) {
+	LoadShortcode($atts, 'handle');
+}
+
+class Shortcode{
+function plugin_sedici($atts,$type) {
+	$filter = new Filter();
+	$a = shortcode_atts ($filter->default_shortcode(), $atts );
+	$a ['type'] = $type;
+	if (is_null ( $a ['context'] )) {
+		return "Ingrese un context";
 	}
-	$type = $a ['type'];
-	if ((strcmp ( $type, "handle" ) !== 0) && (strcmp ( $type, "author" ) !== 0)) {
-		return "El type debe ser handle o author";
-	}
-	
 	$description = $a ['description'] === 'true' ? "description" : false;
 	$date = $a ['date'] === 'true' ? true : false;
 	$show_author = $a ['show_author'] === 'true' ? true : false;
@@ -49,7 +41,7 @@ function plugin_sedici($atts) {
 	$all = $a ['all'] === 'true' ? true : false;
 	$max_results = $a ['max_results'];
 	$maxlenght = $a ['max_lenght'];
-	$filter = new Filter();
+	
 	$util = new Query();
 	$subtypes = $filter->subtypes();
 	// $subtypes: all names of subtypes
@@ -82,4 +74,5 @@ function plugin_sedici($atts) {
 	$attribute = $util->group_attributes( $description, $date, $show_author, $max_results, $context ,$maxlenght );
 	$util->render ( $type, $all, $groups, $attribute );
 	return;
+}
 }
