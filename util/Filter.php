@@ -21,7 +21,28 @@ class Filter {
 		);
 		$this->thesis= array ( "Tesis de doctorado",	"Tesis de grado","Tesis de maestria" );
 	}
-	
+	public function default_shortcode(){
+		return ( array (
+			'type' => null,
+			'context' => null,
+			'max_results' => 0,
+			'max_lenght' => 0,
+			'all' => false,
+			'description' => false,
+			'date' => false,
+			'show_author' => false,
+			'cache' => 604800,
+			'article' => false,
+			'preprint' => false,
+			'book' => false,
+			'working_paper' => false,
+			'technical_report' => false,
+			'conference_object' => false,
+			'revision' => false,
+			'work_specialization' => false,
+			'thesis' => false 
+	));
+	}
 	public function subtypes() {
 		return $this->subtypes;
 	}
