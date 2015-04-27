@@ -1,0 +1,94 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-04-27 09:50-0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: Sedici.php:140
+msgid "Handle"
+msgstr ""
+
+#: Sedici.php:145
+msgid "Autor"
+msgstr ""
+
+#: Sedici.php:154
+msgid "Mostrar Autores"
+msgstr ""
+
+#: Sedici.php:159
+msgid "Filtro:"
+msgstr ""
+
+#: Sedici.php:172
+msgid "Limitar longitud del texto"
+msgstr ""
+
+#: Sedici.php:176
+msgid "Longitud del texto en caracteres:"
+msgstr ""
+
+#: Sedici.php:189
+msgid "Mostrar Resumen"
+msgstr ""
+
+#: Sedici.php:198
+msgid "Mostrar sumario"
+msgstr ""
+
+#: Sedici.php:206
+msgid "Mostrar Fecha"
+msgstr ""
+
+#: Sedici.php:210
+msgid "Duración de la cache:"
+msgstr ""
+
+#: Sedici.php:219
+msgid "días"
+msgstr ""
+
+#: Sedici.php:230
+msgid "Todas las publicaciones sin filtros"
+msgstr ""
+
+#: Sedici.php:252
+msgid "Cantidad de Resultados por filtro:"
+msgstr ""
+
+#: view/View.php:62
+msgid "Autor:"
+msgstr ""
+
+#: view/View.php:89
+msgid "Resumen:"
+msgstr ""
+
+#: view/View.php:101
+msgid "Sumario:"
+msgstr ""
+
+#: view/View.php:133
+msgid "T&iacute;tulo:"
+msgstr ""
+
+#: view/View.php:139
+msgid "Fecha:"
+msgstr ""
+
+#: view/View.php:160
+msgid "Ir a SEDICI"
+msgstr ""
