@@ -59,7 +59,7 @@ class View {
 	
 	public function author($authors){
 		?>			<br>
-					<span class="title sedici-style">Autor:</span>
+					<span class="title sedici-style"><?php _e('Autor:'); ?></span>
 					<?php
 					$count = count($authors); $i = 1;
 					foreach ( $authors as $au ) {
@@ -86,7 +86,7 @@ class View {
 	public function show_description ($description,$item,$maxlenght){
 		if ($description == "description") {
 			?>
-			<span class="title sedici-style">Resumen:</span> 
+			<span class="title sedici-style"><?php _e('Resumen:'); ?></span> 
 			<?php
 					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
 					if ($maxlenght != 0){
@@ -98,7 +98,7 @@ class View {
 			<?php 
 		}else if($description == "summary") {
 			?>
-			 <span class="title sedici-style">Sumario:</span>
+			 <span class="title sedici-style"><?php _e('Sumario:'); ?></span>
 			 <?php 
 			 if ($maxlenght != 0){
 				 echo $this->shorten_text($item->get_description (),$maxlenght);
@@ -130,13 +130,13 @@ class View {
 		?>
 		<li><article>
 			<title><?php echo $item->get_title ();?></title>
-			<span class="title sedici-style">T&iacute;tulo:</span> <a href="<?php echo $link; ?>">
+			<span class="title sedici-style"><?php _e('T&iacute;tulo:'); ?></span> <a href="<?php echo $link; ?>">
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
 			</a>
 				<?php 
 				if ($a['show_author']){ $this->author($item->get_authors ()); }
 				if ($a['date']) { ?>
-				<br><span class="title sedici-style"><published>Fecha: <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
+				<br><span class="title sedici-style"><published><?php _e('Fecha:'); ?> <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
 				<?php } //end if fecha  
 				$this->description($a['description'], $item,$a['max_lenght']);
 				 ?>
@@ -157,7 +157,7 @@ class View {
 	}
 	public function go_to_sedici($type,$url){
 		if ($this->is_handle($type)){ ?> 
-		<span class="go-to"> <a href='<?php echo $url; ?>'>Ir a SEDICI</a></span><br><br>
+		<span class="go-to"> <a href='<?php echo $url; ?>'><?php _e('Ir a SEDICI'); ?></a></span><br><br>
 		<?php }
 	}
 	

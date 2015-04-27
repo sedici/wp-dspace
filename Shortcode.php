@@ -29,11 +29,11 @@ class Shortcode {
 		} else {
 			$a ['type'] = $type;
 			$description = $a ['description'] === 'true' ? "description" : false;
-			$date = $a ['date'] === 'true' ? true : false;
-			$show_author = $a ['show_author'] === 'true' ? true : false;
+			$date = ($a ['date'] === 'true');
+			$show_author = ($a ['show_author'] === 'true');
 			$cache = $a ['cache'];
 			$context = $a ['context'];
-			$all = $a ['all'] === 'true' ? true : false;
+			$all = ($a ['all'] === 'true');
 			$max_results = $a ['max_results'];
 			$maxlenght = $a ['max_lenght'];
 			
@@ -51,7 +51,7 @@ class Shortcode {
 					$groups [$o] = array ();
 				}
 			}
-			$thesis = $a ['thesis'] === 'true' ? true : false;
+			$thesis = ($a ['thesis'] === 'true');
 			if ($thesis) {
 				// if thesis is true, save subtypes thesis
 				$all_thesis = $filter->vectorTesis ();
