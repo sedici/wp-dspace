@@ -14,6 +14,7 @@ require_once 'view/View.php';
 require_once 'util/Filter.php';
 require_once 'util/Query.php';
 require_once 'model/SimplepieModel.php';
+
 function my_styles() {
 	//include the style
 	wp_register_style ( 'Sedici', plugins_url ( 'Sedici-Plugin/css/styles.css' ) );
@@ -136,12 +137,12 @@ class Sedici extends WP_Widget {
 		<?php checked($instance['type'], 'handle'); ?>
 		id="<?php echo $this->get_field_id('type'); ?>"
 		name="<?php echo $this->get_field_name('type'); ?>" value="handle" />
-	<label for="<?php echo $this->get_field_id('type'); ?>">Handle </label>
+	<label for="<?php echo $this->get_field_id('type'); ?>"> <?php _e('Handle'); ?> </label>
 	<input class="checkbox" type="radio"
 		<?php checked($instance['type'], 'author'); ?>
 		id="<?php echo $this->get_field_id('type'); ?>"
 		name="<?php echo $this->get_field_name('type'); ?>" value="author" /> <label
-		for="<?php echo $this->get_field_id('type'); ?>">Autor</label>
+		for="<?php echo $this->get_field_id('type'); ?>"><?php _e('Autor'); ?></label>
 </p>
 
 <p class="conditionally-author"
@@ -149,9 +150,8 @@ class Sedici extends WP_Widget {
 	<input class="checkbox" type="checkbox"
 		<?php checked($instance['show_author'], 'on'); ?>
 		id="<?php echo $this->get_field_id('show_author'); ?>"
-		name="<?php echo $this->get_field_name('show_author'); ?>" /> <label
-		for="<?php echo $this->get_field_id('show_author'); ?>">Mostrar
-		Autores</label>
+		name="<?php echo $this->get_field_name('show_author'); ?>" /> 
+		<label for="<?php echo $this->get_field_id('show_author'); ?>"><?php _e('Mostrar Autores'); ?></label>
 </p>
 
 
@@ -169,7 +169,7 @@ class Sedici extends WP_Widget {
 		<?php checked($instance['limit'], 'on'); ?>
 		id="<?php echo $this->get_field_id('limit'); ?>"
 		name="<?php echo $this->get_field_name('limit'); ?>" /> <label
-		for="<?php echo $this->get_field_id('limit'); ?>">Limitar longitud del texto</label>
+		for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limitar longitud del texto'); ?></label>
 </p>
 <p class="conditionally-limit"
 	<?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
@@ -186,8 +186,7 @@ class Sedici extends WP_Widget {
 		<?php checked($instance['description'], 'on'); ?>
 		id="<?php echo $this->get_field_id('description'); ?>"
 		name="<?php echo $this->get_field_name('description'); ?>" /> <label
-		for="<?php echo $this->get_field_id('description'); ?>">Mostrar
-		Resumen</label>
+		for="<?php echo $this->get_field_id('description'); ?>"><?php _e('Mostrar Resumen'); ?></label>
 </p>
 
 <p class="conditionally-description"
@@ -196,7 +195,7 @@ class Sedici extends WP_Widget {
 		<?php checked($instance['summary'], 'on'); ?>
 		id="<?php echo $this->get_field_id('summary'); ?>"
 		name="<?php echo $this->get_field_name('summary'); ?>" /> <label
-		for="<?php echo $this->get_field_id('summary'); ?>">Mostrar sumario</label>
+		for="<?php echo $this->get_field_id('summary'); ?>"><?php _e('Mostrar sumario'); ?></label>
 </p>
 
 <p>
@@ -204,12 +203,11 @@ class Sedici extends WP_Widget {
 		<?php checked($instance['date'], 'on'); ?>
 		id="<?php echo $this->get_field_id('date'); ?>"
 		name="<?php echo $this->get_field_name('date'); ?>" /> <label
-		for="<?php echo $this->get_field_id('date'); ?>">Mostrar Fecha</label>
+		for="<?php echo $this->get_field_id('date'); ?>"><?php _e('Mostrar Fecha'); ?></label>
 </p>
 	<?php $duration = esc_attr ( $instance ['cache'] );  ?>
 <p>
-	<label for="<?php echo $this->get_field_id('text'); ?>">Duración de la
-		cache: <select class='widefat' type="text"
+	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> <select class='widefat' type="text"
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
@@ -218,7 +216,7 @@ class Sedici extends WP_Widget {
 		foreach ($all_days as $d){
 			?>
 			<option value=<?php echo $d * $one_day;?>
-				<?php echo ($duration==($d * $one_day))?'selected':''; ?>><?php echo $d;?> días</option>
+				<?php echo ($duration==($d * $one_day))?'selected':''; ?>><?php echo $d;?> <?php _e('días'); ?></option>
 		<?php } //end while?>
 	</select>
 	</label>
@@ -229,8 +227,7 @@ class Sedici extends WP_Widget {
 		<?php checked($instance['all'], 'on'); ?>
 		id="<?php echo $this->get_field_id('all'); ?>"
 		name="<?php echo $this->get_field_name('all'); ?>" /> <label
-		for="<?php echo $this->get_field_id('all'); ?>">Todas las
-		publicaciones sin filtros</label>
+		for="<?php echo $this->get_field_id('all'); ?>"> <?php _e('Todas las publicaciones sin filtros'); ?></label>
 </p>
 
 <hr>
@@ -252,8 +249,7 @@ class Sedici extends WP_Widget {
 		}
 		?> 
 	<br>
-	<label for="<?php echo $this->get_field_id('text'); ?>">Cantidad de
-		Resultados por filtro: <select class='widefat'
+	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Cantidad de Resultados por filtro:'); ?> <select class='widefat'
 		id="<?php echo $this->get_field_id('max_results'); ?>"
 		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
 		<?php
