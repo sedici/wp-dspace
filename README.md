@@ -1,6 +1,6 @@
 # wp-dspace
 
-## Plugin de Worespress para conectar con respositorios DSpace
+## Plugin de Wordpress para conectar con respositorios DSpace
 
 Este plugin de Wordpress permite a cualquier sitio web hecho en WP recuperar contenidos alojados en repositorios DSpace y mostrarlos
 dentro de Widgets o como shortcodes dentro de páginas y posts. La recuperación de los contenidos puede realizarse mediante una expresión de búsqueda,
