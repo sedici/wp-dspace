@@ -29,10 +29,9 @@ git commit -m 'otros comentarios sobre este commit'
 
 (una vez que ya tenemos código ESTABLE y listo para compartir)
 
-```bash
-git push origin master
-```
+`bash git push origin master`
+
 
 Si queremos actualizar nuestro repositorio local con datos que comiteó otro usuario a Github, ejecutamos:
 
-git pull origin master
+`bash git pull origin master`
