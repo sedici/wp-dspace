@@ -40,6 +40,8 @@ Si queremos actualizar nuestro repositorio local con datos que comiteó otro usu
 git pull origin master
 ```
 
+## Configuración Shortcode
+
 Shortcode para handle:
 [get_publications_by_handle context="handle"]
 
