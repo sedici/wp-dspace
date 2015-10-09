@@ -58,22 +58,37 @@ Ejemplo: Mostrar solo un articulo (max_results=1) con descripción limitada a 20
 Opciones y sus valores por defecto:
 
 'all' => false, // Poner en true para mostrar todos los documentos sin importar los subtipos
+
 'max_results' => 0, // Limitar el numero a mostrar de documentos por subtipos
+
 'max_lenght' => 0, // Poner un numero que limite la cantidad de caracteres a mostrar de la descripción
+
 'description' => false, // Poner en true para mostrar un resumen del documento
+
 'date' => false, // Poner en true para mostrar la fecha del documento
+
 'show_author' => false, // Poner en true para mostrar los autores del documento
 
-Subtipos:
 
-'article'(articulos) => false,
-'preprint (preprint)' => false,
-'book' (libro) => false,
-'working_paper' (documento de trabajo) => false,
-'technical_report' (informe tecnico)=> false,
-'conference_object' (objeto de conferencia) => false,
-'revision' (revision) => false,
-'work_specialization' (trabajo de especializacion) => false,
+Subtipos de documentos:
+
+'article'(articulos) => false
+
+'preprint (preprint)' => false
+
+'book' (libro) => false
+
+'working_paper' (documento de trabajo) => false
+
+'technical_report' (informe tecnico)=> false
+
+'conference_object' (objeto de conferencia) => false
+
+'revision' (revision) => false
+
+'work_specialization' (trabajo de especializacion) => false
+
 'thesis' (tesis de grado/maestria/doctorado) => false
+
 'learning_object' (objeto de aprendizaje)=>false
 
