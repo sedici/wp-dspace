@@ -39,3 +39,39 @@ Si queremos actualizar nuestro repositorio local con datos que comiteó otro usu
 ```bash 
 git pull origin master
 ```
+
+Shortcode para handle:
+[get_publications_by_handle context="handle"]
+
+Ejemplo de todas las publicaciones de PREBI-SEDICI:
+[get_publications_by_handle context="10915/25293"  all=true]
+
+Shortcode para autores:
+[get_publications_by_author context="nombre autor"]
+
+Ejemplo: Mostrar solo un articulo (max_results=1) con descripción limitada a 200 caracteres del autor  De Giusti, Marisa Raquel
+[get_publications_by_author context=" De Giusti, Marisa Raquel"  article=true max_results=1 description=true max_lenght=200]
+
+
+Opciones y sus valores por defecto:
+
+'all' => false, // Poner en true para mostrar todos los documentos sin importar los subtipos
+'max_results' => 0, // Limitar el numero a mostrar de documentos por subtipos
+'max_lenght' => 0, // Poner un numero que limite la cantidad de caracteres a mostrar de la descripción
+'description' => false, // Poner en true para mostrar un resumen del documento
+'date' => false, // Poner en true para mostrar la fecha del documento
+'show_author' => false, // Poner en true para mostrar los autores del documento
+
+Subtipos:
+
+'article'(articulos) => false,
+'preprint (preprint)' => false,
+'book' (libro) => false,
+'working_paper' (documento de trabajo) => false,
+'technical_report' (informe tecnico)=> false,
+'conference_object' (objeto de conferencia) => false,
+'revision' (revision) => false,
+'work_specialization' (trabajo de especializacion) => false,
+'thesis' (tesis de grado/maestria/doctorado) => false
+'learning_object' (objeto de aprendizaje)=>false
+

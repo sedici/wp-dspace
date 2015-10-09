@@ -16,7 +16,7 @@ class Filter {
 	protected $thesis;
 	public function Filter(){
 		$this->subtypes = array ("Documento de trabajo","Articulo","Contribucion a revista",
-				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision",
+				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision","Objeto de aprendizaje",
 				"Tesis de doctorado","Tesis de grado","Tesis de maestria","Trabajo de especializacion" 
 		);
 		$this->thesis= array ( "Tesis de doctorado",	"Tesis de grado","Tesis de maestria" );
@@ -40,6 +40,7 @@ class Filter {
 			'conference_object' => false,
 			'revision' => false,
 			'work_specialization' => false,
+                        'learning_object'=>false,
 			'thesis' => false 
 	));
 	}
@@ -52,6 +53,9 @@ class Filter {
 	public function convertirEspIng($filtro) {
 		//Pasa los subtipos al ingles para la comparacion con el shortcode
 		switch ($filtro) {
+                        case "Objeto de aprendizaje":
+                            $valor="learning_object";
+                            break;
 			case "Articulo" :
 				$valor = "article";
 				break;
