@@ -41,7 +41,9 @@ class Sedici extends WP_Widget {
 	function widget($args, $instance) {
 		extract ( $args );
 		$context = apply_filters ( 'context', $instance ['context'] );
-		if ($context != "") { 
+                $type = apply_filters ( 'type', $instance ['type'] ); 
+			//$type: handle/author/free for the query
+		if (($context != "") && ($type!="")) { 
 			$cache = apply_filters ( 'cache', $instance ['cache'] ); 
 			//$cache: duration in seconds of cache
 			$all = ('on' == $instance ['all']);
@@ -61,8 +63,6 @@ class Sedici extends WP_Widget {
 					$groups [$o] = array ();
 				}
 			}
-			$type = apply_filters ( 'type', $instance ['type'] ); 
-			//$type: handle/author for the query
 			$groups = $this->util->group_subtypes ( $type, $all, $context, $selected_subtypes, $groups, $cache );
 			// $vector_group: elements to view for all publications
 			if (! $all) {
@@ -96,7 +96,7 @@ class Sedici extends WP_Widget {
 			$this->util->render ( $type, $all, $groups, $attributes );
 		} else {
 			// $context = null
-			echo "Ingrese un filtro";
+			echo "Ingrese un filtro y un contexto";
 		}
 	}
 	
