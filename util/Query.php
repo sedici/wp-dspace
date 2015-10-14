@@ -104,6 +104,13 @@ class Query {
 		$consulta .= $start . "&query=sedici.creator.person:\"$context\"";
 		return $consulta;
 	}
+        function queryFree($start, $context) {
+		//query for author
+		$consulta = $this->query;
+		$consulta .= $start . "&query=\"$context\"";
+		return $consulta;
+	}
+        
 	function group_subtypes($type, $all, $context, $selected_subtypes, $groups,$cache) {
 		$start = 0; 
 		$count = 0;
@@ -116,7 +123,13 @@ class Query {
 					$query = $this->queryHandle ( $start, $context, $selected_subtypes );
 				}
 			} else {
+                            if ($type == "author"){
 				$query = $this->queryAuthor ( $start, $context );
+                            }
+                            else {
+                                //Is free search
+                                $query = $this->queryFree($start, $context);
+                            }
 			}
 			$xpath = $model->loadPath ( $query, $cache );
 			$count += $model->itemQuantity ( $xpath ); // number of entrys
@@ -151,7 +164,7 @@ class Query {
 							'url' => $url,
 							'filter' => $key 
 					);
-				} else { // author
+				} else { // author and free search
 					$colection = array (
 							'view' => $val,
 							'filter' => $key 
@@ -174,7 +187,7 @@ class Query {
 	}
 	function render($type, $all, $groups, $attributes) {
 		$view = new View();
-		if ($type == 'handle') {
+		if ($type != 'author') {
 			$attributes['show_author'] = TRUE;
 			
 		} 

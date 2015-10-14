@@ -147,9 +147,12 @@ class View {
 	public function is_handle($type){
 		return ($type == 'handle');
 	}
+        public function is_author($type){
+		return ($type == 'author');
+	}
 	
 	public function author_name($type, $name){
-		if (!$this->is_handle($type)){ ?>
+		if ($this->is_author($type)){ ?>
 			 <h2> <?php echo $name;?> </h2>
 		<?php 	 
 		}	 

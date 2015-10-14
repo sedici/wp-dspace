@@ -20,6 +20,10 @@ function AuthorShortcode($atts) {
 function HandleShortcode($atts) {
 	LoadShortcode ( $atts, 'handle' );
 }
+function FreeShortcode($atts) {
+	LoadShortcode ( $atts, 'free' );
+}
+
 class Shortcode {
 	function plugin_sedici($atts, $type) {
 		$filter = new Filter ();

@@ -143,6 +143,11 @@ class Sedici extends WP_Widget {
 		id="<?php echo $this->get_field_id('type'); ?>"
 		name="<?php echo $this->get_field_name('type'); ?>" value="author" /> <label
 		for="<?php echo $this->get_field_id('type'); ?>"><?php _e('Autor'); ?></label>
+        <input class="checkbox" type="radio"
+		<?php checked($instance['type'], 'free'); ?>
+		id="<?php echo $this->get_field_id('type'); ?>"
+		name="<?php echo $this->get_field_name('type'); ?>" value="free" /> <label
+		for="<?php echo $this->get_field_id('type'); ?>"><?php _e('Busqueda Libre'); ?></label>
 </p>
 
 <p class="conditionally-author"
@@ -275,3 +280,4 @@ add_action ( 'admin_enqueue_scripts', 'my_styles' );
 add_action ( 'widgets_init', create_function ( '', 'return register_widget("Sedici");' ) );
 add_shortcode ( 'get_publications_by_author', 'AuthorShortcode' );
 add_shortcode ( 'get_publications_by_handle', 'HandleShortcode' );
+add_shortcode ( 'get_publications_by_free_search', 'FreeShortcode' );

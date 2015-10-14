@@ -54,6 +54,11 @@ Shortcode para autores:
 Ejemplo: Mostrar solo un articulo (max_results=1) con descripción limitada a 200 caracteres del autor  De Giusti, Marisa Raquel
 [get_publications_by_author context=" De Giusti, Marisa Raquel"  article=true max_results=1 description=true max_lenght=200]
 
+Shortcode para busqueda libre:
+[get_publications_by_free_search context="Un texto"]
+Ejemplo: como maximo 25 articulos que contengan el texto "UNLP"
+[get_publications_by_free_search context="UNLP"  max_results=25 article=true]
+
 
 Opciones y sus valores por defecto:
 
