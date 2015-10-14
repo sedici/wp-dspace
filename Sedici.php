@@ -161,7 +161,7 @@ class Sedici extends WP_Widget {
 
 
 <p>
-	<label for="<?php echo $this->get_field_id('context'); ?>"><?php _e('Filtro:'); ?> 
+	<label for="<?php echo $this->get_field_id('context'); ?>"><?php _e('Contexto:'); ?> 
        <input class="widefat"
 		id="<?php echo $this->get_field_id('context'); ?>"
 		name="<?php echo $this->get_field_name('context'); ?>" type="text"
