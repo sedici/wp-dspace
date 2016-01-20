@@ -47,7 +47,8 @@ class View {
 		$link = URL.FILTER;
 		$fullname = explode ( ",", $author );
 		$lastname = explode(" ", $fullname[0]);
-		$name = explode(" ", $fullname[1]);
+		if(count($fullname) >1) $name = explode(" ", $fullname[1]);
+                else $name= $lastname;
 		$link .= $this->strtolower_text($lastname).CON1;
 		$link.=$this->strtolower_text($name).SEPARATOR;
 		$link .= $this->ucwords_text($lastname).CON1.$this->ucwords_text($name);
