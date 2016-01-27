@@ -77,7 +77,7 @@ class Sedici extends WP_Widget {
 					$description = "description";
 					// checkbox description ON, summary OFF
 				}
-			}
+                        } else { $description = false;}
 			$date = ('on' == $instance ['date']);
 			// $date: if checkbox date is ON, $date=true
 			if ('on' == $instance ['limit']){

@@ -47,7 +47,8 @@ class View {
 		$link = URL.FILTER;
 		$fullname = explode ( ",", $author );
 		$lastname = explode(" ", $fullname[0]);
-		$name = explode(" ", $fullname[1]);
+		if(count($fullname) >1) $name = explode(" ", $fullname[1]);
+                else $name= $lastname;
 		$link .= $this->strtolower_text($lastname).CON1;
 		$link.=$this->strtolower_text($name).SEPARATOR;
 		$link .= $this->ucwords_text($lastname).CON1.$this->ucwords_text($name);
@@ -136,7 +137,7 @@ class View {
 				<?php 
 				if ($a['show_author']){ $this->author($item->get_authors ()); }
 				if ($a['date']) { ?>
-				<br><span class="title sedici-style"><published><?php _e('Fecha:'); ?> <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published></span>
+				<br><published><span class="title sedici-style"><?php _e('Fecha:'); ?> </span> <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
 				<?php } //end if fecha  
 				$this->description($a['description'], $item,$a['max_lenght']);
 				 ?>
@@ -159,9 +160,9 @@ class View {
 		return;
 	}
 	public function go_to_sedici($type,$url){
-		if ($this->is_handle($type)){ ?> 
+		?> 
 		<span class="go-to"> <a href='<?php echo $url; ?>'><?php _e('Ir a SEDICI'); ?></a></span><br><br>
-		<?php }
+		<?php
 	}
 	
 	function publications($feed, $a, $type) {
@@ -181,6 +182,7 @@ class View {
 		?>
 		</ol>
 		<?php 
+                    if ($this->is_handle($type))
 			$this->go_to_sedici($type, $i['url']);
 			} 
 		return;

@@ -35,7 +35,7 @@ class Shortcode {
 			$description = $a ['description'] === 'true' ? "description" : false;
 			$date = ($a ['date'] === 'true');
 			$show_author = ($a ['show_author'] === 'true');
-			$cache = $a ['cache'];
+			$cache = $a ['cache'];//default value from filer.php
 			$context = $a ['context'];
 			$all = ($a ['all'] === 'true');
 			$max_results = $a ['max_results'];
