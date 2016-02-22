@@ -12,16 +12,20 @@
  */
 function LoadShortcode($atts, $type) {
 	$shortcode = new Shortcode ();
+        ob_start();
 	$shortcode->plugin_sedici ( $atts, $type );
+        $res =ob_get_contents();
+        ob_clean();
+        return $res;
 }
 function AuthorShortcode($atts) {
-	LoadShortcode ( $atts, 'author' );
+	return LoadShortcode ( $atts, 'author' );
 }
 function HandleShortcode($atts) {
-	LoadShortcode ( $atts, 'handle' );
+	return LoadShortcode ( $atts, 'handle' );
 }
 function FreeShortcode($atts) {
-	LoadShortcode ( $atts, 'free' );
+	return LoadShortcode ( $atts, 'free' );
 }
 
 class Shortcode {

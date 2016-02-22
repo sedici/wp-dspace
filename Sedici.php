@@ -278,6 +278,10 @@ class Sedici extends WP_Widget {
 add_action ( 'admin_enqueue_scripts', 'my_scripts_method' );
 add_action ( 'admin_enqueue_scripts', 'my_styles' );
 add_action ( 'widgets_init', create_function ( '', 'return register_widget("Sedici");' ) );
-add_shortcode ( 'get_publications_by_author', 'AuthorShortcode' );
-add_shortcode ( 'get_publications_by_handle', 'HandleShortcode' );
-add_shortcode ( 'get_publications_by_free_search', 'FreeShortcode' );
+$author = add_shortcode ( 'get_publications_by_author', 'AuthorShortcode' );
+print_r($author);
+$handle = add_shortcode ( 'get_publications_by_handle', 'HandleShortcode' );
+print_r($handle);
+$free = add_shortcode ( 'get_publications_by_free_search', 'FreeShortcode' );
+print_r($free);
+
