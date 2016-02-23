@@ -9,6 +9,8 @@
  * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
+?>
+<?php
 require_once 'Shortcode.php';
 require_once 'view/View.php';
 require_once 'util/Filter.php';
@@ -284,4 +286,3 @@ $handle = add_shortcode ( 'get_publications_by_handle', 'HandleShortcode' );
 print_r($handle);
 $free = add_shortcode ( 'get_publications_by_free_search', 'FreeShortcode' );
 print_r($free);
-

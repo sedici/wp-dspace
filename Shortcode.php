@@ -1,5 +1,4 @@
 <?php
-
 function LoadShortcode($atts, $type) {
 	$shortcode = new Shortcode ();
         ob_start();

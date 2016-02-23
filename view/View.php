@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Sedici-Plugin
  * Plugin URI: http://sedici.unlp.edu.ar/
@@ -10,7 +9,8 @@
  * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
-
+?>
+<?php
 define ( URL, 'http://sedici.unlp.edu.ar' );
 define (FILTER , '/discover?fq=author_filter%3A');
 define (CON1 , '%2C');
@@ -204,6 +204,3 @@ class View {
 				}
 	
 } // end class
-
-?>
-

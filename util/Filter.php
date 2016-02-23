@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Plugin Name: Sedici-Plugin
  * Plugin URI: http://sedici.unlp.edu.ar/
@@ -10,7 +9,8 @@
  * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
  * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
  */
-
+?>
+<?php
 class Filter {
 	protected $subtypes;
 	protected $thesis;
@@ -84,4 +84,3 @@ class Filter {
 		return ($valor);
 	}
 }
-?>
