@@ -25,18 +25,7 @@
   font-family: arial;
   font-size: 12px;
 }
-p.description{
-	margin: 0;
-	color:#444 !important;
-}
 
-p.conditionally-description {
-    padding: 6px 8px;
-    margin: 0;
-    min-width: 200px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
 
 p.conditionally-filter {
     padding: 6px 8px;

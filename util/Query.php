@@ -39,7 +39,7 @@ class Query {
 	protected $cache_days;
 	protected $total_results;	
 	public function Query() {
-		$this->query = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER . "&start=";
+		$this->query = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER;
 		$this->cache_days = array (7,1,3,14);
 		$this->one_day = 86400;
 		$this->total_results = array(0,10,25,50,100);
@@ -110,6 +110,65 @@ class Query {
 		$consulta .= $start . "&query=\"$context\"";
 		return $consulta;
 	}
+        
+        function concatenar($typeFilter,$filters){
+            $words = explode ( ";", $filters );
+            $query = $typeFilter;
+            $count_filter = count ( $words );
+            $i=1;
+		foreach ( $words as $w ) {
+			$query .= "\"" . $w . "\"";
+			if ($i != $count_filter) {
+				$query .= "%20OR%20".$typeFilter;
+			}
+			$i ++;
+		}
+		return $query;
+        }
+        function concatenarFree($typeFilter,$filters){
+            $words = explode ( ";", $filters );
+            $query = $typeFilter;
+            $count_filter = count ( $words );
+            $i=1;
+		foreach ( $words as $w ) {
+			$query .= "\"" . $w . "\"";
+			if ($i != $count_filter) {
+				$query .= "%20OR%20";
+			}
+			$i ++;
+		}
+		return $query;
+        }
+        
+        
+        function queryByAll($handle, $author, $free ,$cache) {
+		$start = 0; 
+		$count = 0;
+		$model = new SimplepieModel();
+                $queryEstandar = $this->query;
+                if (!empty($handle)) $queryEstandar .= "&scope=" . $handle;
+                if (!empty($author)) {
+                    $queryEstandar .= $this->concatenar ("&query=sedici.creator.person:", $author);
+                }
+                if (!empty($free)) {
+                    $queryEstandar .= $this->concatenarFree ("&query=", $free);
+                }
+                $groups = array ();
+		do {
+			$query = $queryEstandar . "&start=". $start;
+			$xpath = $model->loadPath ( $query, $cache );
+			$count += $model->itemQuantity ( $xpath ); // number of entrys
+			$totalResults = $model->totalResults ( $xpath );
+			$entry = $model->entry ( $xpath ); //all documents
+			$start += 100;
+			array_push ( $groups, $entry );
+		} while ( $count < $totalResults );
+		return ($groups);
+	}
+        
+        
+        
+        
         
 	function group_subtypes($type, $all, $context, $selected_subtypes, $groups,$cache) {
 		$start = 0; 

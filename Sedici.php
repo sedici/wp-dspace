@@ -42,35 +42,37 @@ class Sedici extends WP_Widget {
 	
 	function widget($args, $instance) {
 		extract ( $args );
-		$context = apply_filters ( 'context', $instance ['context'] );
-                $type = apply_filters ( 'type', $instance ['type'] ); 
-			//$type: handle/author/free for the query
-		if (($context != "") && ($type!="")) { 
+		$handle = apply_filters ( 'handle', $instance ['handle'] );
+                $author = apply_filters ( 'author', $instance ['author'] ); 
+                $free = apply_filters ( 'keywords', $instance ['keywords'] ); 
+		if (!(empty($author)) || !(empty($handle)) || !(empty($free))) { 
 			$cache = apply_filters ( 'cache', $instance ['cache'] ); 
 			//$cache: duration in seconds of cache
 			$all = ('on' == $instance ['all']);
 			//$all: all publications without subtype
 			$max_results = apply_filters ( 'max_results', $instance ['max_results'] );
 			//$max_results: total results of subtype
-			$subtypes = $this->filter->subtypes();
-			// $subtypes: all names of subtypes
-			$selected_subtypes = array (); 
-			// $selected_subtypes: subtypes selected by the user
-			$groups = array ();
-			// $groups: groups publications by subtype
-			foreach ( $subtypes as $o ) {
-				//compares the user marked subtypes, if ON, save the subtype.
+                        if($all) {
+                            $groups = $this->util->queryByAll( $handle, $author, $free,  $cache );
+                        }
+                        else
+                        {
+                            $subtypes = $this->filter->subtypes();
+                            // $subtypes: all names of subtypes
+                            $selected_subtypes = array (); 
+                            // $selected_subtypes: subtypes selected by the user
+                            $groups = array ();
+                            // $groups: groups publications by subtype
+                            foreach ( $subtypes as $o ) {
+                            	//compares the user marked subtypes, if ON, save the subtype.
 				if ('on' == $instance [$o]) {
 					array_push ( $selected_subtypes, $o );
 					$groups [$o] = array ();
 				}
-			}
-			$groups = $this->util->group_subtypes ( $type, $all, $context, $selected_subtypes, $groups, $cache );
-			// $vector_group: elements to view for all publications
-			if (! $all) {
-				//elements to view publications by subtypes
-				$groups = $this->util->view_subtypes ( $groups, $type, $context );
-			}
+                            }   
+                            $groups = $this->util->group_subtypes ( $type, $all, $context, $selected_subtypes, $groups, $cache );
+                            $groups = $this->util->view_subtypes ( $groups, $type, $context );
+                        }
 			If ('on' == $instance ['description']) {
 				if ('on' == $instance ['summary']) {
 					$description = "summary"; 
@@ -95,7 +97,7 @@ class Sedici extends WP_Widget {
 			$show_author = ('on' == $instance ['show_author']);
 			// $show_author: if ON, then $show_author = true
 			$attributes = $this->util->group_attributes ( $description, $date, $show_author, $max_results, $context  , $maxlenght);
-			$this->util->render ( $type, $all, $groups, $attributes );
+                        $this->util->render ( $type, $all, $groups, $attributes );
 		} else {
 			// $context = null
 			echo "Ingrese un filtro y un contexto";
@@ -108,8 +110,9 @@ class Sedici extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		$subtypes = $this->filter->subtypes();
 		$instance = $old_instance;
-		$instance ['context'] = sanitize_text_field ( $new_instance ['context'] );
-		$instance ['type'] = sanitize_text_field ( $new_instance ['type'] );
+		$instance ['handle'] = sanitize_text_field ( $new_instance ['handle'] );
+                $instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
+                $instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
 		$instance ['maxlenght'] = sanitize_text_field ( $new_instance ['maxlenght'] );
 		$instance ['description'] = sanitize_text_field ( $new_instance ['description'] );
 		$instance ['summary'] = sanitize_text_field ( $new_instance ['summary'] );
@@ -130,46 +133,42 @@ class Sedici extends WP_Widget {
 	 */
 	function form($instance) {
 		$max_results = esc_attr ( $instance ['max_results'] );
-		$context = esc_attr ( $instance ['context'] ); 
+		$handle = esc_attr ( $instance ['handle'] );
+                $author = esc_attr ( $instance ['author'] );
+                $keywords = esc_attr ( $instance ['keywords'] );
 		$maxlenght = esc_attr($instance['maxlenght']);
 		?>
 
-<p class="show-author">
-	<input class="checkbox" type="radio"
-		<?php checked($instance['type'], 'handle'); ?>
-		id="<?php echo $this->get_field_id('type'); ?>"
-		name="<?php echo $this->get_field_name('type'); ?>" value="handle" />
-	<label for="<?php echo $this->get_field_id('type'); ?>"> <?php _e('Handle'); ?> </label>
-	<input class="checkbox" type="radio"
-		<?php checked($instance['type'], 'author'); ?>
-		id="<?php echo $this->get_field_id('type'); ?>"
-		name="<?php echo $this->get_field_name('type'); ?>" value="author" /> <label
-		for="<?php echo $this->get_field_id('type'); ?>"><?php _e('Autor'); ?></label>
-        <input class="checkbox" type="radio"
-		<?php checked($instance['type'], 'free'); ?>
-		id="<?php echo $this->get_field_id('type'); ?>"
-		name="<?php echo $this->get_field_name('type'); ?>" value="free" /> <label
-		for="<?php echo $this->get_field_id('type'); ?>"><?php _e('Busqueda Libre'); ?></label>
+
+<p>
+	<label for="<?php echo $this->get_field_id('handle'); ?>"><?php _e('Handle:'); ?> 
+       <input class="widefat"
+		id="<?php echo $this->get_field_id('handle'); ?>"
+		name="<?php echo $this->get_field_name('handle'); ?>" type="text"
+		value="<?php echo $handle; ?>" /></label>
+</p>
+<p>
+	<label for="<?php echo $this->get_field_id('author'); ?>"><?php _e('Autores:'); ?> 
+       <input class="widefat"
+		id="<?php echo $this->get_field_id('author'); ?>"
+		name="<?php echo $this->get_field_name('author'); ?>" type="text"
+		value="<?php echo $author; ?>" /></label>
+</p>
+<p>
+	<label for="<?php echo $this->get_field_id('keywords'); ?>"><?php _e('Palabras claves:'); ?> 
+       <input class="widefat"
+		id="<?php echo $this->get_field_id('keywords'); ?>"
+		name="<?php echo $this->get_field_name('keywords'); ?>" type="text"
+		value="<?php echo $keywords; ?>" /></label>
 </p>
 
-<p class="conditionally-author"
-	<?php echo checked($instance['type'], 'author') === '' ? 'style="display: none;"' : ''; ?>>
+<p>
 	<input class="checkbox" type="checkbox"
 		<?php checked($instance['show_author'], 'on'); ?>
 		id="<?php echo $this->get_field_id('show_author'); ?>"
 		name="<?php echo $this->get_field_name('show_author'); ?>" /> 
 		<label for="<?php echo $this->get_field_id('show_author'); ?>"><?php _e('Mostrar Autores'); ?></label>
 </p>
-
-
-<p>
-	<label for="<?php echo $this->get_field_id('context'); ?>"><?php _e('Contexto:'); ?> 
-       <input class="widefat"
-		id="<?php echo $this->get_field_id('context'); ?>"
-		name="<?php echo $this->get_field_name('context'); ?>" type="text"
-		value="<?php echo $context; ?>" /></label>
-</p>
-
 
 <p class="limit">
 	<input class="checkbox" type="checkbox"
