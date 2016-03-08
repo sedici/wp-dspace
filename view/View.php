@@ -145,62 +145,45 @@ class View {
 		<?php 
 		return;
 	}
-	public function is_handle($type){
-		return ($type == 'handle');
-	}
-        public function is_author($type){
-		return ($type == 'author');
-	}
 	
-	public function author_name($type, $name){
-		if ($this->is_author($type)){ ?>
-			 <h2> <?php echo $name;?> </h2>
-		<?php 	 
-		}	 
-		return;
-	}
-	public function go_to_sedici($type,$url){
-		?> 
-		<span class="go-to"> <a href='<?php echo $url; ?>'><?php _e('Ir a SEDICI'); ?></a></span><br><br>
-		<?php
-	}
-	
-	function publications($feed, $a, $type) {
-		$this->author_name($type, $a['context']);
+	function publications($feed, $attributes) {
 		foreach ( $feed as $i ) {
-			?>
+		?>
 		<h3><?php echo $this->subtype($i ['filter']);?></h3><!-- publication subtype -->
 		<ol class="sedici-style">
 		<?php
 				$list = $i ['view']; $j=0;
-				$totalresults = $this->max_results($a['max_results'], $list);
+				$totalresults = $this->max_results($attributes['max_results'], $list);
 				foreach ( $list as $item ) {
-					$this->document($item,$a);
+					$this->document($item,$attributes);
 					$j++;
 					if($j == $totalresults) break;
 				}
 		?>
 		</ol>
 		<?php 
-                    if ($this->is_handle($type))
-			$this->go_to_sedici($type, $i['url']);
-			} 
+		} 
 		return;
 	}
 	
-	function all_publications($groups, $a,$type) {
-		$this->author_name($type, $a['context']);
-		?><ol class="sedici-style">
-			<?php 
-			foreach ( $groups as $feed ) {
-				foreach ($feed as $item){
-					$this->document($item, $a);
-					}
+	function all_publications($groups, $attributes) {
+	?>
+            <ol class="sedici-style">
+		<?php 
+                    $totalresults = $attributes['max_results'];
+                    $j=0;
+                    foreach ( $groups as $feed ) {
+			foreach ($feed as $item){
+                            $this->document($item, $attributes);
+                            $j++;
+                            if($j == $totalresults) break;
 			}
-			?>
-			</ol>
-			<?php 
-			return ;
-				}
+                        if($j == $totalresults) break;
+                    }
+		?>
+            </ol>
+        <?php 
+            return ;
+	}
 	
 } // end class

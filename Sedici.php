@@ -39,68 +39,66 @@ class Sedici extends WP_Widget {
 		$option = array ('description' => 'This plugin connects the repository SEDICI in wordpress');
 		parent::WP_Widget ( 'Sedici', 'Plugin Sedici', $option );
 	}
-	
+
+        public function description($description,$summary){
+            If ('on' == $description) {
+		if ('on' ==$summary ) {
+                    return "summary"; 
+                    // checkbox description and summary ON
+                } else { return; "description"; } // checkbox description ON, summary OFF
+            } else { return false;}
+        }
+        
+        public function limit_text($limit,$max){
+            if ('on' == $limit){
+                if (empty($max)){
+                    return $this->util->max_lenght_text(); //default lenght
+		}
+            } else { return 0; }
+        }
+        
 	function widget($args, $instance) {
 		extract ( $args );
 		$handle = apply_filters ( 'handle', $instance ['handle'] );
                 $author = apply_filters ( 'author', $instance ['author'] ); 
-                $free = apply_filters ( 'keywords', $instance ['keywords'] ); 
-		if (!(empty($author)) || !(empty($handle)) || !(empty($free))) { 
-			$cache = apply_filters ( 'cache', $instance ['cache'] ); 
-			//$cache: duration in seconds of cache
-			$all = ('on' == $instance ['all']);
-			//$all: all publications without subtype
-			$max_results = apply_filters ( 'max_results', $instance ['max_results'] );
+                $keywords = apply_filters ( 'keywords', $instance ['keywords'] ); 
+		if (!(empty($author)) || !(empty($handle)) || !(empty($keywords))) { 
+                        $description = $this->description($instance ['description'], $instance ['summary']);
+			$maxlenght = $this->limit_text($instance ['limit'],$instance ['maxlenght']);
+                        
+			$show_author = ('on' == $instance ['show_author']);
+			// $show_author: if ON, then $show_author = true
+                        $date = ('on' == $instance ['date']);
+			// $date: if checkbox date is ON, $date=true
+                        $max_results = apply_filters ( 'max_results', $instance ['max_results'] );
 			//$max_results: total results of subtype
-                        if($all) {
-                            $groups = $this->util->queryByAll( $handle, $author, $free,  $cache );
-                        }
-                        else
-                        {
+                        
+                        $cache = apply_filters ( 'cache', $instance ['cache'] ); 
+			//$cache: duration in seconds of cache
+                        $all = ('on' == $instance ['all']);
+			//$all: all publications without subtype
+                        if(!$all) {
                             $subtypes = $this->filter->subtypes();
                             // $subtypes: all names of subtypes
                             $selected_subtypes = array (); 
                             // $selected_subtypes: subtypes selected by the user
                             $groups = array ();
                             // $groups: groups publications by subtype
-                            foreach ( $subtypes as $o ) {
+                            foreach ( $subtypes as $type ) {
                             	//compares the user marked subtypes, if ON, save the subtype.
-				if ('on' == $instance [$o]) {
-					array_push ( $selected_subtypes, $o );
-					$groups [$o] = array ();
+				if ('on' == $instance [$type]) {
+					array_push ( $selected_subtypes, $type );
+					$groups [$type] = array ();
 				}
                             }   
-                            $groups = $this->util->group_subtypes ( $type, $all, $context, $selected_subtypes, $groups, $cache );
-                            $groups = $this->util->view_subtypes ( $groups, $type, $context );
                         }
-			If ('on' == $instance ['description']) {
-				if ('on' == $instance ['summary']) {
-					$description = "summary"; 
-					// checkbox description and summary ON
-				} else {
-					$description = "description";
-					// checkbox description ON, summary OFF
-				}
-                        } else { $description = false;}
-			$date = ('on' == $instance ['date']);
-			// $date: if checkbox date is ON, $date=true
-			if ('on' == $instance ['limit']){
-				//shorten text
-				$maxlenght = $instance ['maxlenght'];
-				if ($maxlenght == ""){
-					$maxlenght = $this->util->max_lenght_text();
-					//default lenght
-				}
-			} else {
-				$maxlenght = 0;
-			}
-			$show_author = ('on' == $instance ['show_author']);
-			// $show_author: if ON, then $show_author = true
-			$attributes = $this->util->group_attributes ( $description, $date, $show_author, $max_results, $context  , $maxlenght);
-                        $this->util->render ( $type, $all, $groups, $attributes );
+                        $query = $this->util->standarQuery($handle, $author, $keywords,$all,$selected_subtypes);
+                        $entrys = $this->util->createQuery( $query,  $cache, $groups, $all );
+                        if (!$all)  { $entrys = $this->util->view_subtypes ( $entrys); }
+			$attributes = $this->util->group_attributes ( $description, $date, $show_author, $max_results, $maxlenght);
+                        $this->util->render ( $all, $entrys, $attributes );
 		} else {
-			// $context = null
-			echo "Ingrese un filtro y un contexto";
+			echo "Ingrese al menos uno de los campos Handle - Autores - Palabras claves";
 		}
 	}
 	
@@ -228,6 +226,26 @@ class Sedici extends WP_Widget {
 	</label>
 </p>
 
+<p>
+<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Cantidad de Resultados a mostrar'); ?> 
+    <select class='widefat'
+		id="<?php echo $this->get_field_id('max_results'); ?>"
+		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
+		<?php
+		
+		$results = $this->util->total_results();
+		foreach ( $results as $c ) {
+			?>
+			<option value=<?php echo $c;?>
+				<?php echo ($max_results==$c)?'selected':''; ?>>
+				<?php  echo ($c==0) ? "Todos":$c; ?>
+			</option>
+		<?php
+		}// end for	
+		?>
+    </select>
+</label>
+</p>
 <p class="show-filter">
 	<input class="checkbox" type="checkbox"
 		<?php checked($instance['all'], 'on'); ?>
@@ -251,29 +269,8 @@ class Sedici extends WP_Widget {
 		name="<?php echo $this->get_field_name($s); ?>" /> <label
 		for="<?php echo $this->get_field_id($s); ?>"><?php echo $s; ?></label>
 	<br />
-<?php
-		}
-		?> 
-	<br>
-	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Cantidad de Resultados por filtro:'); ?> <select class='widefat'
-		id="<?php echo $this->get_field_id('max_results'); ?>"
-		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
-		<?php
-		
-		$results = $this->util->total_results();
-		foreach ( $results as $c ) {
-			?>
-			<option value=<?php echo $c;?>
-				<?php echo ($max_results==$c)?'selected':''; ?>>
-				<?php  echo ($c==0) ? "Todos":$c; ?>
-			</option>
-		<?php
-		}// end for	
-		?>
-	</select>
-	</label>
-</p>
-<?php
+        <?php
+		}//end foreach subtypes
 	}
 }
 add_action ( 'admin_enqueue_scripts', 'my_scripts_method' );

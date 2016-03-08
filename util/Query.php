@@ -11,27 +11,7 @@
  */
 ?>
 <?php
-define ( 'RPP', '100' );
-define ( 'FORMAT', 'atom' );
-define ( 'SORTBY', '0' );
-define ( 'ORDER', 'desc' );
-define ( CONECTOR2, '%5C' );
-define ( CONECTOR3, '%7C' );
-define ( _PROTOCOL, "http://" );
-define ( _DOMAIN, "sedici.unlp.edu.ar" );
-define ( _BASE_PATH, "/open-search/discover" );
-function conector() {
-	return CONECTOR2 . '+';
-}
-function get_conector() {
-	return (CONECTOR2 . CONECTOR3 . CONECTOR2 . CONECTOR3 . CONECTOR2 . CONECTOR3);
-}
-function get_base_url() {
-	return _PROTOCOL . _DOMAIN . _BASE_PATH;
-}
-function get_protocol_domain() {
-	return _PROTOCOL . _DOMAIN;
-}
+include_once 'config.php';
 class Query {
 	protected $max_lenght_text;
 	protected $query;
@@ -39,12 +19,15 @@ class Query {
 	protected $cache_days;
 	protected $total_results;	
 	public function Query() {
-		$this->query = get_base_url () . "?rpp=" . RPP . "&format=" . FORMAT . "&sort_by=" . SORTBY . "&order=" . ORDER;
+		$this->query = get_base_url () . get_standar_query();
 		$this->cache_days = array (7,1,3,14);
 		$this->one_day = 86400;
 		$this->total_results = array(0,10,25,50,100);
 		$this->max_lenght_text = 150;
 	}
+        public function standar_query(){
+            return $this->query;
+        }
 	public function max_lenght_text(){
 		return $this->max_lenght_text;
 	}
@@ -57,145 +40,43 @@ class Query {
 	public function total_results() {
 		return  $this->total_results;
 	}
-	function UrlSedici($filter, $handle) {
-		//URL : go to sedici by subtype and handle
-		$filter = strtolower ( $filter ); 
-		$word = explode ( " ", $filter ); 
-		$url = get_protocol_domain () . "/handle/" . $handle . "/discover?fq=type_filter%3A";
-		$cant = count ( $word ); 
-		$url = $url . $word [0]; 
-		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . conector () . $word [$i];
-		}
-		$uppercase  = ucfirst ( $filter );
-		$word = explode ( " ", $uppercase  );
-		$url = $url . get_conector ();
-		$cant = count ( $word );
-		$url = $url . $word [0];
-		for($i = 1; $i < $cant; $i ++) {
-			$url = $url . conector () . $word [$i];
-		}
-		return $url;
-	}
-	function queryAllHandle($start, $context) {
-		//all results of query handle
-		$query = $this->query;
-		$query .= $start . "&scope=" . $context;
-		return $query;
-	}
-	function queryHandle($start, $context, $subtypes) {
-		//weapon query handle for publications particular subtype
-		$i = 1;
-		$query = $this->query;
-		$query .= $start . "&scope=" . $context . "&query=sedici.subtype:";
-		$count_filter = count ( $subtypes );
-		foreach ( $subtypes as $f ) {
-			$query .= "\"" . $f . "\"";
-			if ($i != $count_filter) {
-				$query .= "%20OR%20sedici.subtype:";
-			}
-			$i ++;
-		}
-		return $query;
-	}
-	function queryAuthor($start, $context) {
-		//query for author
-		$consulta = $this->query;
-		$consulta .= $start . "&query=sedici.creator.person:\"$context\"";
-		return $consulta;
-	}
-        function queryFree($start, $context) {
-		//query for author
-		$consulta = $this->query;
-		$consulta .= $start . "&query=\"$context\"";
-		return $consulta;
-	}
-        
-        function concatenar($typeFilter,$filters){
-            $words = explode ( ";", $filters );
-            $query = $typeFilter;
-            $count_filter = count ( $words );
-            $i=1;
-		foreach ( $words as $w ) {
-			$query .= "\"" . $w . "\"";
-			if ($i != $count_filter) {
-				$query .= "%20OR%20".$typeFilter;
-			}
-			$i ++;
-		}
-		return $query;
-        }
-        function concatenarFree($typeFilter,$filters){
-            $words = explode ( ";", $filters );
-            $query = $typeFilter;
-            $count_filter = count ( $words );
-            $i=1;
-		foreach ( $words as $w ) {
-			$query .= "\"" . $w . "\"";
-			if ($i != $count_filter) {
-				$query .= "%20OR%20";
-			}
-			$i ++;
-		}
-		return $query;
+        function concatenarCondiciones($words, $filterPrefix = ''){
+            $conditions = '';
+            foreach ( $words as $word ) {
+		$conditions[]= $filterPrefix. $word ;
+            }
+            return implode(' OR ', $conditions);
         }
         
-        
-        function queryByAll($handle, $author, $free ,$cache) {
-		$start = 0; 
-		$count = 0;
-		$model = new SimplepieModel();
-                $queryEstandar = $this->query;
-                if (!empty($handle)) $queryEstandar .= "&scope=" . $handle;
+        public function standarQuery($handle, $author, $keywords,$all,$subtypes){
+            $queryEstandar = $this->standar_query();
+                if (!empty($handle)) $queryEstandar .="&". SQ_HANDLE . "=".$handle;
                 if (!empty($author)) {
-                    $queryEstandar .= $this->concatenar ("&query=sedici.creator.person:", $author);
+                    $words = explode(';',$author);
+                    $queryEstandar .= "&". Q_QUERY."=".$this->concatenarCondiciones($words , SQ_AUTHOR);
                 }
-                if (!empty($free)) {
-                    $queryEstandar .= $this->concatenarFree ("&query=", $free);
+                if (!empty($keywords)) {
+                    $words = explode(';',$keywords);
+                    $queryEstandar .= "&". Q_QUERY."=".$this->concatenarCondiciones($words);
                 }
-                $groups = array ();
-		do {
-			$query = $queryEstandar . "&start=". $start;
-			$xpath = $model->loadPath ( $query, $cache );
-			$count += $model->itemQuantity ( $xpath ); // number of entrys
-			$totalResults = $model->totalResults ( $xpath );
-			$entry = $model->entry ( $xpath ); //all documents
-			$start += 100;
-			array_push ( $groups, $entry );
-		} while ( $count < $totalResults );
-		return ($groups);
-	}
+                if (!$all) {
+                    $queryEstandar .="&". Q_QUERY."=". $this->concatenarCondiciones($subtypes,SQ_SUBTYPE);
+                }
+                return $queryEstandar;
+        }
         
-        
-        
-        
-        
-	function group_subtypes($type, $all, $context, $selected_subtypes, $groups,$cache) {
+        function createQuery($queryStandar ,$cache , $groups ="", $all) {
 		$start = 0; 
 		$count = 0;
+                if(!is_array($groups)) { $groups = array (); }
 		$model = new SimplepieModel();
 		do {
-			if ($type == "handle") {
-				if ($all) {
-					$query = $this->queryAllHandle ( $start, $context );
-				} else {
-					$query = $this->queryHandle ( $start, $context, $selected_subtypes );
-				}
-			} else {
-                            if ($type == "author"){
-				$query = $this->queryAuthor ( $start, $context );
-                            }
-                            else {
-                                //Is free search
-                                $query = $this->queryFree($start, $context);
-                            }
-			}
+			$query = $queryStandar . "&start=". $start;
 			$xpath = $model->loadPath ( $query, $cache );
 			$count += $model->itemQuantity ( $xpath ); // number of entrys
 			$totalResults = $model->totalResults ( $xpath );
 			$entry = $model->entry ( $xpath ); //all documents
 			$start += 100;
-			
 			if ($all) {
 				array_push ( $groups, $entry );
 			} else {
@@ -209,32 +90,21 @@ class Query {
 		} while ( $count < $totalResults );
 		return ($groups);
 	}
-	function view_subtypes($selected_subtypes, $type ,$context) {
+        
+	function view_subtypes($selected_subtypes) {
 		$publications = array (); // documents for the view
 		while ( list ( $key, $val ) = each ( $selected_subtypes ) ) {
 			// $val: all documents by subtype
 			$elements = count ( $val );
 			if ($elements > 0) {
 				// $key: document subtype
-				if ($type == 'handle') {
-					$url = $this->UrlSedici ( $key, $context );
-					$colection = array (
-							'view' => $val,
-							'url' => $url,
-							'filter' => $key 
-					);
-				} else { // author and free search
-					$colection = array (
-							'view' => $val,
-							'filter' => $key 
-					);
-				}
+				$colection = array ( 'view' => $val, 'filter' => $key);
 				array_push ( $publications, $colection );
 			}
 		}
 		return ($publications);
 	}
-	function group_attributes($description, $date, $show_author, $max_results, $context, $maxlenght) {
+	function group_attributes($description, $date, $show_author, $max_results, $maxlenght) {
 		return ( array (
 				'description' => $description,
 				'show_author' => $show_author,
@@ -244,16 +114,12 @@ class Query {
 				'date' => $date 
 		));
 	}
-	function render($type, $all, $groups, $attributes) {
+	function render($all, $groups, $attributes) {
 		$view = new View();
-		if ($type != 'author') {
-			$attributes['show_author'] = TRUE;
-			
-		} 
-			if ($all) {
-				return ($view->all_publications ( $groups, $attributes,$type ));
-			} else {
-				return ($view-> publications( $groups, $attributes,$type ));
+		if ($all) {
+                    return ($view->all_publications ( $groups, $attributes));
+		} else {
+                    return ($view-> publications( $groups, $attributes ));
 			}
-		}
+	}
 }
