@@ -47,35 +47,30 @@ class View {
 		$link = URL.FILTER;
 		$fullname = explode ( ",", $author );
 		$lastname = explode(" ", $fullname[0]);
-		if(count($fullname) >1) $name = explode(" ", $fullname[1]);
-                else $name= $lastname;
+                if(count($fullname) >1) {$name = explode(" ", $fullname[1]);}
+                else {$name= $lastname;}
 		$link .= $this->strtolower_text($lastname).CON1;
 		$link.=$this->strtolower_text($name).SEPARATOR;
 		$link .= $this->ucwords_text($lastname).CON1.$this->ucwords_text($name);
-		?>
-				<a href="<?php echo $link; ?>"> <?php echo $author;?></a>
-		<?php 
-				return;
-			}
+		return  ('<a href='.$link.'>'.$author.'</a>') ;
+	}
 	
-	public function author($authors){
-		?>			<br>
-					<span class="title sedici-style"><?php _e('Autor:'); ?></span>
-					<?php
-					$count = count($authors); $i = 1;
-					foreach ( $authors as $au ) {
-						?>
-					<author> <name>	
-						<?php 
-							$this->link_author($au->get_name ());
-						?>
-					</name>
-					</author>
-					<?php
-						if ($i != $count) echo " - ";
-						$i ++;
-					}//end foreach autores
-		return;
+	public function author($authors){ ?>
+            <br>
+            <span class="title sedici-style"><?php _e('Autor:'); ?></span>
+            <?php
+                $names = array ();
+		foreach ( $authors as $au ) {
+            ?>
+		<author> <name>	
+            <?php 
+		array_push ($names, $this->link_author($au->get_name ()));
+            ?>
+		</name></author>
+            <?php
+		}//end foreach autores
+            print_r(implode("-", $names));
+            return;
 	}
 	public function is_description($des){
 		return  ( ($des == "description" || $des == "summary"  ));
@@ -107,8 +102,6 @@ class View {
 					echo $this->html_especial_chars($item->get_description ());
 				}
 			}
-			 ?> 
-	<?php 
 		return;
 	}
 	

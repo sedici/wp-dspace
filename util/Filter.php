@@ -19,12 +19,13 @@ class Filter {
 				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision","Objeto de aprendizaje",
 				"Tesis de doctorado","Tesis de grado","Tesis de maestria","Trabajo de especializacion" 
 		);
-		$this->thesis= array ( "Tesis de doctorado",	"Tesis de grado","Tesis de maestria" );
+		$this->thesis= array ( "Tesis de doctorado","Tesis de grado","Tesis de maestria" );
 	}
 	public function default_shortcode(){
 		return ( array (
-			'type' => null,
-			'context' => null,
+			'handle' => null,
+			'author' => null,
+                        'keywords' => null,
 			'max_results' => 0,
 			'max_lenght' => 0,
 			'all' => false,

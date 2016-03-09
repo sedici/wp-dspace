@@ -12,10 +12,8 @@
 
 jQuery(document).ready(function() {
 	// inicializacion
-	var conditionalAuthor = 'p.conditionally-author';
-	var checkAuthor = 'p.show-author input:radio[value="author"]';
-	
-	var conditionaDescription = 'p.conditionally-description';
+
+	var conditionalDescription = 'p.conditionally-description';
 	var description = 'p.description input:checkbox';
 	
 	var conditionalFilter = 'p.conditionally-filter';
@@ -23,22 +21,18 @@ jQuery(document).ready(function() {
 	
 	var conditionalLimit = 'p.conditionally-limit';
 	var checkLimit = 'p.limit';
-	
-	
+        
+        var filters = new Array ( {selector:description, conditional:conditionalDescription } ,
+                                  {selector:checkFilter, conditional:conditionalFilter},
+                                  {selector:checkLimit, conditional:conditionalLimit});
+        
 	
 	// binding
-	jQuery('p.show-author input:radio').live('change', function() {
-		jQuery(conditionalAuthor).toggle(jQuery(checkAuthor).is(':checked'));
-	});
-	jQuery(description).live('change', function() {
-		jQuery(conditionaDescription).toggle();
-	});
-	jQuery(checkFilter).live('change', function() {
-		jQuery(conditionalFilter).toggle();
-	});
-	jQuery(checkLimit).live('change', function() {
-		jQuery(conditionalLimit).toggle();
-	});
+	jQuery.each( filters, function( i, value ) {
+            jQuery(value.selector).live('change', function() {
+		jQuery(value.conditional).toggle();
+         }); 
+        });
 
 });
 

@@ -72,7 +72,6 @@ class Sedici extends WP_Widget {
 			// $date: if checkbox date is ON, $date=true
                         $max_results = apply_filters ( 'max_results', $instance ['max_results'] );
 			//$max_results: total results of subtype
-                        
                         $cache = apply_filters ( 'cache', $instance ['cache'] ); 
 			//$cache: duration in seconds of cache
                         $all = ('on' == $instance ['all']);
@@ -276,9 +275,4 @@ class Sedici extends WP_Widget {
 add_action ( 'admin_enqueue_scripts', 'my_scripts_method' );
 add_action ( 'admin_enqueue_scripts', 'my_styles' );
 add_action ( 'widgets_init', create_function ( '', 'return register_widget("Sedici");' ) );
-$author = add_shortcode ( 'get_publications_by_author', 'AuthorShortcode' );
-print_r($author);
-$handle = add_shortcode ( 'get_publications_by_handle', 'HandleShortcode' );
-print_r($handle);
-$free = add_shortcode ( 'get_publications_by_free_search', 'FreeShortcode' );
-print_r($free);
+print_r( add_shortcode ( 'get_publications', 'DspaceShortcode' ));

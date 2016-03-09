@@ -43,25 +43,27 @@ class Query {
         function concatenarCondiciones($words, $filterPrefix = ''){
             $conditions = '';
             foreach ( $words as $word ) {
-		$conditions[]= $filterPrefix. $word ;
+		$conditions[]= $filterPrefix. "\"" .$word ."\"" ;
             }
-            return implode(' OR ', $conditions);
+            return implode('%20OR%20', $conditions);
         }
         
         public function standarQuery($handle, $author, $keywords,$all,$subtypes){
             $queryEstandar = $this->standar_query();
+            $query= Array();
                 if (!empty($handle)) $queryEstandar .="&". SQ_HANDLE . "=".$handle;
                 if (!empty($author)) {
                     $words = explode(';',$author);
-                    $queryEstandar .= "&". Q_QUERY."=".$this->concatenarCondiciones($words , SQ_AUTHOR);
+                    array_push($query, $this->concatenarCondiciones($words , SQ_AUTHOR));
                 }
                 if (!empty($keywords)) {
                     $words = explode(';',$keywords);
-                    $queryEstandar .= "&". Q_QUERY."=".$this->concatenarCondiciones($words);
+                    array_push($query, $this->concatenarCondiciones($words));
                 }
                 if (!$all) {
-                    $queryEstandar .="&". Q_QUERY."=". $this->concatenarCondiciones($subtypes,SQ_SUBTYPE);
+                   array_push($query, $this->concatenarCondiciones($subtypes,SQ_SUBTYPE));
                 }
+                if (!empty($query)) { $queryEstandar.="&". Q_QUERY."=". implode('%20AND%20', $query); }
                 return $queryEstandar;
         }
         
