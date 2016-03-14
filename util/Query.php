@@ -13,45 +13,46 @@
 <?php
 include_once 'config.php';
 class Query {
-	protected $max_lenght_text;
-	protected $query;
-	protected $one_day;
 	protected $cache_days;
 	protected $total_results;	
+        protected $model;
 	public function Query() {
-		$this->query = get_base_url () . get_standar_query();
-		$this->cache_days = array (7,1,3,14);
-		$this->one_day = 86400;
-		$this->total_results = array(0,10,25,50,100);
-		$this->max_lenght_text = 150;
+		$this->cache_days = array (7,3,14);
+		$this->total_results = array(10,25,50,100);
+                $this-> model = new SimplepieModel();
 	}
-        public function standar_query(){
-            return $this->query;
+        public function get_model (){
+            return $this->model;
         }
-	public function max_lenght_text(){
-		return $this->max_lenght_text;
-	}
-	public function one_day(){
-		return $this->one_day;
-	}
-	public function cache_days(){
+        public function cache_days(){
 		return $this->cache_days;
 	}
 	public function total_results() {
 		return  $this->total_results;
 	}
-        function concatenarCondiciones($words, $filterPrefix = ''){
+        
+        public function concatenarCondiciones($words, $filterPrefix = ''){
             $conditions = '';
             foreach ( $words as $word ) {
 		$conditions[]= $filterPrefix. "\"" .$word ."\"" ;
             }
-            return implode('%20OR%20', $conditions);
+            return "(".implode('%20OR%20', $conditions).")";
         }
         
-        public function standarQuery($handle, $author, $keywords,$all,$subtypes){
-            $queryEstandar = $this->standar_query();
+        public function querySubtype ($query , $type) {
+            if (strpos($query, Q_QUERY) === false) {
+                $query .= "&". Q_QUERY."=";
+            }
+            else {
+                $query .= '%20AND%20';
+            }
+            return  $query."(".SQ_SUBTYPE."\"" .$type ."\"".")";
+        }
+        
+        public function standarQuery($handle, $author, $keywords,$max_results){
+            $queryEstandar = standar_query($max_results);
             $query= Array();
-                if (!empty($handle)) $queryEstandar .="&". SQ_HANDLE . "=".$handle;
+                if (!empty($handle)) {$queryEstandar .="&". SQ_HANDLE . "=".$handle;}
                 if (!empty($author)) {
                     $words = explode(';',$author);
                     array_push($query, $this->concatenarCondiciones($words , SQ_AUTHOR));
@@ -60,58 +61,21 @@ class Query {
                     $words = explode(';',$keywords);
                     array_push($query, $this->concatenarCondiciones($words));
                 }
-                if (!$all) {
-                   array_push($query, $this->concatenarCondiciones($subtypes,SQ_SUBTYPE));
-                }
                 if (!empty($query)) { $queryEstandar.="&". Q_QUERY."=". implode('%20AND%20', $query); }
                 return $queryEstandar;
         }
         
-        function createQuery($queryStandar ,$cache , $groups ="", $all) {
-		$start = 0; 
-		$count = 0;
-                if(!is_array($groups)) { $groups = array (); }
-		$model = new SimplepieModel();
-		do {
-			$query = $queryStandar . "&start=". $start;
-			$xpath = $model->loadPath ( $query, $cache );
-			$count += $model->itemQuantity ( $xpath ); // number of entrys
-			$totalResults = $model->totalResults ( $xpath );
-			$entry = $model->entry ( $xpath ); //all documents
-			$start += 100;
-			if ($all) {
-				array_push ( $groups, $entry );
-			} else {
-				foreach ( $entry as $e ) {
-					$subtype = $model->type ( $e ); // document subtype
-					if (array_key_exists ( $subtype, $groups )) {
-						array_push ( $groups [$subtype], $e );
-					}
-				}
-			}
-		} while ( $count < $totalResults );
-		return ($groups);
+        function createQuery($query ,$cache) {
+		$model = $this->get_model();
+		$xpath = $model->loadPath ( $query, $cache );
+		$entry = $model->entry ( $xpath ); //all documents
+		return $entry;
 	}
         
-	function view_subtypes($selected_subtypes) {
-		$publications = array (); // documents for the view
-		while ( list ( $key, $val ) = each ( $selected_subtypes ) ) {
-			// $val: all documents by subtype
-			$elements = count ( $val );
-			if ($elements > 0) {
-				// $key: document subtype
-				$colection = array ( 'view' => $val, 'filter' => $key);
-				array_push ( $publications, $colection );
-			}
-		}
-		return ($publications);
-	}
-	function group_attributes($description, $date, $show_author, $max_results, $maxlenght) {
+	function group_attributes($description, $date, $show_author, $maxlenght) {
 		return ( array (
 				'description' => $description,
 				'show_author' => $show_author,
-				'max_results' => $max_results,
-				'context' => $context,
 				'max_lenght' => $maxlenght,
 				'date' => $date 
 		));
@@ -121,7 +85,7 @@ class Query {
 		if ($all) {
                     return ($view->all_publications ( $groups, $attributes));
 		} else {
-                    return ($view-> publications( $groups, $attributes ));
+                    return ($view->publications( $groups, $attributes ));
 			}
 	}
 }

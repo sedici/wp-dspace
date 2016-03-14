@@ -76,26 +76,28 @@ class Sedici extends WP_Widget {
 			//$cache: duration in seconds of cache
                         $all = ('on' == $instance ['all']);
 			//$all: all publications without subtype
+                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
+                        $groups = array ();
                         if(!$all) {
                             $subtypes = $this->filter->subtypes();
                             // $subtypes: all names of subtypes
-                            $selected_subtypes = array (); 
-                            // $selected_subtypes: subtypes selected by the user
-                            $groups = array ();
-                            // $groups: groups publications by subtype
                             foreach ( $subtypes as $type ) {
                             	//compares the user marked subtypes, if ON, save the subtype.
 				if ('on' == $instance [$type]) {
-					array_push ( $selected_subtypes, $type );
-					$groups [$type] = array ();
+                                        $query = $this->util->querySubtype($queryStandar,$type);
+					$entrys =  $this->util->createQuery( $query,  $cache);
+                                        if (!empty($entrys)) { 
+                                            $groups[$type]=array ();
+                                            $groups[$type] = $entrys;
+                                        }
 				}
                             }   
                         }
-                        $query = $this->util->standarQuery($handle, $author, $keywords,$all,$selected_subtypes);
-                        $entrys = $this->util->createQuery( $query,  $cache, $groups, $all );
-                        if (!$all)  { $entrys = $this->util->view_subtypes ( $entrys); }
-			$attributes = $this->util->group_attributes ( $description, $date, $show_author, $max_results, $maxlenght);
-                        $this->util->render ( $all, $entrys, $attributes );
+                        else { 
+                            $groups =$this->util->createQuery( $queryStandar,  $cache);
+                        }
+                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght);
+                        $this->util->render ( $all, $groups, $attributes );
 		} else {
 			echo "Ingrese al menos uno de los campos Handle - Autores - Palabras claves";
 		}
@@ -184,7 +186,7 @@ class Sedici extends WP_Widget {
 </p>
 
 
-<p class="description">
+<p class="description-ds">
 	<input class="checkbox" type="checkbox"
 		<?php checked($instance['description'], 'on'); ?>
 		id="<?php echo $this->get_field_id('description'); ?>"
@@ -214,7 +216,7 @@ class Sedici extends WP_Widget {
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
-		$one_day= $this->util->one_day();
+		$one_day= one_day();
 		$all_days = $this->util->cache_days();
 		foreach ($all_days as $d){
 			?>
@@ -237,7 +239,7 @@ class Sedici extends WP_Widget {
 			?>
 			<option value=<?php echo $c;?>
 				<?php echo ($max_results==$c)?'selected':''; ?>>
-				<?php  echo ($c==0) ? "Todos":$c; ?>
+				<?php echo $c; ?>
 			</option>
 		<?php
 		}// end for	

@@ -139,44 +139,26 @@ class View {
 		return;
 	}
 	
-	function publications($feed, $attributes) {
-		foreach ( $feed as $i ) {
+	public function publications($groups, $attributes) {
+		 foreach ($groups as $key => $entrys){
 		?>
-		<h3><?php echo $this->subtype($i ['filter']);?></h3><!-- publication subtype -->
-		<ol class="sedici-style">
+                    <h3><?php echo $key;?></h3><!-- publication subtype -->
 		<?php
-				$list = $i ['view']; $j=0;
-				$totalresults = $this->max_results($attributes['max_results'], $list);
-				foreach ( $list as $item ) {
-					$this->document($item,$attributes);
-					$j++;
-					if($j == $totalresults) break;
-				}
-		?>
-		</ol>
-		<?php 
-		} 
+                    $this->all_publications($entrys,$attributes);
+                }
 		return;
 	}
 	
-	function all_publications($groups, $attributes) {
+	public function all_publications($groups, $attributes) {
 	?>
             <ol class="sedici-style">
 		<?php 
-                    $totalresults = $attributes['max_results'];
-                    $j=0;
-                    foreach ( $groups as $feed ) {
-			foreach ($feed as $item){
+			foreach ($groups as $item){
                             $this->document($item, $attributes);
-                            $j++;
-                            if($j == $totalresults) break;
 			}
-                        if($j == $totalresults) break;
-                    }
 		?>
             </ol>
         <?php 
             return ;
-	}
-	
+	}	
 } // end class

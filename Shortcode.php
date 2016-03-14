@@ -27,37 +27,45 @@ class Shortcode {
                     $cache = $instance ['cache'];//default value from filer.php
                     $all = ($instance ['all'] === 'true');
                     $max_results = $instance ['max_results'];
+                    if ( $max_results < 1) { $max_results = 10;}
+                    else { if ( $max_results > 100) { $max_results = 100;} }
                     $maxlenght = $instance ['max_lenght'];
+                    $util = new Query();
+                    $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
+                    $groups = array ();
                     if (!$all){
                         $subtypes = $filter->subtypes ();
 			// $subtypes: all names of subtypes
-			$selected_subtypes = array ();
-			$groups = array ();
-			// $groups: groups publications by subtype
-			foreach ( $subtypes as $suptype ) {
+			foreach ( $subtypes as $subtype ) {
 				// compares the user marked subtypes, if TRUE, save the subtype.
-				$subtype = $filter->convertirEspIng ( $suptype );
-				if ('true' === $instance [$subtype]) {
-					array_push ( $selected_subtypes, $suptype );
-					$groups [$suptype] = array ();
+				$type = $filter->convertirEspIng ( $subtype );
+				if ('true' === $instance [$type]) {
+                                    $query = $util->querySubtype($queryStandar,$subtype);
+                                    $entrys =  $util->createQuery( $query,  $cache);
+                                    if (!empty($entrys)) { 
+                                            $groups[$subtype]=array ();
+                                            $groups[$subtype] = $entrys;
+                                    }
 				}
 			}
 			if ($instance ['thesis'] === 'true') {
 				// if thesis is true, save subtypes thesis
 				$all_thesis = $filter->vectorTesis ();
 				// $all_thesis: all subtypes thesis
-				foreach ( $all_thesis as $thesis ) {
-					array_push ( $selected_subtypes, $thesis );
-					$groups [$thesis] = array ();
+				foreach ( $all_thesis as $type ) {
+                                    $query = $util->querySubtype($queryStandar,$type);
+                                    $entrys =  $util->createQuery( $query,  $cache);
+                                    if (!empty($entrys)) { 
+                                            $groups[$type]=array ();
+                                            $groups[$type] = $entrys;
+                                    }
 				}
 			}
-                    }	
-                    $util = new Query ();	
-                    $query = $util->standarQuery($handle, $author, $keywords,$all,$selected_subtypes);
-                    $entrys = $util->createQuery( $query,  $cache, $groups, $all );
-                    if (!$all)  { $entrys = $util->view_subtypes ( $entrys); }
-                    $attributes = $util->group_attributes ( $description, $date, $show_author, $max_results, $maxlenght);
-                    $util->render ( $all, $entrys, $attributes );
+                    }else { 
+                            $groups =$util->createQuery( $queryStandar,  $cache);
+                        }
+                    $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght);
+                    $util->render ( $all, $groups, $attributes );
 		}
 	}
 }

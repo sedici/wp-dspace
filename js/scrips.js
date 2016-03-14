@@ -14,7 +14,7 @@ jQuery(document).ready(function() {
 	// inicializacion
 
 	var conditionalDescription = 'p.conditionally-description';
-	var description = 'p.description input:checkbox';
+	var description = 'p.description-ds input:checkbox';
 	
 	var conditionalFilter = 'p.conditionally-filter';
 	var checkFilter = 'p.show-filter';

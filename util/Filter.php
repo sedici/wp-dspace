@@ -26,7 +26,7 @@ class Filter {
 			'handle' => null,
 			'author' => null,
                         'keywords' => null,
-			'max_results' => 0,
+			'max_results' => 10,
 			'max_lenght' => 0,
 			'all' => false,
 			'description' => false,
