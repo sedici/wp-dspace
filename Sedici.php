@@ -45,7 +45,7 @@ class Sedici extends WP_Widget {
 		if ('on' ==$summary ) {
                     return "summary"; 
                     // checkbox description and summary ON
-                } else { return; "description"; } // checkbox description ON, summary OFF
+                } else { return "description"; } // checkbox description ON, summary OFF
             } else { return false;}
         }
         
@@ -56,7 +56,18 @@ class Sedici extends WP_Widget {
 		}
             } else { return 0; }
         }
-        
+        function querySubtypes($instance,$groups,$queryStandar){
+            $subtypes = $this->filter->subtypes();
+            // $subtypes: all names of subtypes
+            $cache = $instance['cache'];
+            foreach ( $subtypes as $type ) {
+            //compares the user marked subtypes, if ON, save the subtype.
+                if ('on' == $instance [$type]) {
+                    $groups = $this->util->entrys($queryStandar,$type,$cache, $groups);
+                }   
+            }
+            return $groups;
+        }
 	function widget($args, $instance) {
 		extract ( $args );
 		$handle = apply_filters ( 'handle', $instance ['handle'] );
@@ -79,19 +90,7 @@ class Sedici extends WP_Widget {
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
                         $groups = array ();
                         if(!$all) {
-                            $subtypes = $this->filter->subtypes();
-                            // $subtypes: all names of subtypes
-                            foreach ( $subtypes as $type ) {
-                            	//compares the user marked subtypes, if ON, save the subtype.
-				if ('on' == $instance [$type]) {
-                                        $query = $this->util->querySubtype($queryStandar,$type);
-					$entrys =  $this->util->createQuery( $query,  $cache);
-                                        if (!empty($entrys)) { 
-                                            $groups[$type]=array ();
-                                            $groups[$type] = $entrys;
-                                        }
-				}
-                            }   
+                            $groups = $this->querySubtypes($instance, $groups, $queryStandar);
                         }
                         else { 
                             $groups =$this->util->createQuery( $queryStandar,  $cache);
@@ -130,52 +129,46 @@ class Sedici extends WP_Widget {
 	/**
 	 * @see WP_Widget::form
 	 */
+        function show_imput ($type,$text,$id){
+        ?>    
+        <p>
+        <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text); ?> 
+        <input class="widefat"
+		id="<?php echo $this->get_field_id($id); ?>"
+		name="<?php echo $this->get_field_name($id); ?>" type="text"
+		value="<?php echo $type; ?>" /></label>
+        </p>
+        <?php
+        }
+        function show_checkbox($instance,$text,$id){
+        ?>    
+            <input class="checkbox" type="checkbox"
+            <?php checked($instance, 'on'); ?>
+            id="<?php echo $this->get_field_id($id); ?>"
+            name="<?php echo $this->get_field_name($id); ?>" /> 
+            <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text); ?></label>
+        <?php
+        }
+                
 	function form($instance) {
 		$max_results = esc_attr ( $instance ['max_results'] );
 		$handle = esc_attr ( $instance ['handle'] );
                 $author = esc_attr ( $instance ['author'] );
                 $keywords = esc_attr ( $instance ['keywords'] );
 		$maxlenght = esc_attr($instance['maxlenght']);
+                $this->show_imput($handle, 'Handle:', 'handle');
+                $this->show_imput($author, 'Autores:', 'author');
+                $this->show_imput($keywords, 'Palabras claves:', 'keywords');
 		?>
-
-
 <p>
-	<label for="<?php echo $this->get_field_id('handle'); ?>"><?php _e('Handle:'); ?> 
-       <input class="widefat"
-		id="<?php echo $this->get_field_id('handle'); ?>"
-		name="<?php echo $this->get_field_name('handle'); ?>" type="text"
-		value="<?php echo $handle; ?>" /></label>
-</p>
-<p>
-	<label for="<?php echo $this->get_field_id('author'); ?>"><?php _e('Autores:'); ?> 
-       <input class="widefat"
-		id="<?php echo $this->get_field_id('author'); ?>"
-		name="<?php echo $this->get_field_name('author'); ?>" type="text"
-		value="<?php echo $author; ?>" /></label>
-</p>
-<p>
-	<label for="<?php echo $this->get_field_id('keywords'); ?>"><?php _e('Palabras claves:'); ?> 
-       <input class="widefat"
-		id="<?php echo $this->get_field_id('keywords'); ?>"
-		name="<?php echo $this->get_field_name('keywords'); ?>" type="text"
-		value="<?php echo $keywords; ?>" /></label>
+    <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
 </p>
 
-<p>
-	<input class="checkbox" type="checkbox"
-		<?php checked($instance['show_author'], 'on'); ?>
-		id="<?php echo $this->get_field_id('show_author'); ?>"
-		name="<?php echo $this->get_field_name('show_author'); ?>" /> 
-		<label for="<?php echo $this->get_field_id('show_author'); ?>"><?php _e('Mostrar Autores'); ?></label>
+<p class="limit">    <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit') ?>
+</p>
+    <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit') ?>
 </p>
 
-<p class="limit">
-	<input class="checkbox" type="checkbox"
-		<?php checked($instance['limit'], 'on'); ?>
-		id="<?php echo $this->get_field_id('limit'); ?>"
-		name="<?php echo $this->get_field_name('limit'); ?>" /> <label
-		for="<?php echo $this->get_field_id('limit'); ?>"><?php _e('Limitar longitud del texto'); ?></label>
-</p>
 <p class="conditionally-limit"
 	<?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
 	<label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:'); ?> 
@@ -187,30 +180,21 @@ class Sedici extends WP_Widget {
 
 
 <p class="description-ds">
-	<input class="checkbox" type="checkbox"
-		<?php checked($instance['description'], 'on'); ?>
-		id="<?php echo $this->get_field_id('description'); ?>"
-		name="<?php echo $this->get_field_name('description'); ?>" /> <label
-		for="<?php echo $this->get_field_id('description'); ?>"><?php _e('Mostrar Resumen'); ?></label>
+    <?php $this->show_checkbox($instance['description'], 'Mostrar Resumen', 'description') ?>
 </p>
 
 <p class="conditionally-description"
-	<?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
-	<input class="checkbox" type="checkbox"
-		<?php checked($instance['summary'], 'on'); ?>
-		id="<?php echo $this->get_field_id('summary'); ?>"
-		name="<?php echo $this->get_field_name('summary'); ?>" /> <label
-		for="<?php echo $this->get_field_id('summary'); ?>"><?php _e('Mostrar sumario'); ?></label>
+<?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
+     <?php $this->show_checkbox($instance['summary'], 'Mostrar sumario', 'summary') ?>
 </p>
 
 <p>
-	<input class="checkbox" type="checkbox"
-		<?php checked($instance['date'], 'on'); ?>
-		id="<?php echo $this->get_field_id('date'); ?>"
-		name="<?php echo $this->get_field_name('date'); ?>" /> <label
-		for="<?php echo $this->get_field_id('date'); ?>"><?php _e('Mostrar Fecha'); ?></label>
+     <?php $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date') ?>
 </p>
-	<?php $duration = esc_attr ( $instance ['cache'] );  ?>
+	
+<?php $duration = esc_attr ( $instance ['cache'] );
+      if (empty($duration)) { $duration = defaultCache();}
+?>
 <p>
 	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> <select class='widefat' type="text"
 		id="<?php echo $this->get_field_id('cache'); ?>"
@@ -221,8 +205,8 @@ class Sedici extends WP_Widget {
 		foreach ($all_days as $d){
 			?>
 			<option value=<?php echo $d * $one_day;?>
-				<?php echo ($duration==($d * $one_day))?'selected':''; ?>><?php echo $d;?> <?php _e('días'); ?></option>
-		<?php } //end while?>
+			<?php echo ($duration==($d * $one_day))?'selected':''; ?>><?php echo $d;?> <?php _e('días'); ?></option>
+		<?php } //end foreach?>
 	</select>
 	</label>
 </p>
@@ -233,7 +217,6 @@ class Sedici extends WP_Widget {
 		id="<?php echo $this->get_field_id('max_results'); ?>"
 		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
 		<?php
-		
 		$results = $this->util->total_results();
 		foreach ( $results as $c ) {
 			?>
@@ -248,27 +231,17 @@ class Sedici extends WP_Widget {
 </label>
 </p>
 <p class="show-filter">
-	<input class="checkbox" type="checkbox"
-		<?php checked($instance['all'], 'on'); ?>
-		id="<?php echo $this->get_field_id('all'); ?>"
-		name="<?php echo $this->get_field_name('all'); ?>" /> <label
-		for="<?php echo $this->get_field_id('all'); ?>"> <?php _e('Todas las publicaciones sin filtros'); ?></label>
+    <?php $this->show_checkbox($instance['all'], 'Todas las publicaciones sin filtros', 'all'); ?>
 </p>
-
 <hr>
 <hr>
-
 <p class="conditionally-filter"
 	<?php echo checked($instance['all'], 'on') === '' ? '' : 'style="display: none;"'; ?>>
 	<?php
 		$subtypes = $this->filter->subtypes();
-		foreach ( $subtypes as $s ) {
+		foreach ( $subtypes as $subtype ) {
+                    $this->show_checkbox($instance[$subtype], $subtype, $subtype);
 			?>
-	<input class="checkbox" type="checkbox"
-		<?php checked($instance[$s], 'on'); ?>
-		id="<?php echo $this->get_field_id($s); ?>"
-		name="<?php echo $this->get_field_name($s); ?>" /> <label
-		for="<?php echo $this->get_field_id($s); ?>"><?php echo $s; ?></label>
 	<br />
         <?php
 		}//end foreach subtypes

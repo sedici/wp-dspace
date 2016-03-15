@@ -28,6 +28,9 @@ define (S_TEXT , 150);
 define (S_CACHE,86400);
 define (S_START, 0);
 
+function defaultCache(){
+    return S_CACHE * 7 ;
+}
 function conector() {
 	return CONECTOR2 . '+';
 }
@@ -51,4 +54,28 @@ function total_results() {
 }
 function one_day(){
     return S_CACHE;
+}
+function default_shortcode(){
+	return ( array (
+		'handle' => null,
+		'author' => null,
+                'keywords' => null,
+		'max_results' => 10,
+		'max_lenght' => 0,
+		'all' => false,
+		'description' => false,
+		'date' => false,
+		'show_author' => false,
+		'cache' => defaultCache(),
+		'article' => false,
+		'preprint' => false,
+		'book' => false,
+		'working_paper' => false,
+		'technical_report' => false,
+		'conference_object' => false,
+		'revision' => false,
+		'work_specialization' => false,
+                'learning_object'=>false,
+		'thesis' => false 
+	));
 }

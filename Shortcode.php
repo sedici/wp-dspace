@@ -11,9 +11,37 @@ function DspaceShortcode($atts) {
 	return LoadShortcode ( $atts );
 }
 class Shortcode {
+    
+        function querySubtypes ($instance, $util, $queryStandar) {
+             $filter = new Filter ();
+             $cache = $instance ['cache'];//default value from filer.php
+             $groups = array ();
+             $subtypes = $filter->subtypes ();
+			// $subtypes: all names of subtypes
+			foreach ( $subtypes as $subtype ) {
+				// compares the user marked subtypes, if TRUE, save the subtype.
+				$type = $filter->convertirEspIng ( $subtype );
+				if ('true' === $instance [$type]) {
+                                   $groups = $util->entrys($queryStandar,$subtype,$cache, $groups);
+				}
+			}
+			if ($instance ['thesis'] === 'true') {
+				// if thesis is true, save subtypes thesis
+				$all_thesis = $filter->vectorTesis ();
+				// $all_thesis: all subtypes thesis
+				foreach ( $all_thesis as $type ) {
+                                    $groups = $util->entrys($queryStandar,$type,$cache, $groups);
+				}
+			}
+               return $groups;
+        }
+        function maxResults($max_results){
+            if ( $max_results < 1) { $max_results = 10;}
+            else { if ( $max_results > 100) { $max_results = 100;} }
+            return $max_results;
+        }
 	function plugin_sedici($atts) {
-            $filter = new Filter ();
-            $instance = shortcode_atts ( $filter->default_shortcode (), $atts );
+            $instance = shortcode_atts ( default_shortcode (), $atts );
             $handle = $instance ['handle'] ;
             $author = $instance ['author']; 
             $keywords = $instance ['keywords'] ;
@@ -26,41 +54,13 @@ class Shortcode {
                     $show_author = ($instance ['show_author'] === 'true');
                     $cache = $instance ['cache'];//default value from filer.php
                     $all = ($instance ['all'] === 'true');
-                    $max_results = $instance ['max_results'];
-                    if ( $max_results < 1) { $max_results = 10;}
-                    else { if ( $max_results > 100) { $max_results = 100;} }
+                    $max_results = $this->maxResults($instance ['max_results']);
                     $maxlenght = $instance ['max_lenght'];
                     $util = new Query();
                     $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
                     $groups = array ();
                     if (!$all){
-                        $subtypes = $filter->subtypes ();
-			// $subtypes: all names of subtypes
-			foreach ( $subtypes as $subtype ) {
-				// compares the user marked subtypes, if TRUE, save the subtype.
-				$type = $filter->convertirEspIng ( $subtype );
-				if ('true' === $instance [$type]) {
-                                    $query = $util->querySubtype($queryStandar,$subtype);
-                                    $entrys =  $util->createQuery( $query,  $cache);
-                                    if (!empty($entrys)) { 
-                                            $groups[$subtype]=array ();
-                                            $groups[$subtype] = $entrys;
-                                    }
-				}
-			}
-			if ($instance ['thesis'] === 'true') {
-				// if thesis is true, save subtypes thesis
-				$all_thesis = $filter->vectorTesis ();
-				// $all_thesis: all subtypes thesis
-				foreach ( $all_thesis as $type ) {
-                                    $query = $util->querySubtype($queryStandar,$type);
-                                    $entrys =  $util->createQuery( $query,  $cache);
-                                    if (!empty($entrys)) { 
-                                            $groups[$type]=array ();
-                                            $groups[$type] = $entrys;
-                                    }
-				}
-			}
+                       $groups = $this->querySubtypes($instance, $util, $queryStandar);
                     }else { 
                             $groups =$util->createQuery( $queryStandar,  $cache);
                         }

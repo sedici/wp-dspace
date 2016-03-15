@@ -17,7 +17,7 @@ class Query {
 	protected $total_results;	
         protected $model;
 	public function Query() {
-		$this->cache_days = array (7,3,14);
+		$this->cache_days = array (3,7,14);
 		$this->total_results = array(10,25,50,100);
                 $this-> model = new SimplepieModel();
 	}
@@ -72,6 +72,16 @@ class Query {
 		return $entry;
 	}
         
+        function entrys ($queryStandar,$subtype,$cache, $groups){
+             $query = $this->querySubtype($queryStandar,$subtype);
+             $entrys =  $this->createQuery( $query,  $cache);
+             if (!empty($entrys)) { 
+                $groups[$subtype]=array ();
+                $groups[$subtype] = $entrys;
+            }
+            return $groups;
+        }
+                
 	function group_attributes($description, $date, $show_author, $maxlenght) {
 		return ( array (
 				'description' => $description,
