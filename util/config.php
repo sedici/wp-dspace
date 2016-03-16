@@ -15,8 +15,10 @@ define ( Q_RPP, '100' );
 define ( Q_FORMAT, 'atom' );
 define ( Q_SORTBY, '3' );
 define ( Q_ORDER, 'desc' );
-define ( CONECTOR2, '%5C' );
-define ( CONECTOR3, '%7C' );
+define ( S_CONECTOR2, '%5C' );
+define ( S_CONECTOR3, '%7C' );
+define (S_CONECTOR4 , '%2C');
+define (S_CONECTOR5, '\+');
 define ( _PROTOCOL, "http://" );
 define ( _DOMAIN, "sedici.unlp.edu.ar" );
 define ( _BASE_PATH, "/open-search/discover" );
@@ -27,15 +29,17 @@ define (SQ_SUBTYPE, "sedici.subtype:");
 define (S_TEXT , 150);
 define (S_CACHE,86400);
 define (S_START, 0);
+define (S_FILTER , '/discover?fq=author_filter%3A');
+define (S_SEPARATOR, '\|\|\|');
 
 function defaultCache(){
     return S_CACHE * 7 ;
 }
 function conector() {
-	return CONECTOR2 . '+';
+	return S_CONECTOR2 . '+';
 }
 function get_conector() {
-	return (CONECTOR2 . CONECTOR3 . CONECTOR2 . CONECTOR3 . CONECTOR2 . CONECTOR3);
+	return (S_CONECTOR2 . S_CONECTOR3 . S_CONECTOR2 . S_CONECTOR3 . S_CONECTOR2 . S_CONECTOR3);
 }
 function get_base_url() {
 	return get_protocol_domain() . _BASE_PATH;

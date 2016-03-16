@@ -11,11 +11,6 @@
  */
 ?>
 <?php
-define ( URL, 'http://sedici.unlp.edu.ar' );
-define (FILTER , '/discover?fq=author_filter%3A');
-define (CON1 , '%2C');
-define (CON2, '\+');
-define (SEPARATOR, '\|\|\|');
 class View {
 	function View() {
 		// Register style sheet.
@@ -26,48 +21,39 @@ class View {
 	public function subtype($sub){
 		return ucfirst($sub);
 	}
-	public function max_results($cant,$list){
-		if ($cant == 0){ return (count($list)); }
-		else return $cant;
-	}
-	
+
 	public function html_especial_chars($texto){
 		return (htmlspecialchars_decode($texto));
 	}
 	public function strtolower_text($text){
-		return strtolower(implode(CON2, $text));
+		return strtolower(implode(S_CONECTOR5, $text));
 	}
 	public function ucwords_text($text){
 		$text = implode(" ", $text);
 		$text = ucwords($text);
 		$text = explode ( " ", $text );
-		return implode(CON2, $text);
+		return implode(S_CONECTOR5, $text);
 	}
 	public function link_author( $author){
-		$link = URL.FILTER;
+		$link = get_protocol_domain().S_FILTER;
 		$fullname = explode ( ",", $author );
 		$lastname = explode(" ", $fullname[0]);
                 if(count($fullname) >1) {$name = explode(" ", $fullname[1]);}
                 else {$name= $lastname;}
-		$link .= $this->strtolower_text($lastname).CON1;
-		$link.=$this->strtolower_text($name).SEPARATOR;
-		$link .= $this->ucwords_text($lastname).CON1.$this->ucwords_text($name);
+		$link .= $this->strtolower_text($lastname).S_CONECTOR4;
+		$link.=$this->strtolower_text($name).S_SEPARATOR;
+		$link .= $this->ucwords_text($lastname).S_CONECTOR4.$this->ucwords_text($name);
 		return  ('<a href='.$link.'>'.$author.'</a>') ;
 	}
 	
 	public function author($authors){ ?>
-            <br>
+            <br>		
+
             <span class="title sedici-style"><?php _e('Autor:'); ?></span>
             <?php
                 $names = array ();
-		foreach ( $authors as $au ) {
-            ?>
-		<author> <name>	
-            <?php 
-		array_push ($names, $this->link_author($au->get_name ()));
-            ?>
-		</name></author>
-            <?php
+		foreach ( $authors as $author ) {
+                    array_push ($names, "<author><name>".$this->link_author($author->get_name ())."</name></author>");
 		}//end foreach autores
             print_r(implode("-", $names));
             return;
@@ -81,30 +67,22 @@ class View {
 	
 	public function show_description ($description,$item,$maxlenght){
 		if ($description == "description") {
-			?>
-			<span class="title sedici-style"><?php _e('Resumen:'); ?></span> 
-			<?php
-					$des= $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
-					if ($maxlenght != 0){
-						echo $this->shorten_text($des[0]['data'],$maxlenght);
-					} else {
-						echo $this->html_especial_chars($des[0]['data']);
-					}
-					?>
-			<?php 
-		}else if($description == "summary") {
-			?>
-			 <span class="title sedici-style"><?php _e('Sumario:'); ?></span>
-			 <?php 
-			 if ($maxlenght != 0){
-				 echo $this->shorten_text($item->get_description (),$maxlenght);
-				} else {
-					echo $this->html_especial_chars($item->get_description ());
-				}
-			}
+                        $title = "Resumen:";
+                        $show_text = $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
+                        $show_text = $show_text[0]['data'];
+                } else {
+                        $title = 'Sumario:';
+                        $show_text = $item->get_description ();
+                } ?>
+		<span class="title sedici-style"><?php _e($title); ?></span>
+                <?php 
+                if ($maxlenght != 0){
+                    echo $this->shorten_text($show_text,$maxlenght);
+		} else {
+                    echo $this->html_especial_chars($show_text);
+		}
 		return;
 	}
-	
 	
 	public function description($description,$item,$maxlenght){
 		if($this->is_description($description)){
@@ -119,7 +97,7 @@ class View {
 		return;
 	}
 	
-	public function document($item,$a){
+	public function document($item,$attributes){
 		$link = $item->get_link ();	
 		?>
 		<li><article>
@@ -128,12 +106,13 @@ class View {
 			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
 			</a>
 				<?php 
-				if ($a['show_author']){ $this->author($item->get_authors ()); }
-				if ($a['date']) { ?>
-				<br><published><span class="title sedici-style"><?php _e('Fecha:'); ?> </span> <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
+				if ($attributes['show_author']){ $this->author($item->get_authors ()); }
+				if ($attributes['date']) 
+                                { ?>
+                                    <br><published><span class="title sedici-style"><?php _e('Fecha:'); ?> </span> <?php  echo $item->get_date ( 'Y-m-d' ); ?> </published>
 				<?php } //end if fecha  
-				$this->description($a['description'], $item,$a['max_lenght']);
-				 ?>
+				$this->description($attributes['description'], $item,$attributes['max_lenght']);
+				?>
 		</article></li>
 		<?php 
 		return;

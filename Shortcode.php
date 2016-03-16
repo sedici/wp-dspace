@@ -11,7 +11,6 @@ function DspaceShortcode($atts) {
 	return LoadShortcode ( $atts );
 }
 class Shortcode {
-    
         function querySubtypes ($instance, $util, $queryStandar) {
              $filter = new Filter ();
              $cache = $instance ['cache'];//default value from filer.php

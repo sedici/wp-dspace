@@ -52,9 +52,10 @@ class Sedici extends WP_Widget {
         public function limit_text($limit,$max){
             if ('on' == $limit){
                 if (empty($max)){
-                    return $this->util->max_lenght_text(); //default lenght
-		}
-            } else { return 0; }
+                    $max =  S_TEXT; //default lenght
+                }
+            } else { $max = 0; }
+            return $max;
         }
         function querySubtypes($instance,$groups,$queryStandar){
             $subtypes = $this->filter->subtypes();
@@ -76,7 +77,6 @@ class Sedici extends WP_Widget {
 		if (!(empty($author)) || !(empty($handle)) || !(empty($keywords))) { 
                         $description = $this->description($instance ['description'], $instance ['summary']);
 			$maxlenght = $this->limit_text($instance ['limit'],$instance ['maxlenght']);
-                        
 			$show_author = ('on' == $instance ['show_author']);
 			// $show_author: if ON, then $show_author = true
                         $date = ('on' == $instance ['date']);
@@ -164,8 +164,7 @@ class Sedici extends WP_Widget {
     <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
 </p>
 
-<p class="limit">    <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit') ?>
-</p>
+<p class="limit">
     <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit') ?>
 </p>
 
@@ -185,7 +184,7 @@ class Sedici extends WP_Widget {
 
 <p class="conditionally-description"
 <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
-     <?php $this->show_checkbox($instance['summary'], 'Mostrar sumario', 'summary') ?>
+     <?php $this->show_checkbox($instance['summary'], 'Mostrar Sumario', 'summary') ?>
 </p>
 
 <p>
@@ -196,18 +195,20 @@ class Sedici extends WP_Widget {
       if (empty($duration)) { $duration = defaultCache();}
 ?>
 <p>
-	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> <select class='widefat' type="text"
+	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> 
+            <select class='widefat'
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
 		$one_day= one_day();
 		$all_days = $this->util->cache_days();
-		foreach ($all_days as $d){
+		foreach ($all_days as $day){
 			?>
-			<option value=<?php echo $d * $one_day;?>
-			<?php echo ($duration==($d * $one_day))?'selected':''; ?>><?php echo $d;?> <?php _e('días'); ?></option>
+			<option value=<?php echo $day * $one_day;?>
+			<?php echo ($duration==($day * $one_day))?'selected':''; ?>>
+                        <?php echo $day;?> <?php _e('días'); ?></option>
 		<?php } //end foreach?>
-	</select>
+            </select>
 	</label>
 </p>
 
@@ -218,11 +219,11 @@ class Sedici extends WP_Widget {
 		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
 		<?php
 		$results = $this->util->total_results();
-		foreach ( $results as $c ) {
+		foreach ( $results as $result ) {
 			?>
-			<option value=<?php echo $c;?>
-				<?php echo ($max_results==$c)?'selected':''; ?>>
-				<?php echo $c; ?>
+			<option value=<?php echo $result;?>
+				<?php echo ($max_results==$result)?'selected':''; ?>>
+				<?php echo $result; ?>
 			</option>
 		<?php
 		}// end for	
