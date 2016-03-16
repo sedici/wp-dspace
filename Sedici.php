@@ -12,7 +12,6 @@
 ?>
 <?php
 require_once 'Shortcode.php';
-require_once 'view/View.php';
 require_once 'util/Filter.php';
 require_once 'util/Query.php';
 require_once 'model/SimplepieModel.php';

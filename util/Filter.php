@@ -15,49 +15,26 @@ class Filter {
 	protected $subtypes;
 	protected $thesis;
 	public function Filter(){
-		$this->subtypes = array ("Documento de trabajo","Articulo","Contribucion a revista",
-				"Informe tecnico","Libro","Objeto de conferencia","Preprint","Revision","Objeto de aprendizaje",
-				"Tesis de doctorado","Tesis de grado","Tesis de maestria","Trabajo de especializacion" 
-		);
-		$this->thesis= array ( "Tesis de doctorado","Tesis de grado","Tesis de maestria" );
+		$this->subtypes =  array(
+                'article' => 'Articulo',
+                'book' => 'Libro',
+                'working_paper' =>  "Documento de trabajo",
+                'technical_report' => "Informe tecnico",
+                'conference_object' => "Objeto de conferencia",
+                'revision' => "Revision",
+                'work_specialization' => "Trabajo de especializacion",
+                'preprint' => 'Preprint'
+                
+            );
+		$this->thesis= array ('master_thesis'=>  "Tesis de maestria",
+                                      'phD_thesis'=>"Tesis de doctorado",
+                                      'licentiate_thesis'=>"Tesis de grado"
+                 );
 	}
 	public function subtypes() {
 		return $this->subtypes;
 	}
 	public function vectorTesis() {
 		return $this->thesis;
-	}
-	public function convertirEspIng($filtro) {
-		//Pasa los subtipos al ingles para la comparacion con el shortcode
-		switch ($filtro) {
-                        case "Objeto de aprendizaje":
-                            $valor="learning_object";
-                            break;
-			case "Articulo" :
-				$valor = "article";
-				break;
-			case "Libro" :
-				$valor = "book";
-				break;
-			case "Preprint" :
-				$valor = "preprint";
-				break;
-			case "Documento de trabajo" :
-				$valor = "working_paper";
-				break;
-			case "Informe tecnico" :
-				$valor = "technical_report";
-				break;
-			case "Objeto de conferencia" :
-				$valor = "conference_object";
-				break;
-			case "Revision" :
-				$valor = "revision";
-				break;
-			case "Trabajo de especializacion" :
-				$valor = "work_specialization";
-				break;
-		}
-		return ($valor);
 	}
 }

@@ -10,6 +10,32 @@ function LoadShortcode($atts) {
 function DspaceShortcode($atts) {
 	return LoadShortcode ( $atts );
 }
+
+function default_shortcode(){
+	return ( array (
+		'handle' => null,
+		'author' => null,
+                'keywords' => null,
+		'max_results' => 10,
+		'max_lenght' => 0,
+		'all' => false,
+		'description' => false,
+		'date' => false,
+		'show_author' => false,
+		'cache' => defaultCache(),
+		'article' => false,
+		'preprint' => false,
+		'book' => false,
+		'working_paper' => false,
+		'technical_report' => false,
+		'conference_object' => false,
+		'revision' => false,
+		'work_specialization' => false,
+                'learning_object'=>false,
+		'thesis' => false 
+	));
+}
+
 class Shortcode {
         function querySubtypes ($instance, $util, $queryStandar) {
              $filter = new Filter ();
@@ -17,10 +43,9 @@ class Shortcode {
              $groups = array ();
              $subtypes = $filter->subtypes ();
 			// $subtypes: all names of subtypes
-			foreach ( $subtypes as $subtype ) {
+			foreach ($subtypes as $key => $subtype){
 				// compares the user marked subtypes, if TRUE, save the subtype.
-				$type = $filter->convertirEspIng ( $subtype );
-				if ('true' === $instance [$type]) {
+				if ('true' === $instance [$key]) {
                                    $groups = $util->entrys($queryStandar,$subtype,$cache, $groups);
 				}
 			}

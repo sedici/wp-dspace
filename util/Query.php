@@ -12,6 +12,7 @@
 ?>
 <?php
 include_once 'config.php';
+include_once dirname(__DIR__)."/view/View.php";
 class Query {
 	protected $cache_days;
 	protected $total_results;	
