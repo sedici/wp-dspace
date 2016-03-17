@@ -23,8 +23,7 @@ class Filter {
                 'conference_object' => "Objeto de conferencia",
                 'revision' => "Revision",
                 'work_specialization' => "Trabajo de especializacion",
-                'preprint' => 'Preprint'
-                
+                'preprint' => 'Preprint'   
             );
 		$this->thesis= array ('master_thesis'=>  "Tesis de maestria",
                                       'phD_thesis'=>"Tesis de doctorado",
@@ -32,9 +31,12 @@ class Filter {
                  );
 	}
 	public function subtypes() {
-		return $this->subtypes;
+		return array_merge($this->vectorSubtypes(),$this->vectorTesis());
 	}
 	public function vectorTesis() {
 		return $this->thesis;
 	}
+        public function vectorSubtypes (){
+            return $this->subtypes;
+        }
 }

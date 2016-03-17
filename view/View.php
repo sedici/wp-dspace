@@ -47,8 +47,7 @@ class View {
 	}
 	
 	public function author($authors){ ?>
-            <br>		
-
+            <br>
             <span class="title sedici-style"><?php _e('Autor:'); ?></span>
             <?php
                 $names = array ();
