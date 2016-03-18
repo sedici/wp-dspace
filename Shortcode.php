@@ -37,16 +37,17 @@ function default_shortcode(){
 }
 
 class Shortcode {
-        function querySubtypes ($instance, $util, $queryStandar) {
-             $filter = new Filter ();
-             $cache = $instance ['cache'];//default value from filer.php
+        function querySubtypes ($instance,$all) {
+            //this function returns all active subtypes
+            if (!$all){
              $groups = array ();
+             $filter = new Filter ();
              $subtypes = $filter->subtypes ();
 			// $subtypes: all names of subtypes
 			foreach ($subtypes as $key => $subtype){
 				// compares the user marked subtypes, if TRUE, save the subtype.
 				if ('true' === $instance [$key]) {
-                                   $groups = $util->entrys($queryStandar,$subtype,$cache, $groups);
+                                    array_push($groups, $subtype);
 				}
 			}
 			if ($instance ['thesis'] === 'true') {
@@ -54,10 +55,12 @@ class Shortcode {
 				$all_thesis = $filter->vectorTesis ();
 				// $all_thesis: all subtypes thesis
 				foreach ( $all_thesis as $type ) {
-                                    $groups = $util->entrys($queryStandar,$type,$cache, $groups);
+                                    array_push($groups, $type);
 				}
 			}
-               return $groups;
+                return $groups;
+              }
+            else { return; }   
         }
         function maxResults($max_results){
             if ( $max_results < 1) { $max_results = 10;}
@@ -68,11 +71,10 @@ class Shortcode {
             $instance = shortcode_atts ( default_shortcode (), $atts );
             $handle = $instance ['handle'] ;
             $author = $instance ['author']; 
-            $keywords = $instance ['keywords'] ;
-            if ( is_null($author) && is_null($handle) && is_null($keywords)) {
-                echo "Ingrese al menos una de las opciones: handle - author - keywords";
-            } 
-            else {
+            $keywords = $instance ['keywords'];
+            $util = new Query();
+            
+            if ($util->validete($author,$handle,$keywords)){
                     $description = $instance ['description'] === 'true' ? "description" : false;
                     $date = ($instance ['date'] === 'true');
                     $show_author = ($instance ['show_author'] === 'true');
@@ -80,16 +82,13 @@ class Shortcode {
                     $all = ($instance ['all'] === 'true');
                     $max_results = $this->maxResults($instance ['max_results']);
                     $maxlenght = $instance ['max_lenght'];
-                    $util = new Query();
+                    
+                    
                     $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
-                    $groups = array ();
-                    if (!$all){
-                       $groups = $this->querySubtypes($instance, $util, $queryStandar);
-                    }else { 
-                            $groups =$util->createQuery( $queryStandar,  $cache);
-                        }
+                    $subtypes = $this->querySubtypes($instance,$all);
+                    $groups = $util->getPublications($all, $queryStandar, $cache, $subtypes);
                     $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght);
                     $util->render ( $all, $groups, $attributes );
-		}
-	}
+            }
+        }    
 }

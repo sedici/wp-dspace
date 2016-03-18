@@ -39,7 +39,14 @@ class Query {
             }
             return "(".implode('%20OR%20', $conditions).")";
         }
-        
+        public function validete($author,$handle,$keywords){
+            if (( is_null($author) && is_null($handle) && is_null($keywords)) ||
+                ( empty($author) && empty($handle) && empty($keywords)) ){
+                echo "Ingrese al menos una de las opciones: handle - author - keywords";
+                return false;
+            } 
+            else { return true; }
+        }
         public function querySubtype ($query , $type) {
             if (strpos($query, Q_QUERY) === false) {
                 $query .= "&". Q_QUERY."=";
@@ -73,7 +80,7 @@ class Query {
 		return $entry;
 	}
         
-        function entrys ($queryStandar,$subtype,$cache, $groups){
+        function entrys ($queryStandar,$subtype,$cache,$groups){
              $query = $this->querySubtype($queryStandar,$subtype);
              $entrys =  $this->createQuery( $query,  $cache);
              if (!empty($entrys)) { 
@@ -82,7 +89,25 @@ class Query {
             }
             return $groups;
         }
-                
+        function concatenarSubtypes($subtypes,$cache,$queryStandar){
+            $groups = Array ();
+            foreach ( $subtypes as $type ) {
+            //compares the user marked subtypes, if ON, save the subtype.
+                $groups = $this->entrys($queryStandar,$type,$cache,$groups);  
+            }
+            return $groups;
+        }
+        
+        function getPublications($all, $queryStandar, $cache, $subtypes = ""){
+            if(!$all) {
+                $groups = $this->concatenarSubtypes($subtypes,$cache,$queryStandar);
+            }
+            else { 
+                $groups =$this->createQuery( $queryStandar,  $cache);
+            }
+            return $groups;
+        }
+        
 	function group_attributes($description, $date, $show_author, $maxlenght) {
 		return ( array (
 				'description' => $description,

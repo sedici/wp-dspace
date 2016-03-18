@@ -56,24 +56,31 @@ class Sedici extends WP_Widget {
             } else { $max = 0; }
             return $max;
         }
-        function querySubtypes($instance,$groups,$queryStandar){
-            $subtypes = $this->filter->subtypes();
-            // $subtypes: all names of subtypes
-            $cache = $instance['cache'];
-            foreach ( $subtypes as $type ) {
-            //compares the user marked subtypes, if ON, save the subtype.
-                if ('on' == $instance [$type]) {
-                    $groups = $this->util->entrys($queryStandar,$type,$cache, $groups);
-                }   
-            }
-            return $groups;
+        
+        
+        function querySubtypes ($instance,$all) {
+            //this function returns all active subtypes
+            if (!$all){
+             $groups = array ();
+             $subtypes = $this->filter->subtypes();
+			// $subtypes: all names of subtypes
+			foreach ($subtypes as $type){
+				// compares the user marked subtypes, if TRUE, save the subtype.
+				 if ('on' == $instance [$type]) {
+                                    array_push($groups, $type);
+				}
+			}
+                return $groups;
+              }
+            else { return; }   
         }
+
 	function widget($args, $instance) {
 		extract ( $args );
 		$handle = apply_filters ( 'handle', $instance ['handle'] );
                 $author = apply_filters ( 'author', $instance ['author'] ); 
-                $keywords = apply_filters ( 'keywords', $instance ['keywords'] ); 
-		if (!(empty($author)) || !(empty($handle)) || !(empty($keywords))) { 
+                $keywords = apply_filters ( 'keywords', $instance ['keywords'] ); 	
+                if($this->util->validete($author,$handle,$keywords)){
                         $description = $this->description($instance ['description'], $instance ['summary']);
 			$maxlenght = $this->limit_text($instance ['limit'],$instance ['maxlenght']);
 			$show_author = ('on' == $instance ['show_author']);
@@ -86,21 +93,15 @@ class Sedici extends WP_Widget {
 			//$cache: duration in seconds of cache
                         $all = ('on' == $instance ['all']);
 			//$all: all publications without subtype
+                        
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
-                        $groups = array ();
-                        if(!$all) {
-                            $groups = $this->querySubtypes($instance, $groups, $queryStandar);
-                        }
-                        else { 
-                            $groups =$this->util->createQuery( $queryStandar,  $cache);
-                        }
+                        $subtypes = $this->querySubtypes($instance,$all);
+                        $groups = $this->util->getPublications($all, $queryStandar, $cache, $subtypes);
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght);
-                        $this->util->render ( $all, $groups, $attributes );
-		} else {
-			echo "Ingrese al menos uno de los campos Handle - Autores - Palabras claves";
-		}
-	}
-	
+                        $this->util->render ( $all, $groups, $attributes );        
+		} 
+        }   
+
 	/**
 	 * @see WP_Widget::update
 	 */
@@ -245,6 +246,8 @@ class Sedici extends WP_Widget {
 	<br />
         <?php
 		}//end foreach subtypes
+?></p>
+<?php
 	}
 }
 add_action ( 'admin_enqueue_scripts', 'my_scripts_method' );
