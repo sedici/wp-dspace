@@ -17,7 +17,7 @@ function default_shortcode(){
 		'author' => null,
                 'keywords' => null,
 		'max_results' => 10,
-		'max_lenght' => 0,
+		'max_lenght' => null,
 		'all' => false,
 		'description' => false,
 		'date' => false,
@@ -63,9 +63,15 @@ class Shortcode {
             else { return; }   
         }
         function maxResults($max_results){
-            if ( $max_results < 1) { $max_results = 10;}
-            else { if ( $max_results > 100) { $max_results = 100;} }
+            if ( $max_results < min_results()) { $max_results = min_results();}
+            else { if ( $max_results > total_results()) { $max_results = total_results();} }
             return $max_results;
+        }
+        function maxLenght($max_lenght){
+            if (!is_null($max_lenght)){
+		 if ( $max_lenght < min_results()) { $max_lenght = show_text();}
+            }
+            return $max_lenght;
         }
 	function plugin_sedici($atts) {
             $instance = shortcode_atts ( default_shortcode (), $atts );
@@ -81,11 +87,11 @@ class Shortcode {
                     $cache = $instance ['cache'];//default value from filer.php
                     $all = ($instance ['all'] === 'true');
                     $max_results = $this->maxResults($instance ['max_results']);
-                    $maxlenght = $instance ['max_lenght'];
-                    
+                    $maxlenght = $this->maxLenght($instance ['max_lenght']);
+                    $subtypes = $this->querySubtypes($instance,$all);
+                    //$subtypes: all selected documents subtypes
                     
                     $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
-                    $subtypes = $this->querySubtypes($instance,$all);
                     $groups = $util->getPublications($all, $queryStandar, $cache, $subtypes);
                     $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght);
                     $util->render ( $all, $groups, $attributes );

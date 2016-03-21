@@ -11,6 +11,7 @@
  */
 ?>
 <?php
+include_once 'util/config.php';
 require_once 'Shortcode.php';
 require_once 'util/Filter.php';
 require_once 'util/Query.php';
@@ -50,10 +51,10 @@ class Sedici extends WP_Widget {
         
         public function limit_text($limit,$max){
             if ('on' == $limit){
-                if (empty($max)){
-                    $max =  S_TEXT; //default lenght
+                if ( (empty($max)) || ($max < min_results())){
+                    $max =  show_text(); //default lenght
                 }
-            } else { $max = 0; }
+            } else { $max = null; }
             return $max;
         }
         
@@ -93,9 +94,10 @@ class Sedici extends WP_Widget {
 			//$cache: duration in seconds of cache
                         $all = ('on' == $instance ['all']);
 			//$all: all publications without subtype
+                        $subtypes = $this->querySubtypes($instance,$all);
+                        //$subtypes: all selected documents subtypes
                         
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
-                        $subtypes = $this->querySubtypes($instance,$all);
                         $groups = $this->util->getPublications($all, $queryStandar, $cache, $subtypes);
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght);
                         $this->util->render ( $all, $groups, $attributes );        

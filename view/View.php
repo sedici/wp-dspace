@@ -60,8 +60,15 @@ class View {
 	public function is_description($des){
 		return  ( ($des == "description" || $des == "summary"  ));
 	}
-	public function shorten_text($text,$maxlenght){
-		return ($this->html_especial_chars(substr($text, 0, $maxlenght).'...'));
+        
+	public function show_text($text,$maxlenght){
+            if (!is_null($maxlenght)){
+		echo ($this->html_especial_chars(substr($text, 0, $maxlenght).'...'));
+            }
+            else {
+               echo  $this->html_especial_chars($text);
+            }
+            return;
 	}
 	
 	public function show_description ($description,$item,$maxlenght){
@@ -75,11 +82,7 @@ class View {
                 } ?>
 		<span class="title sedici-style"><?php _e($title); ?></span>
                 <?php 
-                if ($maxlenght != 0){
-                    echo $this->shorten_text($show_text,$maxlenght);
-		} else {
-                    echo $this->html_especial_chars($show_text);
-		}
+                    $this->show_text($show_text,$maxlenght);
 		return;
 	}
 	

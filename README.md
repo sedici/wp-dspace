@@ -42,37 +42,31 @@ git pull origin master
 
 ## Configuración Shortcode
 
-Shortcode para handle:
-[get_publications_by_handle context="handle"]
+El shortcode para su correcto funcionamiento necesita alguno de los criterios de búsqueda: hable - author - keywords.
+Y si se quieren las últimas publicaciones indistintamente del subtipo de documento (all=true), o si se desea filtrar por algun criterio (article=true).
 
-Ejemplo de todas las publicaciones de PREBI-SEDICI:
-[get_publications_by_handle context="10915/25293"  all=true]
+[get_publications handle="Un/handle" author"Autor1 ; Autor2" keywords="Palabras ; claves" ]
 
-Shortcode para autores:
-[get_publications_by_author context="nombre autor"]
+Por ejemplo: Las publicaciones de la colección 10915/25293 sin importar el subtipo de documento.
+[get_publications handle=10915/25293 all=true max_results=15 ]
 
-Ejemplo: Mostrar solo un articulo (max_results=1) con descripción limitada a 200 caracteres del autor  De Giusti, Marisa Raquel
-[get_publications_by_author context=" De Giusti, Marisa Raquel"  article=true max_results=1 description=true max_lenght=200]
-
-Shortcode para busqueda libre:
-[get_publications_by_free_search context="Un texto"]
-Ejemplo: como maximo 25 articulos que contengan el texto "UNLP"
-[get_publications_by_free_search context="UNLP"  max_results=25 article=true]
-
+Se puede acotar aún más los resultados, especificando uno/varios autores o palabras claves separados por ";".
+Ejemplo:
+[get_publications handle=10915/25293 author="De Giusti, Marisa Raquel;Gonzalo Luján" keywords=" DSpace ; CMS" thesis=true  article=true description=true ]
 
 Opciones y sus valores por defecto:
 
-'all' => false, // Poner en true para mostrar todos los documentos sin importar los subtipos
+'all' => false, // Poner en true para mostrar todos los documentos sin importar los subtipos.
 
-'max_results' => 0, // Limitar el numero a mostrar de documentos por subtipos
+'max_results' => 0, // Limitar el numero a mostrar de documentos por subtipos, como máximo 100.
 
-'max_lenght' => 0, // Poner un numero que limite la cantidad de caracteres a mostrar de la descripción
+'max_lenght' => null, // Poner un numero que limite la cantidad de caracteres a mostrar de la descripción.
 
-'description' => false, // Poner en true para mostrar un resumen del documento
+'description' => false, // Poner en true para mostrar un resumen de la publicación.
 
-'date' => false, // Poner en true para mostrar la fecha del documento
+'date' => false, // Poner en true para mostrar la fecha de la publicación.
 
-'show_author' => false, // Poner en true para mostrar los autores del documento
+'show_author' => false, // Poner en true para mostrar los autores de la publicación.
 
 
 Subtipos de documentos:

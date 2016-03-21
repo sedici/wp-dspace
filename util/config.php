@@ -29,6 +29,8 @@ define (SQ_SUBTYPE, "sedici.subtype:");
 define (S_TEXT , 150);
 define (S_CACHE,86400);
 define (S_START, 0);
+define(S_MAXRESULT, 100);
+define(S_MINRESULT,1);
 define (S_FILTER , '/discover?fq=author_filter%3A');
 define (S_SEPARATOR, '\|\|\|');
 
@@ -53,8 +55,14 @@ function get_standar_query($results){
 function standar_query($results){
    return get_base_url () . get_standar_query($results);
 }
-function total_results() {
+function show_text() {
     return  S_TEXT;
+}
+function total_results(){
+    return S_MAXRESULT;
+}
+function min_results(){
+    return S_MINRESULT;
 }
 function one_day(){
     return S_CACHE;
