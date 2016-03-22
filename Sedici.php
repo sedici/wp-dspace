@@ -174,6 +174,7 @@ class Sedici extends WP_Widget {
 	<?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
 	<label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:'); ?> 
        <input class="widefat" type="number" onKeyPress="return justNumbers(event);"
+                min="10"
 		id="<?php echo $this->get_field_id('maxlenght'); ?>"
 		name="<?php echo $this->get_field_name('maxlenght'); ?>" 
 		value="<?php echo $maxlenght; ?>" /></label>

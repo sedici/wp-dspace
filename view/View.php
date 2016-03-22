@@ -25,24 +25,14 @@ class View {
 	public function html_especial_chars($texto){
 		return (htmlspecialchars_decode($texto));
 	}
-	public function strtolower_text($text){
-		return strtolower(implode(S_CONECTOR5, $text));
-	}
-	public function ucwords_text($text){
-		$text = implode(" ", $text);
-		$text = ucwords($text);
-		$text = explode ( " ", $text );
-		return implode(S_CONECTOR5, $text);
+	public function remplace($text){
+		return str_replace(" ", S_CONECTOR5, $text);
 	}
 	public function link_author( $author){
 		$link = get_protocol_domain().S_FILTER;
-		$fullname = explode ( ",", $author );
-		$lastname = explode(" ", $fullname[0]);
-                if(count($fullname) >1) {$name = explode(" ", $fullname[1]);}
-                else {$name= $lastname;}
-		$link .= $this->strtolower_text($lastname).S_CONECTOR4;
-		$link.=$this->strtolower_text($name).S_SEPARATOR;
-		$link .= $this->ucwords_text($lastname).S_CONECTOR4.$this->ucwords_text($name);
+                $name = str_replace(",", S_CONECTOR4, $author);
+                $name = $this->remplace($name);
+                $link .= strtolower($name). S_SEPARATOR . $name;
 		return  ('<a href='.$link.'>'.$author.'</a>') ;
 	}
 	
