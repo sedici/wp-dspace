@@ -30,7 +30,19 @@ class Query {
 	public function total_results() {
 		return  $this->total_results;
 	}
-        
+        public function remplace($text){
+		return str_replace(" ", S_CONECTOR5, $text);
+	}
+        public function queryAuthor($words){
+            $Authors = Array();
+            foreach ( $words as $author ) {
+                $name = str_replace(",", S_CONECTOR4, $author);
+                $name = $this->remplace($name);
+                $query= strtolower($name). S_SEPARATOR . $name;
+                array_push($Authors, $query);
+            }    
+            return $this->concatenarCondiciones($Authors,SQ_AUTHORFILTER);
+        }
         public function concatenarCondiciones($words, $filterPrefix = ''){
             $conditions = '';
             foreach ( $words as $word ) {
@@ -56,16 +68,20 @@ class Query {
             return  $query."(".SQ_SUBTYPE."\"" .$type ."\"".")";
         }
         
+        public function splitImputs($imput){
+            return explode(';',$imput);
+        }
+        
         public function standarQuery($handle, $author, $keywords,$max_results){
             $queryEstandar = standar_query($max_results);
             $query= Array();
                 if (!empty($handle)) {$queryEstandar .="&". SQ_HANDLE . "=".$handle;}
                 if (!empty($author)) {
-                    $words = explode(';',$author);
-                    array_push($query, $this->concatenarCondiciones($words , SQ_AUTHOR));
+                    $words = $this->splitImputs($author);
+                    array_push($query, $this->queryAuthor($words));
                 }
                 if (!empty($keywords)) {
-                    $words = explode(';',$keywords);
+                    $words = $this->splitImputs($keywords);
                     array_push($query, $this->concatenarCondiciones($words));
                 }
                 if (!empty($query)) { $queryEstandar.="&". Q_QUERY."=". implode('%20AND%20', $query); }

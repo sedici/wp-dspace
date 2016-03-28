@@ -131,11 +131,12 @@ class Sedici extends WP_Widget {
 	/**
 	 * @see WP_Widget::form
 	 */
-        function show_imput ($type,$text,$id){
+        function show_imput ($type,$text,$id,$placeholder=""){
         ?>    
         <p>
         <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text); ?> 
         <input class="widefat"
+                placeholder="<?php echo $placeholder; ?>"
 		id="<?php echo $this->get_field_id($id); ?>"
 		name="<?php echo $this->get_field_name($id); ?>" type="text"
 		value="<?php echo $type; ?>" /></label>
@@ -158,9 +159,9 @@ class Sedici extends WP_Widget {
                 $author = esc_attr ( $instance ['author'] );
                 $keywords = esc_attr ( $instance ['keywords'] );
 		$maxlenght = esc_attr($instance['maxlenght']);
-                $this->show_imput($handle, 'Handle:', 'handle');
-                $this->show_imput($author, 'Autores:', 'author');
-                $this->show_imput($keywords, 'Palabras claves:', 'keywords');
+                $this->show_imput($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
+                $this->show_imput($author, 'Autores:', 'author','Apellidos, Nombres como en SEDICI');
+                $this->show_imput($keywords, 'Palabras claves:', 'keywords','Palabra1; Palabra2; etc');
 		?>
 <p>
     <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>

@@ -25,6 +25,7 @@ define ( _BASE_PATH, "/open-search/discover" );
 define ( SQ_HANDLE, "scope");
 define ( Q_QUERY, "query");
 define ( SQ_AUTHOR, "sedici.creator.person:");
+define(SQ_AUTHORFILTER, "author_filter:");
 define (SQ_SUBTYPE, "sedici.subtype:");
 define (S_TEXT , 150);
 define (S_CACHE,86400);
