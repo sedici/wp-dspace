@@ -205,7 +205,7 @@ class Sedici extends WP_Widget {
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
 		$one_day= one_day();
-		$all_days = $this->util->cache_days();
+		$all_days = cache_days();
 		foreach ($all_days as $day){
 			?>
 			<option value=<?php echo $day * $one_day;?>
@@ -222,7 +222,7 @@ class Sedici extends WP_Widget {
 		id="<?php echo $this->get_field_id('max_results'); ?>"
 		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
 		<?php
-		$results = $this->util->total_results();
+		$results = total_results();
 		foreach ( $results as $result ) {
 			?>
 			<option value=<?php echo $result;?>

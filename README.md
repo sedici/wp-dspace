@@ -50,7 +50,7 @@ Y si se quieren las últimas publicaciones indistintamente del subtipo de docume
 Por ejemplo: Las publicaciones de la colección 10915/25293 sin importar el subtipo de documento.
 [get_publications handle=10915/25293 all=true max_results=15 ]
 
-Se puede acotar aún más los resultados, especificando uno/varios autores o palabras claves separados por ";".
+Se puede acotar aún más los resultados, especificando uno/varios autores o palabras claves separados por ";" sin espacios en blanco entre nombres.
 Ejemplo:
 [get_publications handle=10915/25293 author="De Giusti, Marisa Raquel;Gonzalo Luján" keywords=" DSpace ; CMS" thesis=true  article=true description=true ]
 

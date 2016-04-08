@@ -12,24 +12,14 @@
 ?>
 <?php
 include_once dirname(__DIR__)."/view/View.php";
-class Query {
-	protected $cache_days;
-	protected $total_results;	
+class Query {	
         protected $model;
 	public function Query() {
-		$this->cache_days = array (3,7,14);
-		$this->total_results = array(10,25,50,100);
                 $this-> model = new SimplepieModel();
 	}
         public function get_model (){
             return $this->model;
         }
-        public function cache_days(){
-		return $this->cache_days;
-	}
-	public function total_results() {
-		return  $this->total_results;
-	}
         public function remplace($text){
 		return str_replace(" ", S_CONECTOR5, $text);
 	}

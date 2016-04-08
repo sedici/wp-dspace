@@ -64,7 +64,7 @@ class Shortcode {
         }
         function maxResults($max_results){
             if ( $max_results < min_results()) { $max_results = min_results();}
-            else { if ( $max_results > total_results()) { $max_results = total_results();} }
+            else { if ( $max_results > max_results()) { $max_results = max_results();} }
             return $max_results;
         }
         function maxLenght($max_lenght){
