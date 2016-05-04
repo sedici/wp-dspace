@@ -1,48 +1,12 @@
-/**
- * Plugin Name: Sedici-Plugin
- * Plugin URI: http://sedici.unlp.edu.ar/
- * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
- * Version: 1.0
- * Author: SEDICI - Paula Salamone Lacunza
- * Author URI: http://sedici.unlp.edu.ar/
- * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar
- * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
- */
-
-
-.go-to{
-	font-size: 14px;
-}
-
-.title{
-	font-style: italic;
-}
-.summary{
-	text-align: justify;
+.sedici-content{
+    display: inline;
+    text-align: justify !important;
     text-justify: inter-word;
+    font-family: arial;
+    font-size: 12px;
 }
-.sedici-style{
-  font-family: arial;
-  font-size: 12px;
-}
-
-
-p.conditionally-filter {
-    padding: 6px 8px;
-    min-width: 200px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-p.show-filter{
-	color:#444 !important;
-}
-
-p.conditionally-author {
-    padding: 6px 8px;
-    min-width: 200px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-p.show-author{
-	color:#444 !important;
+.sedici-title{
+    display: inline;
+    font-family: arial;
+    font-size: 14px;
 }

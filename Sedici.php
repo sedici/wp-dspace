@@ -19,7 +19,7 @@ require_once 'model/SimplepieModel.php';
 
 function my_styles() {
 	//include the style
-	wp_register_style ( 'Sedici', plugins_url ( 'Sedici-Plugin/css/styles.css' ) );
+	wp_register_style ( 'Sedici', plugins_url ( 'wp-dspace/css/styles.css' ) );
 	wp_enqueue_style ( 'Sedici' );
 }
 function my_scripts_method() {

@@ -54,8 +54,8 @@ class Shortcode {
 				// if thesis is true, save subtypes thesis
 				$all_thesis = $filter->vectorTesis ();
 				// $all_thesis: all subtypes thesis
-				foreach ( $all_thesis as $type ) {
-                                    array_push($groups, $type);
+				foreach ( $all_thesis as $thesis ) {
+                                    array_push($groups, $thesis);
 				}
 			}
                 return $groups;
