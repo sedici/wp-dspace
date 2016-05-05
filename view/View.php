@@ -25,8 +25,7 @@ class View {
 	}
 	
 	public function author($authors){ ?>
-            <div class="sedici-title"><?php _e('Autores:'); ?></div>
-            <div class="sedici-content">
+            <div id="sedici-title"><?php _e('Autores:'); ?>
             <?php
                 $names = array ();
 		foreach ( $authors as $author ) {
@@ -61,11 +60,11 @@ class View {
                         $title = 'Sumario:';
                         $show_text = $item->get_description ();
                 } ?>
-                <div class="sedici-title"><?php _e($title); ?></div>
-                <div class="sedici-content">
+                <div id="sedici-title"><?php _e($title); ?>
+                <span class="sedici-content">
                 <?php 
                     $this->show_text($show_text,$maxlenght);
-                ?>
+                    ?></span>
                 </div>
                 <?php
 		return;
@@ -87,18 +86,18 @@ class View {
 		?>
 		<li><article>
 			<title><?php echo $item->get_title ();?></title>
-                        <div class="sedici-title"><?php _e('T&iacute;tulo:'); ?></div>
-                        <div class="sedici-content"><a href="<?php echo $link; ?>">
-			<?php echo ($this->html_especial_chars($item->get_title ())); ?> 
-			</a>
+                        <div id="sedici-title"><?php _e('T&iacute;tulo:'); ?>
+                        <a href="<?php echo $link; ?>">
+                            <?php echo ($this->html_especial_chars($item->get_title ())); ?> 
+                        </a>
                         </div>  
 				<?php 
 				if ($attributes['show_author']){ $this->author($item->get_authors ()); }
 				if ($attributes['date']) 
                                 { ?>
                                     <published>
-                                        <div class="sedici-title"><?php _e('Fecha:'); ?> </div>
-                                        <div class="sedici-content"><?php  echo $item->get_date ( 'Y-m-d' ); ?></div>
+                                        <div id="sedici-title"><?php _e('Fecha:'); ?> 
+                                        <span class="sedici-content"><?php  echo $item->get_date ( 'Y-m-d' ); ?></span></div>
                                     </published>
 				<?php } //end if fecha  
 				$this->description($attributes['description'], $item,$attributes['max_lenght']);

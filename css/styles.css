@@ -1,12 +1,14 @@
 .sedici-content{
-    display: inline;
-    text-align: justify !important;
-    text-justify: inter-word;
-    font-family: arial;
+    font-weight: normal;
+    text-align: justify;
+    display: inline-block;
     font-size: 12px;
 }
-.sedici-title{
-    display: inline;
-    font-family: arial;
+.sedici-title a, #sedici-title a  {
+    font-weight: normal;
+}
+#sedici-title {
+    font-weight: bold;
     font-size: 14px;
+    
 }
