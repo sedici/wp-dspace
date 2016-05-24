@@ -97,36 +97,53 @@ class Query {
         function concatenarSubtypes($subtypes,$cache,$queryStandar){
             $groups = Array ();
             foreach ( $subtypes as $type ) {
-            //compares the user marked subtypes, if ON, save the subtype.
                 $groups = $this->entrys($queryStandar,$type,$cache,$groups);  
             }
             return $groups;
         }
         
-        function getPublications($all, $queryStandar, $cache, $subtypes = ""){
+        function group($entrys){
+            $model = $this->get_model();
+            $groups = array();
+            foreach ($entrys as $item){
+                $subtype = $model->type($item);
+                if (! array_key_exists( $subtype , $groups)) { 
+                    $groups[$subtype]=array ();
+                }
+                array_push($groups[$subtype],$item);
+            }
+            return $groups;
+        }
+                
+        function getPublications($all, $queryStandar, $cache, $subtypes = "", $show_group){
             if(!$all) {
                 $groups = $this->concatenarSubtypes($subtypes,$cache,$queryStandar);
             }
             else { 
                 $groups =$this->createQuery( $queryStandar,  $cache);
+                if ($show_group){
+                    $groups =  $this->group($groups);
+                }    
             }
             return $groups;
         }
         
-	function group_attributes($description, $date, $show_author, $maxlenght) {
+	function group_attributes($description, $date, $show_author, $maxlenght,$show_subtypes) {
 		return ( array (
 				'description' => $description,
 				'show_author' => $show_author,
 				'max_lenght' => $maxlenght,
+                                'show_subtypes' => $show_subtypes,
 				'date' => $date 
 		));
 	}
-	function render($all, $groups, $attributes) {
+	function render($show_groups, $groups, $attributes) {
 		$view = new View();
-		if ($all) {
-                    return ($view->all_publications ( $groups, $attributes));
-		} else {
+		if ($show_groups) {
+                    ksort($groups);
                     return ($view->publications( $groups, $attributes ));
-			}
+		} else {
+                    return ($view->all_publications ( $groups, $attributes));
+                }
 	}
 }

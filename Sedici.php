@@ -16,6 +16,7 @@ require_once 'Shortcode.php';
 require_once 'util/Filter.php';
 require_once 'util/Query.php';
 require_once 'model/SimplepieModel.php';
+include_once 'show_shortcode.php';
 
 function my_styles() {
 	//include the style
@@ -73,7 +74,7 @@ class Sedici extends WP_Widget {
 			}
                 return $groups;
               }
-            else { return; }   
+            return;    
         }
 
 	function widget($args, $instance) {
@@ -94,13 +95,17 @@ class Sedici extends WP_Widget {
 			//$cache: duration in seconds of cache
                         $all = ('on' == $instance ['all']);
 			//$all: all publications without subtype
+                        if ($all) { $show_group = ('on' == $instance ['group']); }
+                        else { $show_group=true; }
+                        
                         $subtypes = $this->querySubtypes($instance,$all);
                         //$subtypes: all selected documents subtypes
+                        $show_subtypes = ('on' == $instance ['subtype']);
                         
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
-                        $groups = $this->util->getPublications($all, $queryStandar, $cache, $subtypes);
-                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght);
-                        $this->util->render ( $all, $groups, $attributes );        
+                        $groups = $this->util->getPublications($all, $queryStandar, $cache, $subtypes,$show_group);
+                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
+                        $this->util->render ( $show_group, $groups, $attributes );        
 		} 
         }   
 
@@ -122,6 +127,8 @@ class Sedici extends WP_Widget {
 		$instance ['cache'] = sanitize_text_field ( $new_instance ['cache'] );
 		$instance ['all'] = sanitize_text_field ( $new_instance ['all'] );
 		$instance ['limit'] = sanitize_text_field ( $new_instance ['limit'] );
+                $instance ['group'] = sanitize_text_field ( $new_instance ['group'] );
+                $instance ['subtype'] = sanitize_text_field ( $new_instance ['subtype'] );
 		foreach ( $subtypes as $s) {
 			$instance [$s] = sanitize_text_field ( $new_instance [$s] );
 		}
@@ -152,16 +159,55 @@ class Sedici extends WP_Widget {
             <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text); ?></label>
         <?php
         }
-                
+         
+        function show_thesis($instance){
+            $show_thesis=false;
+            $thesis = $this->filter->vectorTesis();
+            foreach ($thesis as $t){    
+                if ('on' == $instance [$t]) {
+                    $show_thesis = true;
+                }
+            }
+            if ($show_thesis) {
+                echo "thesis=true ";
+            }
+        }
+        
+        function show_shortcode($instance){
+        ?>    
+            <hr>
+            El shortcode de la configuración guardada es:
+            <?php 
+                echo "[".get_shortcode()." ";
+                echo get_label('handle', $instance['handle']);
+                echo get_label('author', $instance['author']);
+                echo get_label('free', $instance['keywords']);
+                $all = ('on' == $instance ['all']);
+                if (!$all){
+                    $subtypes = $this->filter->vectorSubtypes ();
+                    foreach ($subtypes as $key => $subtype){    
+                        echo is_on($key, $instance[$subtype]);
+                    }
+                    $this->show_thesis($instance);
+                }
+                echo " ]";
+            ?>
+            <hr>
+        <?php    
+        return;
+        }
+        
 	function form($instance) {
 		$max_results = esc_attr ( $instance ['max_results'] );
 		$handle = esc_attr ( $instance ['handle'] );
                 $author = esc_attr ( $instance ['author'] );
                 $keywords = esc_attr ( $instance ['keywords'] );
 		$maxlenght = esc_attr($instance['maxlenght']);
+                $this->show_shortcode($instance);
                 $this->show_imput($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
                 $this->show_imput($author, 'Autores:', 'author','Apellidos, Nombres como en SEDICI');
                 $this->show_imput($keywords, 'Palabras claves:', 'keywords','Palabra1; Palabra2; etc');
+                
 		?>
 <p>
     <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
@@ -235,9 +281,19 @@ class Sedici extends WP_Widget {
     </select>
 </label>
 </p>
+
+<p>
+    <?php $this->show_checkbox($instance['subtype'], 'Mostrar el tipo de documento', 'subtype'); ?>
+</p>
 <p class="show-filter">
     <?php $this->show_checkbox($instance['all'], 'Todas las publicaciones sin filtros', 'all'); ?>
 </p>
+
+<p class="conditionally-filter"
+	<?php echo checked($instance['all'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
+    <?php $this->show_checkbox($instance['group'], 'Agrupar por subtipos de documentos', 'group'); ?>
+</p>
+
 <hr>
 <hr>
 <p class="conditionally-filter"

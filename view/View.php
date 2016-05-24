@@ -70,6 +70,13 @@ class View {
 		return;
 	}
 	
+        public function type($entry){
+		//return subtype document
+		$description = $entry->get_description();
+		$filter = explode ( "\n", $description );
+		return ($filter[0]);
+	}
+        
 	public function description($description,$item,$maxlenght){
 		if($this->is_description($description)){
 			?>
@@ -100,6 +107,15 @@ class View {
                                         <span class="sedici-content"><?php  echo $item->get_date ( 'Y-m-d' ); ?></span></div>
                                     </published>
 				<?php } //end if fecha  
+                                if ($attributes['show_subtypes']) 
+                                { ?>
+                                    <subtype>
+                                        <div id="sedici-title"><?php _e('Tipo de documento:'); ?> 
+                                            <span class="sedici-content"><?php  echo $this->type($item); ?></span></div>
+                                    </subtype>
+				<?php } //end if fecha
+                                
+                                
 				$this->description($attributes['description'], $item,$attributes['max_lenght']);
 				?>
 		</article></li>

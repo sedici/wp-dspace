@@ -18,7 +18,9 @@ function default_shortcode(){
                 'keywords' => null,
 		'max_results' => 10,
 		'max_lenght' => null,
-		'all' => false,
+                'show_subtypes' =>false,
+		'all' => true,
+                'show_group' =>false,
 		'description' => false,
 		'date' => false,
 		'show_author' => false,
@@ -37,9 +39,9 @@ function default_shortcode(){
 }
 
 class Shortcode {
-        function querySubtypes ($instance,$all) {
+        function querySubtypes ($instance) {
             //this function returns all active subtypes
-            if (!$all){
+            $all=true;
              $groups = array ();
              $filter = new Filter ();
              $subtypes = $filter->subtypes ();
@@ -48,6 +50,7 @@ class Shortcode {
 				// compares the user marked subtypes, if TRUE, save the subtype.
 				if ('true' === $instance [$key]) {
                                     array_push($groups, $subtype);
+                                    $all=false;
 				}
 			}
 			if ($instance ['thesis'] === 'true') {
@@ -56,11 +59,13 @@ class Shortcode {
 				// $all_thesis: all subtypes thesis
 				foreach ( $all_thesis as $thesis ) {
                                     array_push($groups, $thesis);
+                                    $all=false;
 				}
 			}
+              if($all){          
                 return $groups;
               }
-            else { return; }   
+                else { return false; }   
         }
         function maxResults($max_results){
             if ( $max_results < min_results()) { $max_results = min_results();}
@@ -85,16 +90,19 @@ class Shortcode {
                     $date = ($instance ['date'] === 'true');
                     $show_author = ($instance ['show_author'] === 'true');
                     $cache = $instance ['cache'];//default value from filer.php
-                    $all = ($instance ['all'] === 'true');
                     $max_results = $this->maxResults($instance ['max_results']);
                     $maxlenght = $this->maxLenght($instance ['max_lenght']);
-                    $subtypes = $this->querySubtypes($instance,$all);
+                    $subtypes = $this->querySubtypes($instance);
                     //$subtypes: all selected documents subtypes
-                    
+                    $all = ($instance ['all'] === 'true');
+                    if (!$subtypes){ $all = true; }
+                    if ($all) { $show_group = ($instance ['show_group'] === 'true'); }
+                    else { $show_group=true; }
+                    $show_subtypes=($instance ['show_subtypes'] === 'true');
                     $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
-                    $groups = $util->getPublications($all, $queryStandar, $cache, $subtypes);
-                    $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght);
-                    $util->render ( $all, $groups, $attributes );
+                    $groups = $util->getPublications($all, $queryStandar,$cache, $subtypes,$show_group);
+                    $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
+                    $util->render (  $show_group, $groups, $attributes );
             }
         }    
 }
