@@ -190,6 +190,16 @@ class Sedici extends WP_Widget {
                     }
                     $this->show_thesis($instance);
                 }
+                echo get_label('max_results', $instance['max_results']);
+                $limit = ('on' == $instance ['limit']);
+                if ($limit){
+                    echo get_label('max_lenght', $instance['maxlenght']);
+                }
+                echo is_on('show_subtypes', $instance['subtype']);
+                echo is_on('group', $instance['group']);
+                echo is_on('description', $instance['description']);
+                echo is_on('date', $instance['date']);
+                echo is_on('show_author', $instance['show_author']);
                 echo " ]";
             ?>
             <hr>

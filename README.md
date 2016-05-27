@@ -45,7 +45,7 @@ git pull origin master
 El shortcode para su correcto funcionamiento necesita alguno de los criterios de búsqueda: hable - author - keywords.
 Y si se quieren las últimas publicaciones indistintamente del subtipo de documento (all=true), o si se desea filtrar por algun criterio (article=true).
 
-[get_publications handle="Un/handle" author"Autor1 ; Autor2" keywords="Palabras ; claves" ]
+[get_publications handle="Un/handle" author"Autor1;Autor2" keywords="Palabras;claves" ]
 
 Por ejemplo: Las publicaciones de la colección 10915/25293 sin importar el subtipo de documento.
 [get_publications handle=10915/25293 all=true max_results=15 ]
@@ -56,7 +56,7 @@ Ejemplo:
 
 Opciones y sus valores por defecto:
 
-'all' => false, // Poner en true para mostrar todos los documentos sin importar los subtipos.
+'all' => true, // Al especificar al menos un subtipo de documento, cambia a false.
 
 'max_results' => 0, // Limitar el numero a mostrar de documentos por subtipos, como máximo 100.
 
@@ -67,6 +67,10 @@ Opciones y sus valores por defecto:
 'date' => false, // Poner en true para mostrar la fecha de la publicación.
 
 'show_author' => false, // Poner en true para mostrar los autores de la publicación.
+
+'group' => false, // Poner en true para agrupar las publicaciones por subtipos de documentos cuando all=true.
+
+'show_subtypes' => false, // Poner en true para mostrar el subtipo de documento de la publicación.
 
 
 Subtipos de documentos:

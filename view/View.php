@@ -70,11 +70,11 @@ class View {
 		return;
 	}
 	
-        public function type($entry){
+        public function dctype($entry){
 		//return subtype document
 		$description = $entry->get_description();
-		$filter = explode ( "\n", $description );
-		return ($filter[0]);
+		$dctype = explode ( "\n", $description );
+		return ($dctype[0]);
 	}
         
 	public function description($description,$item,$maxlenght){
@@ -109,10 +109,10 @@ class View {
 				<?php } //end if fecha  
                                 if ($attributes['show_subtypes']) 
                                 { ?>
-                                    <subtype>
+                                    <dc:type>
                                         <div id="sedici-title"><?php _e('Tipo de documento:'); ?> 
-                                            <span class="sedici-content"><?php  echo $this->type($item); ?></span></div>
-                                    </subtype>
+                                            <span class="sedici-content"><?php  echo $this->dctype($item); ?></span></div>
+                                    </dc:type>
 				<?php } //end if fecha
                                 
                                 

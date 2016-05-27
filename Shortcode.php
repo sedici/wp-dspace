@@ -1,4 +1,27 @@
 <?php
+define('SHORTCODE', 'get_publications');
+
+
+function get_shortcode(){
+    return SHORTCODE;
+}
+
+function get_label($label,$value){
+    if(!empty($value)){
+        $text = $label.'="'.$value.'" ';
+        return $text;
+    }
+    return;
+}
+
+function is_on($label,$value){
+    if('on' == $value){
+        $text = $label.'=true ';
+        return $text;
+    }
+    return;
+}
+
 function LoadShortcode($atts) {
 	$shortcode = new Shortcode ();
         ob_start();
@@ -20,7 +43,7 @@ function default_shortcode(){
 		'max_lenght' => null,
                 'show_subtypes' =>false,
 		'all' => true,
-                'show_group' =>false,
+                'group' =>false,
 		'description' => false,
 		'date' => false,
 		'show_author' => false,
@@ -96,7 +119,7 @@ class Shortcode {
                     //$subtypes: all selected documents subtypes
                     $all = ($instance ['all'] === 'true');
                     if (!$subtypes){ $all = true; }
-                    if ($all) { $show_group = ($instance ['show_group'] === 'true'); }
+                    if ($all) { $show_group = ($instance ['group'] === 'true'); }
                     else { $show_group=true; }
                     $show_subtypes=($instance ['show_subtypes'] === 'true');
                     $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
