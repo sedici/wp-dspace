@@ -41,9 +41,10 @@ function default_shortcode(){
                 'keywords' => null,
 		'max_results' => 10,
 		'max_lenght' => null,
-                'show_subtypes' =>false,
+                'show_subtype' =>false,
 		'all' => true,
-                'group' =>false,
+                'group_subtype' =>false,
+                'group_date' =>false,
 		'description' => false,
 		'date' => false,
 		'show_author' => false,
@@ -62,7 +63,7 @@ function default_shortcode(){
 }
 
 class Shortcode {
-        function querySubtypes ($instance) {
+        function selectedSubtypes ($instance) {
             //this function returns all active subtypes
             $all=true;
              $groups = array ();
@@ -115,17 +116,19 @@ class Shortcode {
                     $cache = $instance ['cache'];//default value from filer.php
                     $max_results = $this->maxResults($instance ['max_results']);
                     $maxlenght = $this->maxLenght($instance ['max_lenght']);
-                    $subtypes = $this->querySubtypes($instance);
+                    $subtypes = $this->selectedSubtypes($instance);
                     //$subtypes: all selected documents subtypes
-                    $all = ($instance ['all'] === 'true');
-                    if (!$subtypes){ $all = true; }
-                    if ($all) { $show_group = ($instance ['group'] === 'true'); }
-                    else { $show_group=true; }
+                    if (!$subtypes){ $all = true; } else { $all=false;}
+                    $group_subtype=($instance ['group_subtype'] === 'true');
+                    $group_date=($instance ['group_date'] === 'true');
                     $show_subtypes=($instance ['show_subtypes'] === 'true');
-                    $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
-                    $groups = $util->getPublications($all, $queryStandar,$cache, $subtypes,$show_group);
+
+                    
                     $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
-                    $util->render (  $show_group, $groups, $attributes );
+                    $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
+                    $results= $util->getPublications($all, $queryStandar, $cache, $subtypes ,$group_subtype,$group_date);
+                    $util->render ($results,$attributes,$group_subtype,$group_date);
+                    
             }
         }    
 }

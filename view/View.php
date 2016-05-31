@@ -91,7 +91,7 @@ class View {
 	public function document($item,$attributes){
 		$link = $item->get_link ();	
 		?>
-		<li><article>
+		<article>
 			<title><?php echo $item->get_title ();?></title>
                         <div id="sedici-title"><?php _e('T&iacute;tulo:'); ?>
                         <a href="<?php echo $link; ?>">
@@ -118,31 +118,51 @@ class View {
                                 
 				$this->description($attributes['description'], $item,$attributes['max_lenght']);
 				?>
-		</article></li>
+		</article>
 		<?php 
 		return;
 	}
 	
-	public function publications($groups, $attributes) {
-		 foreach ($groups as $key => $entrys){
-		?>
-                <div class="sedici-title"><?php echo $key;?></div><!-- publication subtype -->
-		<?php
-                    $this->all_publications($entrys,$attributes);
-                }
-		return;
-	}
-	
-	public function all_publications($groups, $attributes) {
-	?>
-            <ol>
-		<?php 
-			foreach ($groups as $item){
+	public function publicationsByDateSubtype($entrys, $attributes) {
+                    $date="";$subtype="";
+			foreach ($entrys as $item){
+                            $date2=$date;
+                            $date=$item->get_date ( 'Y' );
+                            $subtype2=$subtype;
+                            $subtype= $this->dctype($item);
+                            if($date != $date2) { echo "<h2>".$date."</h2>";
+                            $subtype2="";
+                            }
+                            if($subtype != $subtype2) { echo "<h3>".$subtype."</h3>";}
                             $this->document($item, $attributes);
 			}
-		?>
-            </ol>
-        <?php 
             return ;
-	}	
+	}
+        public function publicationsByDate($entrys, $attributes) {
+                    $date="";
+			foreach ($entrys as $item){
+                            $date2=$date;
+                            $date=$item->get_date ( 'Y' );
+                            if($date != $date2) { echo "<h2>".$date."</h2>";}
+                            $this->document($item, $attributes);
+			}
+            return ;
+	}
+        public function publicationsBySubtype($entrys, $attributes) {
+                    $subtype="";
+			foreach ($entrys as $item){
+                            $subtype2=$subtype;
+                            $subtype= $this->dctype($item);
+                             if($subtype != $subtype2) { echo "<h2>".$subtype."</h2>";}
+                            $this->document($item, $attributes);
+			}
+            return ;
+	}
+        public function allPublications($entrys, $attributes) {
+			foreach ($entrys as $item){
+                            $this->document($item, $attributes);
+			}
+            return ;
+	}
+        
 } // end class

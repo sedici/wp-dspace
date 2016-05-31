@@ -16,7 +16,6 @@ require_once 'Shortcode.php';
 require_once 'util/Filter.php';
 require_once 'util/Query.php';
 require_once 'model/SimplepieModel.php';
-include_once 'show_shortcode.php';
 
 function my_styles() {
 	//include the style
@@ -60,7 +59,7 @@ class Sedici extends WP_Widget {
         }
         
         
-        function querySubtypes ($instance,$all) {
+        function selectedSubtypes ($instance,$all) {
             //this function returns all active subtypes
             if (!$all){
              $groups = array ();
@@ -93,19 +92,21 @@ class Sedici extends WP_Widget {
 			//$max_results: total results of subtype
                         $cache = apply_filters ( 'cache', $instance ['cache'] ); 
 			//$cache: duration in seconds of cache
+                        $show_subtypes = ('on' == $instance ['show_subtype']);
+                        //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
                         $all = ('on' == $instance ['all']);
-			//$all: all publications without subtype
-                        if ($all) { $show_group = ('on' == $instance ['group']); }
-                        else { $show_group=true; }
+			//$all: all publications without subtype filter
+                        $group_year= ('on' == $instance ['group_year']);
+                        $group_subtype = ('on' == $instance ['group_subtype']);
                         
-                        $subtypes = $this->querySubtypes($instance,$all);
+                        $subtypes_selected = $this->selectedSubtypes($instance,$all);
                         //$subtypes: all selected documents subtypes
-                        $show_subtypes = ('on' == $instance ['subtype']);
                         
-                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
-                        $groups = $this->util->getPublications($all, $queryStandar, $cache, $subtypes,$show_group);
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
-                        $this->util->render ( $show_group, $groups, $attributes );        
+                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
+                        
+                        $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected ,$group_subtype,$group_year);
+                        $this->util->render ($results,$attributes,$group_subtype,$group_year);        
 		} 
         }   
 
@@ -127,8 +128,9 @@ class Sedici extends WP_Widget {
 		$instance ['cache'] = sanitize_text_field ( $new_instance ['cache'] );
 		$instance ['all'] = sanitize_text_field ( $new_instance ['all'] );
 		$instance ['limit'] = sanitize_text_field ( $new_instance ['limit'] );
-                $instance ['group'] = sanitize_text_field ( $new_instance ['group'] );
-                $instance ['subtype'] = sanitize_text_field ( $new_instance ['subtype'] );
+                $instance ['group_subtype'] = sanitize_text_field ( $new_instance ['group_subtype'] );
+                $instance ['group_year'] = sanitize_text_field ( $new_instance ['group_year'] );
+                $instance ['show_subtype'] = sanitize_text_field ( $new_instance ['show_subtype'] );
 		foreach ( $subtypes as $s) {
 			$instance [$s] = sanitize_text_field ( $new_instance [$s] );
 		}
@@ -195,8 +197,9 @@ class Sedici extends WP_Widget {
                 if ($limit){
                     echo get_label('max_lenght', $instance['maxlenght']);
                 }
-                echo is_on('show_subtypes', $instance['subtype']);
-                echo is_on('group', $instance['group']);
+                echo is_on('show_subtype', $instance['show_subtype']);
+                echo is_on('group_subtype', $instance['group_subtype']);
+                echo is_on('group_date', $instance['group_year']);
                 echo is_on('description', $instance['description']);
                 echo is_on('date', $instance['date']);
                 echo is_on('show_author', $instance['show_author']);
@@ -293,15 +296,16 @@ class Sedici extends WP_Widget {
 </p>
 
 <p>
-    <?php $this->show_checkbox($instance['subtype'], 'Mostrar el tipo de documento', 'subtype'); ?>
+    <?php $this->show_checkbox($instance['show_subtype'], 'Mostrar el tipo de documento', 'show_subtype'); ?>
+</p>
+<p>
+    <?php $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year'); ?>
+</p>
+<p>
+    <?php $this->show_checkbox($instance['group_subtype'], 'Agrupar por subtipos de documentos', 'group_subtype'); ?>
 </p>
 <p class="show-filter">
     <?php $this->show_checkbox($instance['all'], 'Todas las publicaciones sin filtros', 'all'); ?>
-</p>
-
-<p class="conditionally-filter"
-	<?php echo checked($instance['all'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
-    <?php $this->show_checkbox($instance['group'], 'Agrupar por subtipos de documentos', 'group'); ?>
 </p>
 
 <hr>
