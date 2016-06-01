@@ -121,9 +121,7 @@ class Shortcode {
                     if (!$subtypes){ $all = true; } else { $all=false;}
                     $group_subtype=($instance ['group_subtype'] === 'true');
                     $group_date=($instance ['group_date'] === 'true');
-                    $show_subtypes=($instance ['show_subtypes'] === 'true');
-
-                    
+                    $show_subtypes=($instance ['show_subtype'] === 'true');
                     $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
                     $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
                     $results= $util->getPublications($all, $queryStandar, $cache, $subtypes ,$group_subtype,$group_date);

@@ -98,13 +98,10 @@ class Sedici extends WP_Widget {
 			//$all: all publications without subtype filter
                         $group_year= ('on' == $instance ['group_year']);
                         $group_subtype = ('on' == $instance ['group_subtype']);
-                        
                         $subtypes_selected = $this->selectedSubtypes($instance,$all);
                         //$subtypes: all selected documents subtypes
-                        
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
-                        
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected ,$group_subtype,$group_year);
                         $this->util->render ($results,$attributes,$group_subtype,$group_year);        
 		} 
@@ -220,43 +217,9 @@ class Sedici extends WP_Widget {
                 $this->show_imput($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
                 $this->show_imput($author, 'Autores:', 'author','Apellidos, Nombres como en SEDICI');
                 $this->show_imput($keywords, 'Palabras claves:', 'keywords','Palabra1; Palabra2; etc');
-                
+                $duration = esc_attr ( $instance ['cache'] );
+                if (empty($duration)) { $duration = defaultCache();}
 		?>
-<p>
-    <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
-</p>
-
-<p class="limit">
-    <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit') ?>
-</p>
-
-<p class="conditionally-limit"
-	<?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
-	<label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:'); ?> 
-       <input class="widefat" type="number" onKeyPress="return justNumbers(event);"
-                min="10"
-		id="<?php echo $this->get_field_id('maxlenght'); ?>"
-		name="<?php echo $this->get_field_name('maxlenght'); ?>" 
-		value="<?php echo $maxlenght; ?>" /></label>
-</p>
-
-
-<p class="description-ds">
-    <?php $this->show_checkbox($instance['description'], 'Mostrar Resumen', 'description') ?>
-</p>
-
-<p class="conditionally-description"
-<?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
-     <?php $this->show_checkbox($instance['summary'], 'Mostrar Sumario', 'summary') ?>
-</p>
-
-<p>
-     <?php $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date') ?>
-</p>
-	
-<?php $duration = esc_attr ( $instance ['cache'] );
-      if (empty($duration)) { $duration = defaultCache();}
-?>
 <p>
 	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> 
             <select class='widefat'
@@ -273,8 +236,47 @@ class Sedici extends WP_Widget {
 		<?php } //end foreach?>
             </select>
 	</label>
+</p>            
+            
+<p>
+    <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
 </p>
 
+<p>
+     <?php $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date') ?>
+</p>
+	
+<p>
+    <?php $this->show_checkbox($instance['show_subtype'], 'Mostrar el tipo de documento', 'show_subtype'); ?>
+</p>
+<div class="description-ds">
+<p class="description-ds">
+    <?php $this->show_checkbox($instance['description'], 'Mostrar Resumen', 'description') ?>
+</p>
+</div>
+<p class="conditionally-description"
+<?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
+     <?php $this->show_checkbox($instance['summary'], 'Mostrar Sumario', 'summary') ?>
+</p>
+
+<div class="conditionally-description"
+     <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>
+>
+<p class="limit">
+   <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit') ?>
+</p>
+
+<p class="conditionally-limit"
+        <?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>
+>
+	<label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:'); ?> 
+       <input class="widefat" type="number" onKeyPress="return justNumbers(event);"
+                min="10"
+		id="<?php echo $this->get_field_id('maxlenght'); ?>"
+		name="<?php echo $this->get_field_name('maxlenght'); ?>" 
+		value="<?php echo $maxlenght; ?>" /></label>
+</p>
+</div>
 <p>
 <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Cantidad de Resultados a mostrar'); ?> 
     <select class='widefat'
@@ -293,10 +295,6 @@ class Sedici extends WP_Widget {
 		?>
     </select>
 </label>
-</p>
-
-<p>
-    <?php $this->show_checkbox($instance['show_subtype'], 'Mostrar el tipo de documento', 'show_subtype'); ?>
 </p>
 <p>
     <?php $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year'); ?>

@@ -138,26 +138,28 @@ class View {
 			}
             return ;
 	}
-        public function publicationsByDate($entrys, $attributes) {
-                    $date="";
+        public function group($item,$group){
+            if ($group == "date") {
+                return $item->get_date ( 'Y' );
+            } else if ( $group == "subtype") {
+                return $this->dctype($item);
+            }
+        }
+        
+        public function publicationsByGroup($entrys, $attributes, $group) {
+                    $order="";
 			foreach ($entrys as $item){
-                            $date2=$date;
-                            $date=$item->get_date ( 'Y' );
-                            if($date != $date2) { echo "<h2>".$date."</h2>";}
+                            $value=$order;
+                            $order= $this->group($item, $group);
+                             if($value != $order) {
+                                 ?><h2><?php echo $order; ?></h2><?php
+                             }
                             $this->document($item, $attributes);
 			}
             return ;
 	}
-        public function publicationsBySubtype($entrys, $attributes) {
-                    $subtype="";
-			foreach ($entrys as $item){
-                            $subtype2=$subtype;
-                            $subtype= $this->dctype($item);
-                             if($subtype != $subtype2) { echo "<h2>".$subtype."</h2>";}
-                            $this->document($item, $attributes);
-			}
-            return ;
-	}
+        
+        
         public function allPublications($entrys, $attributes) {
 			foreach ($entrys as $item){
                             $this->document($item, $attributes);

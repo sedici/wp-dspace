@@ -128,13 +128,8 @@ class Query {
           else{
           return strcmp($model->date($b), $model->date($a));}
         }
-                
-        function getPublications($all, $queryStandar, $cache, $subtypes_selected ,$group_subtype,$group_year){
-            if($all){
-                $results = $this->executeQuery($queryStandar, $cache);
-            } else {
-                $results = $this->executeQueryBySubtypes($subtypes_selected, $cache, $queryStandar);
-            }
+        
+        function group($group_year,$group_subtype,$results){
             if ($group_year && $group_subtype){
                usort($results,  array($this,"cmpDateSubtype"));
                return $results;
@@ -148,6 +143,15 @@ class Query {
               return $results;
             }
             return $results;
+        }  
+        
+        function getPublications($all, $queryStandar, $cache, $subtypes_selected ,$group_subtype,$group_year){
+            if($all){
+                $results = $this->executeQuery($queryStandar, $cache);
+            } else {
+                $results = $this->executeQueryBySubtypes($subtypes_selected, $cache, $queryStandar);
+            }
+            return $this->group($group_year, $group_subtype, $results);
         }
         
 	function group_attributes($description, $date, $show_author, $maxlenght,$show_subtypes) {
@@ -165,10 +169,10 @@ class Query {
                     return ($view->publicationsByDateSubtype ( $results, $attributes));
                 }
                 if ($group_date){
-                     return ($view->publicationsByDate ( $results, $attributes));
+                     return ($view->publicationsByDate ( $results, $attributes,"date"));
                 }
                 if ($group_subtype){
-                     return ($view->publicationsBySubtype ( $results, $attributes));
+                     return ($view->publicationsBySubtype ( $results, $attributes,"subtype"));
                 }
                 return $view->allPublications($results, $attributes);
 	}

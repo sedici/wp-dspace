@@ -1,6 +1,7 @@
 jQuery(document).ready(function() {
 	// inicializacion
-
+        var divConditionalDescription = 'div.conditionally-description';
+        var divDescription = 'div.description-ds';
 	var conditionalDescription = 'p.conditionally-description';
 	var description = 'p.description-ds input:checkbox';
 	
@@ -10,7 +11,8 @@ jQuery(document).ready(function() {
 	var conditionalLimit = 'p.conditionally-limit';
 	var checkLimit = 'p.limit';
         
-        var filters = new Array ( {selector:description, conditional:conditionalDescription } ,
+        var filters = new Array ( {selector:description, conditional:conditionalDescription },
+                                  {selector:divDescription, conditional:divConditionalDescription },
                                   {selector:checkFilter, conditional:conditionalFilter},
                                   {selector:checkLimit, conditional:conditionalLimit});
 

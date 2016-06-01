@@ -70,8 +70,13 @@ Opciones y sus valores por defecto:
 
 'group' => false, // Poner en true para agrupar las publicaciones por subtipos de documentos cuando all=true.
 
-'show_subtypes' => false, // Poner en true para mostrar el subtipo de documento de la publicación.
+'show_subtype' => false, // Poner en true para mostrar el subtipo de documento de la publicación.
 
+'group_subtype' => false, // Poner en true para agrupar las publicaciones por subtipo de documento (ordenados por año de publicación.).
+
+'group_date' => false, // Poner en true para agrupar las publicaciones por año.
+
+Si group_date=true y group_subtype=true entonces primero ordena por año y cada año por tipo de documento.
 
 Subtipos de documentos:
 
