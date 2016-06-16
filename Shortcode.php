@@ -39,6 +39,7 @@ function default_shortcode(){
 		'handle' => null,
 		'author' => null,
                 'keywords' => null,
+                'share' => false,
 		'max_results' => 10,
 		'max_lenght' => null,
                 'show_subtype' =>false,
@@ -122,7 +123,8 @@ class Shortcode {
                     $group_subtype=($instance ['group_subtype'] === 'true');
                     $group_date=($instance ['group_date'] === 'true');
                     $show_subtypes=($instance ['show_subtype'] === 'true');
-                    $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
+                    $share=($instance ['share'] === 'true');
+                    $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                     $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
                     $results= $util->getPublications($all, $queryStandar, $cache, $subtypes ,$group_subtype,$group_date);
                     $util->render ($results,$attributes,$group_subtype,$group_date);

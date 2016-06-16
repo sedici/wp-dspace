@@ -87,7 +87,23 @@ class View {
 		}
 		return;
 	}
-	
+        function share($link){
+        ?>
+            Compartir: 
+             <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $link;?>" target="_blank">
+                 <?php echo '<img src="' . plugins_url( 'img/share-facebook.png', dirname(__FILE__) ) . '" alt="Facebook logo" title="Compartir en Facebook">';?>
+             </a>
+             <a href="https://twitter.com/?status=<?php echo $link;?>" target="_blank">
+                  <?php echo '<img src="' . plugins_url( 'img/share-twitter.png', dirname(__FILE__) ) . '" alt="Twitter logo" title="Compartir en Twitter">';?>
+             </a>
+             <a href="https://plus.google.com/share?url=<?php echo $link;?>" target="_blank">
+                  <?php echo '<img src="' . plugins_url( 'img/share-plus.png', dirname(__FILE__) ) . '" alt="Google+ logo" title="Compartir en Google+">';?>
+             </a>
+             <a href="http://www.linkedin.com/shareArticle?url=<?php echo $link;?>" target="_blank">
+                  <?php echo '<img src="' . plugins_url( 'img/share-linkedin.png', dirname(__FILE__) ) . '" alt="Linkedin logo" title="Compartir en Linkedin">';?>
+             </a>
+        <?php    
+        }
 	public function document($item,$attributes){
 		$link = $item->get_link ();	
 		?>
@@ -114,9 +130,8 @@ class View {
                                             <span class="sedici-content"><?php  echo $this->dctype($item); ?></span></div>
                                     </dc:type>
 				<?php } //end if fecha
-                                
-                                
 				$this->description($attributes['description'], $item,$attributes['max_lenght']);
+                                if ($attributes['share']){ $this->share($link); }
 				?>
 		</article>
 		<?php 

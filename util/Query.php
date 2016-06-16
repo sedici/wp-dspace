@@ -154,12 +154,13 @@ class Query {
             return $this->group($group_year, $group_subtype, $results);
         }
         
-	function group_attributes($description, $date, $show_author, $maxlenght,$show_subtypes) {
+	function group_attributes($description, $date, $show_author, $maxlenght,$show_subtypes,$share) {
 		return ( array (
 				'description' => $description,
 				'show_author' => $show_author,
 				'max_lenght' => $maxlenght,
                                 'show_subtypes' => $show_subtypes,
+                                'share'=> $share,
 				'date' => $date 
 		));
 	}

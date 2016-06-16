@@ -84,6 +84,7 @@ class Sedici extends WP_Widget {
                 if($this->util->validete($author,$handle,$keywords)){
                         $description = $this->description($instance ['description'], $instance ['summary']);
 			$maxlenght = $this->limit_text($instance ['limit'],$instance ['maxlenght']);
+                        $share = ('on' == $instance ['share']);
 			$show_author = ('on' == $instance ['show_author']);
 			// $show_author: if ON, then $show_author = true
                         $date = ('on' == $instance ['date']);
@@ -100,7 +101,7 @@ class Sedici extends WP_Widget {
                         $group_subtype = ('on' == $instance ['group_subtype']);
                         $subtypes_selected = $this->selectedSubtypes($instance,$all);
                         //$subtypes: all selected documents subtypes
-                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes);
+                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected ,$group_subtype,$group_year);
                         $this->util->render ($results,$attributes,$group_subtype,$group_year);        
@@ -116,6 +117,7 @@ class Sedici extends WP_Widget {
 		$instance ['handle'] = sanitize_text_field ( $new_instance ['handle'] );
                 $instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
                 $instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
+                $instance ['share'] = sanitize_text_field ( $new_instance ['share'] );
 		$instance ['maxlenght'] = sanitize_text_field ( $new_instance ['maxlenght'] );
 		$instance ['description'] = sanitize_text_field ( $new_instance ['description'] );
 		$instance ['summary'] = sanitize_text_field ( $new_instance ['summary'] );
@@ -194,6 +196,7 @@ class Sedici extends WP_Widget {
                 if ($limit){
                     echo get_label('max_lenght', $instance['maxlenght']);
                 }
+                echo is_on('share', $instance['share']);
                 echo is_on('show_subtype', $instance['show_subtype']);
                 echo is_on('group_subtype', $instance['group_subtype']);
                 echo is_on('group_date', $instance['group_year']);
@@ -240,6 +243,10 @@ class Sedici extends WP_Widget {
             
 <p>
     <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
+</p>
+
+<p>
+    <?php $this->show_checkbox($instance['share'], 'Compartir', 'share')?>
 </p>
 
 <p>
