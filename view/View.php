@@ -21,7 +21,7 @@ class View {
                 $name = str_replace(",", S_CONECTOR4, $author);
                 $name = $this->remplace($name);
                 $link .= strtolower($name). S_SEPARATOR . $name;
-		return  ('<a href='.$link.'>'.$author.'</a>') ;
+		return  ('<a href='.$link.' target="_blank">'.$author.'</a>') ;
 	}
 	
 	public function author($authors){ ?>
@@ -87,13 +87,14 @@ class View {
 		}
 		return;
 	}
-        function share($link){
+        function share($link,$title){
         ?>
+        <div class="a_unline">
             Compartir: 
-             <a href="https://www.facebook.com/sharer/sharer.php?u=<?php echo $link;?>" target="_blank">
+             <a href="https://www.facebook.com/sharer/sharer.php?p[title]=<?php echo $title;?>&p[url]=<?php echo $link;?>" target="_blank">
                  <?php echo '<img src="' . plugins_url( 'img/share-facebook.png', dirname(__FILE__) ) . '" alt="Facebook logo" title="Compartir en Facebook">';?>
              </a>
-             <a href="https://twitter.com/?status=<?php echo $link;?>" target="_blank">
+             <a href="https://twitter.com/?status=<?php echo $title," ",$link," via @sedici_unlp";?>" target="_blank">
                   <?php echo '<img src="' . plugins_url( 'img/share-twitter.png', dirname(__FILE__) ) . '" alt="Twitter logo" title="Compartir en Twitter">';?>
              </a>
              <a href="https://plus.google.com/share?url=<?php echo $link;?>" target="_blank">
@@ -102,6 +103,7 @@ class View {
              <a href="http://www.linkedin.com/shareArticle?url=<?php echo $link;?>" target="_blank">
                   <?php echo '<img src="' . plugins_url( 'img/share-linkedin.png', dirname(__FILE__) ) . '" alt="Linkedin logo" title="Compartir en Linkedin">';?>
              </a>
+        </div>    
         <?php    
         }
 	public function document($item,$attributes){
@@ -110,7 +112,7 @@ class View {
 		<article>
 			<title><?php echo $item->get_title ();?></title>
                         <div id="sedici-title"><?php _e('T&iacute;tulo:'); ?>
-                        <a href="<?php echo $link; ?>">
+                        <a href="<?php echo $link; ?>" target="_blank">
                             <?php echo ($this->html_especial_chars($item->get_title ())); ?> 
                         </a>
                         </div>  
@@ -131,7 +133,7 @@ class View {
                                     </dc:type>
 				<?php } //end if fecha
 				$this->description($attributes['description'], $item,$attributes['max_lenght']);
-                                if ($attributes['share']){ $this->share($link); }
+                                if ($attributes['share']){ $this->share($link,$item->get_title ()); }
 				?>
 		</article>
 		<?php 
