@@ -170,10 +170,10 @@ class Query {
                     return ($view->publicationsByDateSubtype ( $results, $attributes));
                 }
                 if ($group_date){
-                     return ($view->publicationsByDate ( $results, $attributes,"date"));
+                     return ($view->publicationsByGroup( $results, $attributes,"date"));
                 }
                 if ($group_subtype){
-                     return ($view->publicationsBySubtype ( $results, $attributes,"subtype"));
+                     return ($view->publicationsByGroup( $results, $attributes,"subtype"));
                 }
                 return $view->allPublications($results, $attributes);
 	}
