@@ -87,7 +87,7 @@ class Shortcode {
                                     $all=false;
 				}
 			}
-              if($all){          
+              if(!$all){          
                 return $groups;
               }
                 else { return false; }   
