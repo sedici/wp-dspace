@@ -64,7 +64,7 @@ function default_shortcode(){
 }
 
 class Shortcode {
-        function selectedSubtypes ($instance) {
+        function selectedSubtypes ($instance,&$groups) {
             //this function returns all active subtypes
             $all=true;
              $groups = array ();
@@ -87,10 +87,7 @@ class Shortcode {
                                     $all=false;
 				}
 			}
-              if(!$all){          
-                return $groups;
-              }
-                else { return false; }   
+            return $all;   
         }
         function maxResults($max_results){
             if ( $max_results < min_results()) { $max_results = min_results();}
@@ -117,9 +114,7 @@ class Shortcode {
                     $cache = $instance ['cache'];//default value from filer.php
                     $max_results = $this->maxResults($instance ['max_results']);
                     $maxlenght = $this->maxLenght($instance ['max_lenght']);
-                    $subtypes = $this->selectedSubtypes($instance);
-                    //$subtypes: all selected documents subtypes
-                    if (!$subtypes){ $all = true; } else { $all=false;}
+                    $all = $this->selectedSubtypes($instance, $subtypes);
                     $group_subtype=($instance ['group_subtype'] === 'true');
                     $group_date=($instance ['group_date'] === 'true');
                     $show_subtypes=($instance ['show_subtype'] === 'true');
