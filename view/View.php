@@ -52,20 +52,19 @@ class View {
 	}
 	
 	public function show_description ($description,$item,$maxlenght){
-		if ($description == "description") {
-                        $title = "Resumen:";
+		if ($description == "description") { ?>
+                      <div id="sedici-title"><?php _e("Resumen:");  
                         $show_text = $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
                         $show_text = $show_text[0]['data'];
-                } else {
-                        $title = 'Sumario:';
+                } else {  ?>
+                     <div id="sedici-title"><?php _e('Sumario:'); 
                         $show_text = $item->get_description ();
                 } ?>
-                <div id="sedici-title"><?php _e($title); ?>
                 <span class="sedici-content">
                 <?php 
                     $this->show_text($show_text,$maxlenght);
-                    ?></span>
-                </div>
+                    ?>
+                </span></div>
                 <?php
 		return;
 	}
@@ -111,10 +110,10 @@ class View {
 		?>
 		<article>
 			<title><?php echo $item->get_title ();?></title>
-                        <div id="sedici-title"><?php _e('T&iacute;tulo:'); ?>
-                        <a href="<?php echo $link; ?>" target="_blank">
+                        <div id="sedici-title">
+                            <li><a href="<?php echo $link; ?>" target="_blank">
                             <?php echo ($this->html_especial_chars($item->get_title ())); ?> 
-                        </a>
+                            </a></li>
                         </div>  
 				<?php 
 				if ($attributes['show_author']){ $this->author($item->get_authors ()); }
@@ -142,6 +141,7 @@ class View {
 	
 	public function publicationsByDateSubtype($entrys, $attributes) {
                     $date="";$subtype="";
+                    ?><ul><?php
 			foreach ($entrys as $item){
                             $date2=$date;
                             $date=$item->get_date ( 'Y' );
@@ -153,6 +153,7 @@ class View {
                             if($subtype != $subtype2) { echo "<h3>".$subtype."</h3>";}
                             $this->document($item, $attributes);
 			}
+                    ?></ul><?php    
             return ;
 	}
         public function group($item,$group){
@@ -165,6 +166,7 @@ class View {
         
         public function publicationsByGroup($entrys, $attributes, $group) {
                     $order="";
+                    ?><ul><?php
 			foreach ($entrys as $item){
                             $value=$order;
                             $order= $this->group($item, $group);
@@ -173,14 +175,17 @@ class View {
                              }
                             $this->document($item, $attributes);
 			}
+                    ?></ul><?php    
             return ;
 	}
         
         
         public function allPublications($entrys, $attributes) {
+            ?><ul><?php
 			foreach ($entrys as $item){
                             $this->document($item, $attributes);
 			}
+            ?></ul><?php            
             return ;
 	}
         
