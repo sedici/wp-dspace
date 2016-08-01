@@ -110,10 +110,14 @@ class Query {
         function cmpSubtype($a, $b)
         {
             $model = $this->get_model();
-            if($model->type($b) == $model->type($a)){ 
+             if ($model->type($b) == $model->type($a)){
+             if($model->date($b) == $model->date($a)){ 
                  return 0;   
              }
-             return ($model->type($b) > $model->type($a)) ? -1 : 1;
+             return ($model->date($b) < $model->date($a)) ? -1 : 1;
+             }
+            else{
+            return strcmp($model->type($b), $model->type($a));}
         }
         
         function cmpDateSubtype($a, $b)

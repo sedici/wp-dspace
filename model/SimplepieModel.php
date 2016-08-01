@@ -32,7 +32,7 @@ class SimplepieModel {
 		return ($filter[0]);
 	}
         public function date($entry){
-            return $entry->get_date ( 'Y' );
+            return $entry->get_date ( 'Y-m-d' );
         }
 	public function totalResults($sxe){
 		$results=$sxe->get_feed_tags('http://a9.com/-/spec/opensearch/1.1/','totalResults');
