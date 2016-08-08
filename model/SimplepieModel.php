@@ -34,6 +34,9 @@ class SimplepieModel {
         public function date($entry){
             return $entry->get_date ( 'Y-m-d' );
         }
+        public function year($entry){
+            return $entry->get_date ( 'Y' );
+        }
 	public function totalResults($sxe){
 		$results=$sxe->get_feed_tags('http://a9.com/-/spec/opensearch/1.1/','totalResults');
 		return ($results[0]['data']);

@@ -48,8 +48,7 @@ class Query {
             } 
             else { return true; }
         }
-        
-        
+           
         public function splitImputs($imput){
             return explode(';',$imput);
         }
@@ -104,33 +103,28 @@ class Query {
         function cmpDate($a, $b)
         {
             $model = $this->get_model();
-            return strcmp($model->date($b), $model->date($a));
+            if ($model->date($b) == $model->date($a)){
+                return strcmp($model->type($a), $model->type($b));}
+            else {
+            return strcmp($model->date($b), $model->date($a));}
         } 
         
         function cmpSubtype($a, $b)
         {
             $model = $this->get_model();
-             if ($model->type($b) == $model->type($a)){
-             if($model->date($b) == $model->date($a)){ 
-                 return 0;   
-             }
-             return ($model->date($b) < $model->date($a)) ? -1 : 1;
-             }
-            else{
-            return strcmp($model->type($b), $model->type($a));}
+            if ($model->type($b) == $model->type($a)){
+                return strcmp($model->date($b), $model->date($a));}
+            else {
+                return strcmp($model->type($a), $model->type($b));}
         }
         
         function cmpDateSubtype($a, $b)
         {
-         $model = $this->get_model();
-         if ($model->date($b) == $model->date($a)){
-             if($model->type($b) == $model->type($a)){ 
-                 return 0;   
-             }
-             return ($model->type($b) > $model->type($a)) ? -1 : 1;
-         }
-          else{
-          return strcmp($model->date($b), $model->date($a));}
+            $model = $this->get_model();
+            if ($model->year($b) == $model->year($a)){
+                return $this->cmpSubtype($a, $b);}
+            else {
+            return strcmp($model->year($b), $model->year($a));}
         }
         
         function group($group_year,$group_subtype,$results){
