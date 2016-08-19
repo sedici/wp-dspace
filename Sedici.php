@@ -19,13 +19,13 @@ require_once 'model/SimplepieModel.php';
 
 function my_styles() {
 	//include the style
-	wp_register_style ( 'Sedici', plugins_url ( 'wp-dspace/css/styles.css' ) );
+	wp_register_style ( 'Sedici', plugin_dir_url ('media/css/styles.css' ));
 	wp_enqueue_style ( 'Sedici' );
 }
 function my_scripts_method() {
 	// include js archives
 	wp_enqueue_script ( 'jquery' );
-	wp_register_script ( 'sedici', plugins_url ( 'js/scrips.js', __FILE__ ), array ("jquery"), null, true );
+	wp_register_script ( 'sedici', plugins_url ( 'media/js/scrips.js', __FILE__ ), array ("jquery"), null, true );
 	wp_enqueue_script ( 'sedici' );
 }
 
@@ -73,7 +73,7 @@ class Sedici extends WP_Widget {
 			}
                 return $groups;
               }
-            return;    
+            return false;    
         }
 
 	function widget($args, $instance) {

@@ -2,7 +2,7 @@
 class View {
 	function View() {
 		// Register style sheet.
-		wp_register_style ( 'Vista', plugins_url ( 'wp-dspace/css/styles.css' ) );
+		wp_register_style ( 'Vista', plugin_dir_url (__FILE__). '../media/css/styles.css' );
 		wp_enqueue_style ( 'Vista' );
 	}
 
@@ -91,16 +91,16 @@ class View {
         <div class="a_unline">
             Compartir: 
              <a href="https://www.facebook.com/sharer/sharer.php?p[title]=<?php echo $title;?>&p[url]=<?php echo $link;?>" target="_blank">
-                 <?php echo '<img src="' . plugins_url( 'img/share-facebook.png', dirname(__FILE__) ) . '" alt="Facebook logo" title="Compartir en Facebook">';?>
+                 <?php echo '<img src="' . plugins_url( 'media/img/share-facebook.png', dirname(__FILE__) ) . '" alt="Facebook logo" title="Compartir en Facebook">';?>
              </a>
              <a href="https://twitter.com/?status=<?php echo $title," ",$link," via @sedici_unlp";?>" target="_blank">
-                  <?php echo '<img src="' . plugins_url( 'img/share-twitter.png', dirname(__FILE__) ) . '" alt="Twitter logo" title="Compartir en Twitter">';?>
+                  <?php echo '<img src="' . plugins_url( 'media/img/share-twitter.png', dirname(__FILE__) ) . '" alt="Twitter logo" title="Compartir en Twitter">';?>
              </a>
              <a href="https://plus.google.com/share?url=<?php echo $link;?>" target="_blank">
-                  <?php echo '<img src="' . plugins_url( 'img/share-plus.png', dirname(__FILE__) ) . '" alt="Google+ logo" title="Compartir en Google+">';?>
+                  <?php echo '<img src="' . plugins_url( 'media/img/share-plus.png', dirname(__FILE__) ) . '" alt="Google+ logo" title="Compartir en Google+">';?>
              </a>
              <a href="http://www.linkedin.com/shareArticle?url=<?php echo $link;?>" target="_blank">
-                  <?php echo '<img src="' . plugins_url( 'img/share-linkedin.png', dirname(__FILE__) ) . '" alt="Linkedin logo" title="Compartir en Linkedin">';?>
+                  <?php echo '<img src="' . plugins_url( 'media/img/share-linkedin.png', dirname(__FILE__) ) . '" alt="Linkedin logo" title="Compartir en Linkedin">';?>
              </a>
         </div>    
         <?php    

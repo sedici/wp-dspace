@@ -1,0 +1,18 @@
+.sedici-content{
+    font-weight: normal;
+    text-align: justify;
+    display: inline-block;
+    font-size: 12px;
+}
+.sedici-title a, #sedici-title a  {
+    font-weight: normal;
+}
+#sedici-title {
+    font-weight: bold;
+    font-size: 14px;
+    
+}
+
+.a_unline a{
+    text-decoration:none;   
+}

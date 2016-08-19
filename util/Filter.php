@@ -31,9 +31,9 @@ class Filter {
                  );
 	}
 	public function subtypes() {
-                $array = array_merge($this->vectorSubtypes(),$this->vectorTesis());
-                asort($array);
-		return $array;
+                $all_subtypes = array_merge($this->vectorSubtypes(),$this->vectorTesis());
+                asort($all_subtypes);
+                return $all_subtypes;
 	}
 	public function vectorTesis() {
 		return $this->thesis;
