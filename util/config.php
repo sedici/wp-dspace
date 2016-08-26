@@ -13,7 +13,7 @@
  */
 define ( 'Q_RPP', '100' );
 define ( 'Q_FORMAT', 'atom' );
-define ( 'Q_SORTBY', '3' );
+define ( 'Q_SORTBY', '2' );
 define ( 'Q_ORDER', 'desc' );
 define ( 'S_CONECTOR2', '%5C' );
 define ( 'S_CONECTOR3', '%7C' );
