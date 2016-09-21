@@ -13,6 +13,7 @@
 <?php
 include_once 'util/config.php';
 require_once 'Shortcode.php';
+require_once 'Dspace-config.php';
 require_once 'util/Filter.php';
 require_once 'util/Query.php';
 require_once 'model/SimplepieModel.php';
@@ -222,6 +223,8 @@ class Sedici extends WP_Widget {
                 $this->show_imput($keywords, 'Palabras claves:', 'keywords','Palabra1; Palabra2; etc');
                 $duration = esc_attr ( $instance ['cache'] );
                 if (empty($duration)) { $duration = defaultCache();}
+                $options = get_option( 'values' );
+                echo $options['prueba'];
 		?>
 <p>
 	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> 
@@ -332,4 +335,5 @@ class Sedici extends WP_Widget {
 add_action ( 'admin_enqueue_scripts', 'my_scripts_method' );
 add_action ( 'admin_enqueue_scripts', 'my_styles' );
 add_action ( 'widgets_init', create_function ( '', 'return register_widget("Sedici");' ) );
+add_action( 'admin_menu', 'dspace_config' );
 print_r( add_shortcode ( 'get_publications', 'DspaceShortcode' ));
