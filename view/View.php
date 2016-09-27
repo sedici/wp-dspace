@@ -24,17 +24,22 @@ class View {
 		return  ('<a href='.$link.' target="_blank">'.$author.'</a>') ;
 	}
 	
-	public function author($authors){ ?>
-            <div id="sedici-title"><?php _e('Autores:'); ?>
-            <?php
-                $names = array ();
-		foreach ( $authors as $author ) {
+	public function author($authors){ 
+            $names = array ();
+            foreach ( $authors as $author ) {
+                if(!empty($author->get_name ())){
                     array_push ($names, "<author><name>".$this->link_author($author->get_name ())."</name></author>");
-		}//end foreach autores
-            print_r(implode("-", $names));
+                }
+            }//end foreach autores
+            if (!empty($names)){
+            ?>
+            <div id="sedici-title">
+            <?php _e('Autores:');
+                print_r(implode("-", $names));
             ?>
             </div>
             <?php
+            }
             return;
 	}
 	public function is_description($des){

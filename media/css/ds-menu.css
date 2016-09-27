@@ -1,0 +1,29 @@
+/**
+ * Plugin Name: Sedici-Plugin
+ * Plugin URI: http://sedici.unlp.edu.ar/
+ * Description: This plugin connects the repository SEDICI in choique, with the purpose of showing the publications of authors or institutions
+ * Version: 1.0
+ * Author: SEDICI - Paula Salamone Lacunza
+ * Author URI: http://sedici.unlp.edu.ar/
+ * Copyright (c) 2016 SEDICI UNLP, http://sedici.unlp.edu.ar
+ * Distributed under the GNU GPL v3. For full terms see the file docs/COPYING.
+ */
+#menu-selector ul  {   display: inline; height: 18px;}
+#menu-selector ul li {   display: inline; height: 18px;}
+#menu-selector a {   float: left; padding: 5px 20px; list-style: none; border: 1px solid #999;   }
+#menu-selector a:hover  {   background-color: #999; color: #FFF;}
+#menu-selector a.aqui  {   background-color: #333; color: #FFF; box-shadow: 3px 0px 2px #ccc;
+                                    -webkit-box-shadow: 3px 0px 2px #ccc; -moz-box-shadow: 3px 0px 2px #ccc;}
+#menu-selector div  {   
+                        width: 100%; 
+                        padding: 20px;
+                        position:relative; top:10px;
+}
+
+#menu-selector ul.subtipos li{display:block;    }
+#menu-selector ul.subtipos li input {  }
+
+
+.tony a {display:inline-block; border:none!important; color:black !important;}
+.tony a:hover {text-decoration: underline; background-color: white !important;}
+.tony a::before {content: "√";}

@@ -18,12 +18,13 @@ require_once 'util/Filter.php';
 require_once 'util/Query.php';
 require_once 'model/SimplepieModel.php';
 
-function my_styles() {
+function dspace_styles() {
 	//include the style
-	wp_register_style ( 'Sedici', plugin_dir_url ('media/css/styles.css' ));
+	wp_register_style ( 'Sedici', plugins_url ( 'media/css/styles.css', __FILE__ ));
 	wp_enqueue_style ( 'Sedici' );
 }
-function my_scripts_method() {
+
+function dspace_scripts_method() {
 	// include js archives
 	wp_enqueue_script ( 'jquery' );
 	wp_register_script ( 'sedici', plugins_url ( 'media/js/scrips.js', __FILE__ ), array ("jquery"), null, true );
@@ -223,8 +224,6 @@ class Sedici extends WP_Widget {
                 $this->show_imput($keywords, 'Palabras claves:', 'keywords','Palabra1; Palabra2; etc');
                 $duration = esc_attr ( $instance ['cache'] );
                 if (empty($duration)) { $duration = defaultCache();}
-                $options = get_option( 'values' );
-                echo $options['prueba'];
 		?>
 <p>
 	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> 
@@ -332,8 +331,8 @@ class Sedici extends WP_Widget {
 <?php
 	}
 }
-add_action ( 'admin_enqueue_scripts', 'my_scripts_method' );
-add_action ( 'admin_enqueue_scripts', 'my_styles' );
+add_action ( 'admin_enqueue_scripts', 'dspace_scripts_method' );
+add_action ( 'admin_enqueue_scripts', 'dspace_styles' );
 add_action ( 'widgets_init', create_function ( '', 'return register_widget("Sedici");' ) );
 add_action( 'admin_menu', 'dspace_config' );
 print_r( add_shortcode ( 'get_publications', 'DspaceShortcode' ));
