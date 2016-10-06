@@ -165,7 +165,7 @@ class Query {
 	function render ($results,$attributes,$group_subtype,$group_date){
 		$view = new View();
                 if ($group_date && $group_subtype) {
-                    return ($view->publicationsByDateSubtype ( $results, $attributes));
+                    return ($view->publicationsByDateSubtype ( $results, $attributes,"date","subtype"));
                 }
                 if ($group_date){
                      return ($view->publicationsByGroup( $results, $attributes,"date"));

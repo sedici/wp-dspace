@@ -113,12 +113,12 @@ class View {
 	public function document($item,$attributes){
 		$link = $item->get_link ();	
 		?>
-		<article>
+		<li><article>
 			<title><?php echo $item->get_title ();?></title>
                         <div id="sedici-title">
-                            <li><a href="<?php echo $link; ?>" target="_blank">
+                            <a href="<?php echo $link; ?>" target="_blank">
                             <?php echo ($this->html_especial_chars($item->get_title ())); ?> 
-                            </a></li>
+                            </a>
                         </div>  
 				<?php 
 				if ($attributes['show_author']){ $this->author($item->get_authors ()); }
@@ -139,58 +139,114 @@ class View {
 				$this->description($attributes['description'], $item,$attributes['max_lenght']);
                                 if ($attributes['share']){ $this->share($link,$item->get_title ()); }
 				?>
-		</article>
+		</article></li>
 		<?php 
 		return;
 	}
 	
-	public function publicationsByDateSubtype($entrys, $attributes) {
-                    $date="";$subtype="";
-                    ?><ul><?php
-			foreach ($entrys as $item){
-                            $date2=$date;
-                            $date=$item->get_date ( 'Y' );
-                            $subtype2=$subtype;
-                            $subtype= $this->dctype($item);
-                            if($date != $date2) { echo "<h2>".$date."</h2>";
-                            $subtype2="";
-                            }
-                            if($subtype != $subtype2) { echo "<h3>".$subtype."</h3>";}
-                            $this->document($item, $attributes);
-			}
-                    ?></ul><?php    
-            return ;
-	}
         public function group($item,$group){
             if ($group == "date") {
                 return $item->get_date ( 'Y' );
             } else if ( $group == "subtype") {
                 return $this->dctype($item);
             }
+            return true;
+        }
+        public function corte($elem,$comparator,$value){
+            if($comparator=="date"){
+                return ($elem->get_date ( 'Y' )==$value);
+            }
+            elseif ($comparator=="subtype") {
+                return ($this->dctype($elem)==$value);
+            }
+            return true;
+        }
+        public function corteControl($anArray,$attributes,$position,$corte,$corte2=""){
+            $c=true; $c2=true; 
+            $condition= $this->group($anArray[$position],$corte);
+            $condition2= $this->group($anArray[$position],$corte2);
+            while ( ($position != count($anArray)) && ( $c ) && ($c2)) {
+                 $c = $this->corte($anArray[$position], $corte, $condition);
+                 $c2 = $this->corte($anArray[$position], $corte2, $condition2);
+                 if (($c) && ($c2)) {
+                    $this->document($anArray[$position], $attributes);
+                    $position++;
+                 }   
+             }
+             return $position;
+        }
+
+        public function publicationsByGroup($entrys, $attributes, $group) {
+                    $position=0;
+                    while ($position != count($entrys)){
+                        $currentElem= $entrys[$position];
+                        $title = $this->group($currentElem, $group);
+                    ?>
+                        <div id="<?php echo $title; ?>">
+                        <h2><?php echo $title; ?></h2>
+                        <ul>
+                    <?php
+                        $position = $this->corteControl($entrys,$attributes,$position,$group);
+                    ?>
+                        </ul>
+                        </div>
+                    <?php    
+                    }
+            return ;
+	}
+        public function printTitle($title,$lastTitle){
+            if (strcmp($title,$lastTitle)!== 0) { ?>
+                <!-- Div open in function printTitle  -->
+                <div id="<?php echo $title; ?>">
+                <h2><?php echo $title; ?></h2>
+            <?php
+            }//end if
+            return ;
         }
         
-        public function publicationsByGroup($entrys, $attributes, $group) {
-                    $order="";
-                    ?><ul><?php
-			foreach ($entrys as $item){
-                            $value=$order;
-                            $order= $this->group($item, $group);
-                             if($value != $order) {
-                                 ?><h2><?php echo $order; ?></h2><?php
-                             }
-                            $this->document($item, $attributes);
-			}
-                    ?></ul><?php    
+        public function closeDiv($actualTitle,$entrys,$position,$group){
+            if ($position < count($entrys)) {
+                $titleEntry = $this->group($entrys[$position], $group); 
+                return (strcmp($actualTitle, $titleEntry)!== 0);
+            }
+            return true;
+        }
+        
+        public function publicationsByDateSubtype($entrys, $attributes,$group,$subgroup) {
+           $position=0; $title="";
+           while ($position != count($entrys)){
+                $currentElem= $entrys[$position];
+                $lastTitle = $title;
+                $title = $this->group($currentElem, $group);
+                $subtitle = $this->group($currentElem, $subgroup);
+                $this->printTitle($title, $lastTitle);
+            ?>
+                <div id="<?php echo $title.$subtitle; ?>">
+                <h3><?php echo $subtitle; ?></h3>
+                <ul>
+            <?php
+                $position = $this->corteControl($entrys,$attributes,$position,$group,$subgroup);
+            ?>
+                </ul>
+                </div>    
+            <?php
+                if($this->closeDiv($title, $entrys, $position, $group)){ 
+                    ?>
+                    </div> 
+                    <!-- Close the Div open in function printTitle  -->
+            <?php    
+                }// end if(cerrarDiv)
+            }//end while
             return ;
 	}
         
         
         public function allPublications($entrys, $attributes) {
-            ?><ul><?php
+            ?><div id="allPublications"><ul><?php
 			foreach ($entrys as $item){
                             $this->document($item, $attributes);
 			}
-            ?></ul><?php            
+            ?></ul></div><?php            
             return ;
 	}
         
