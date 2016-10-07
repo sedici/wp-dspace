@@ -1,0 +1,82 @@
+<?php
+class ShowShortcode {
+    protected $filter;
+    public function ShowShortcode(){
+        $this->filter = new WidgetFilter();
+    }
+    
+    public function get_label($label,$value){
+        if(!empty($value)){
+            $text = $label.'="'.$value.'" ';
+            return $text;
+        }
+        return;
+    }
+
+    public function is_on($label,$value){
+        if('on' == $value){
+            $text = $label.'=true ';
+            return $text;
+        }
+        return;
+    }
+    
+    public function show_thesis($instance){
+            $show_thesis=false;
+            $thesis = $this->filter->vectorTesis();
+            foreach ($thesis as $t){    
+                if ('on' == $instance [$t]) {
+                    $show_thesis = true;
+                }
+            }
+            if ($show_thesis) {
+                echo "thesis=true ";
+            }
+        }
+    public function show_label($instance){
+        echo $this->get_label('handle', $instance['handle']);
+        echo $this->get_label('author', $instance['author']);
+        echo $this->get_label('free', $instance['keywords']);
+        echo $this->get_label('max_results', $instance['max_results']);
+        if ('on' == $instance ['limit']){
+            echo $this->get_label('max_lenght', $instance['maxlenght']);
+        }
+        return;
+    }
+    public function show_subtypes($instance){
+        if (!('on' == $instance ['all'])){
+            $subtypes = $this->filter->vectorSubtypes();
+            foreach ($subtypes as $key => $subtype){    
+                echo $this->is_on($key, $instance[$subtype]);
+            }
+            $this->show_thesis($instance);
+        }
+        return;        
+    }
+    public function show_checkbox($instance){
+        echo $this->is_on('share', $instance['share']);
+        echo $this->is_on('show_subtype', $instance['show_subtype']);
+        echo $this->is_on('group_subtype', $instance['group_subtype']);
+        echo $this->is_on('group_date', $instance['group_year']);
+        echo $this->is_on('description', $instance['description']);
+        echo $this->is_on('date', $instance['date']);
+        echo $this->is_on('show_author', $instance['show_author']);
+        return;
+    }    
+    public function show_shortcode($instance){
+        ?>    
+            <hr>
+            El shortcode de la configuración guardada es:
+            <?php 
+                echo "[".get_shortcode()." ";
+                $this->show_label($instance);
+                $this->show_subtypes($instance);
+                $this->show_checkbox($instance);
+                echo " ]";
+            ?>
+            <hr>
+        <?php    
+        return;
+        }
+    
+}

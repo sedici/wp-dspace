@@ -11,15 +11,28 @@
  */
 ?>
 <?php
+
+define ( 'ACTIVE_SUBTYPE', "subtype" );
+define ( 'ACTIVE_DATE', "date" );
+
 include_once dirname(__DIR__)."/view/View.php";
 class Query {	
+        protected $view;
         protected $model;
+        protected $order;
 	public function Query() {
                 $this-> model = new SimplepieModel();
+                $this-> order = new XmlOrder();
+                $this-> view = new View();
 	}
         public function get_model (){
             return $this->model;
         }
+        
+        public function setCmp($value){
+            $this->order->setCmp($value);
+        }
+
         public function remplace($text){
 		return str_replace(" ", S_CONECTOR5, $text);
 	}
@@ -40,14 +53,7 @@ class Query {
             }
             return "(".implode('%20OR%20', $conditions).")";
         }
-        public function validete($author,$handle,$keywords){
-            if (( is_null($author) && is_null($handle) && is_null($keywords)) ||
-                ( empty($author) && empty($handle) && empty($keywords)) ){
-                echo "Ingrese al menos una de las opciones: handle - author - keywords";
-                return false;
-            } 
-            else { return true; }
-        }
+        
            
         public function splitImputs($imput){
             return explode(';',$imput);
@@ -99,57 +105,14 @@ class Query {
             }
             return $results;
         }
-
-        function cmpDate($a, $b)
-        {
-            $model = $this->get_model();
-            if ($model->date($b) == $model->date($a)){
-                return strcmp($model->type($a), $model->type($b));}
-            else {
-            return strcmp($model->date($b), $model->date($a));}
-        } 
         
-        function cmpSubtype($a, $b)
-        {
-            $model = $this->get_model();
-            if ($model->type($b) == $model->type($a)){
-                return strcmp($model->date($b), $model->date($a));}
-            else {
-                return strcmp($model->type($a), $model->type($b));}
-        }
-        
-        function cmpDateSubtype($a, $b)
-        {
-            $model = $this->get_model();
-            if ($model->year($b) == $model->year($a)){
-                return $this->cmpSubtype($a, $b);}
-            else {
-            return strcmp($model->year($b), $model->year($a));}
-        }
-        
-        function group($group_year,$group_subtype,$results){
-            if ($group_year && $group_subtype){
-               usort($results,  array($this,"cmpDateSubtype"));
-               return $results;
-            }
-            if($group_year){
-              usort($results,  array($this,"cmpDate"));
-              return $results;
-            }
-            if($group_subtype){
-              usort($results,  array($this,"cmpSubtype"));
-              return $results;
-            }
-            return $results;
-        }  
-        
-        function getPublications($all, $queryStandar, $cache, $subtypes_selected ,$group_subtype,$group_year){
+        function getPublications($all, $queryStandar, $cache, $subtypes_selected){
             if($all){
                 $results = $this->executeQuery($queryStandar, $cache);
             } else {
                 $results = $this->executeQueryBySubtypes($subtypes_selected, $cache, $queryStandar);
             }
-            return $this->group($group_year, $group_subtype, $results);
+            return $this->order->cmpXml($results);
         }
         
 	function group_attributes($description, $date, $show_author, $maxlenght,$show_subtypes,$share) {
@@ -162,17 +125,17 @@ class Query {
 				'date' => $date 
 		));
 	}
-	function render ($results,$attributes,$group_subtype,$group_date){
-		$view = new View();
-                if ($group_date && $group_subtype) {
-                    return ($view->publicationsByDateSubtype ( $results, $attributes,"date","subtype"));
+
+	function render ($results,$attributes,$cmp){
+                if(strcmp($cmp, CMP_DATE_SUBTYPE)==0){
+                    return ($this->view->publicationsByDateSubtype ( $results, $attributes,ACTIVE_DATE,ACTIVE_SUBTYPE));
                 }
-                if ($group_date){
-                     return ($view->publicationsByGroup( $results, $attributes,"date"));
+                if (strcmp($cmp, CMP_DATE)==0){
+                     return ($this->view->publicationsByGroup( $results, $attributes,ACTIVE_DATE));
                 }
-                if ($group_subtype){
-                     return ($view->publicationsByGroup( $results, $attributes,"subtype"));
+                if (strcmp($cmp, CMP_SUBTYPE)==0){
+                     return ($this->view->publicationsByGroup( $results, $attributes,ACTIVE_SUBTYPE));
                 }
-                return $view->allPublications($results, $attributes);
+                return $this->view->allPublications($results, $attributes);
 	}
 }

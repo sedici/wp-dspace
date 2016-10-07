@@ -6,22 +6,6 @@ function get_shortcode(){
     return SHORTCODE;
 }
 
-function get_label($label,$value){
-    if(!empty($value)){
-        $text = $label.'="'.$value.'" ';
-        return $text;
-    }
-    return;
-}
-
-function is_on($label,$value){
-    if('on' == $value){
-        $text = $label.'=true ';
-        return $text;
-    }
-    return;
-}
-
 function LoadShortcode($atts) {
 	$shortcode = new Shortcode ();
         ob_start();
