@@ -1,7 +1,6 @@
 <?php
 define('SHORTCODE', 'get_publications');
 
-
 function get_shortcode(){
     return SHORTCODE;
 }
@@ -17,97 +16,40 @@ function LoadShortcode($atts) {
 function DspaceShortcode($atts) {
 	return LoadShortcode ( $atts );
 }
-
-function default_shortcode(){
-	return ( array (
-		'handle' => null,
-		'author' => null,
-                'keywords' => null,
-                'share' => false,
-		'max_results' => 10,
-		'max_lenght' => null,
-                'show_subtype' =>false,
-		'all' => true,
-                'group_subtype' =>false,
-                'group_date' =>false,
-		'description' => false,
-		'date' => false,
-		'show_author' => false,
-		'cache' => defaultCache(),
-		'article' => false,
-		'preprint' => false,
-		'book' => false,
-		'working_paper' => false,
-		'technical_report' => false,
-		'conference_object' => false,
-		'revision' => false,
-		'work_specialization' => false,
-                'learning_object'=>false,
-		'thesis' => false 
-	));
-}
-
+require_once 'util/ShortcodeFilter.php';
+require_once 'util/ShortcodeValidation.php';
 class Shortcode {
-        function selectedSubtypes ($instance,&$groups) {
-            //this function returns all active subtypes
-            $all=true;
-             $groups = array ();
-             $filter = new Filter ();
-             $subtypes = $filter->subtypes ();
-			// $subtypes: all names of subtypes
-			foreach ($subtypes as $key => $subtype){
-				// compares the user marked subtypes, if TRUE, save the subtype.
-				if ('true' === $instance [$key]) {
-                                    array_push($groups, $subtype);
-                                    $all=false;
-				}
-			}
-			if ($instance ['thesis'] === 'true') {
-				// if thesis is true, save subtypes thesis
-				$all_thesis = $filter->vectorTesis ();
-				// $all_thesis: all subtypes thesis
-				foreach ( $all_thesis as $thesis ) {
-                                    array_push($groups, $thesis);
-                                    $all=false;
-				}
-			}
-            return $all;   
-        }
-        function maxResults($max_results){
-            if ( $max_results < min_results()) { $max_results = min_results();}
-            else { if ( $max_results > max_results()) { $max_results = max_results();} }
-            return $max_results;
-        }
-        function maxLenght($max_lenght){
-            if (!is_null($max_lenght)){
-		 if ( $max_lenght < min_results()) { $max_lenght = show_text();}
-            }
-            return $max_lenght;
-        }
+        protected $filter;
+        protected $validation;
+        protected $util;
+        public function Shortcode(){
+            $this->filter = new ShortcodeFilter();
+            $this->validation = new ShortcodeValidation();
+            $this->util = new Query();
+        }   
+        
 	function plugin_sedici($atts) {
-            $instance = shortcode_atts ( default_shortcode (), $atts );
+            $instance = shortcode_atts ($this->filter->default_shortcode (), $atts );
             $handle = $instance ['handle'] ;
             $author = $instance ['author']; 
             $keywords = $instance ['keywords'];
-            $util = new Query();
-            
-            if ($util->validete($author,$handle,$keywords)){
+            if ($this->validation->validete($author,$handle,$keywords)){
+                    $subtypes="";
                     $description = $instance ['description'] === 'true' ? "description" : false;
                     $date = ($instance ['date'] === 'true');
                     $show_author = ($instance ['show_author'] === 'true');
                     $cache = $instance ['cache'];//default value from filer.php
-                    $max_results = $this->maxResults($instance ['max_results']);
-                    $maxlenght = $this->maxLenght($instance ['max_lenght']);
-                    $all = $this->selectedSubtypes($instance, $subtypes);
-                    $group_subtype=($instance ['group_subtype'] === 'true');
-                    $group_date=($instance ['group_date'] === 'true');
+                    $max_results = $this->validation->maxResults($instance ['max_results']);
+                    $maxlenght = $this->validation->maxLenght($instance ['max_lenght']);
+                    $all = $this->filter->selectedSubtypes($instance, $subtypes);
                     $show_subtypes=($instance ['show_subtype'] === 'true');
                     $share=($instance ['share'] === 'true');
-                    $attributes = $util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                    $queryStandar = $util->standarQuery($handle, $author, $keywords,$max_results);
-                    $results= $util->getPublications($all, $queryStandar, $cache, $subtypes ,$group_subtype,$group_date);
-                    $util->render ($results,$attributes,$group_subtype,$group_date);
-                    
+                    $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_date']);
+                    $this->util->setCmp($cmp);
+                    $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
+                    $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
+                    $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
+                    $this->util->render ($results,$attributes,$cmp);   
             }
         }    
 }
