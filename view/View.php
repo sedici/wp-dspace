@@ -178,6 +178,9 @@ class View {
 
         public function publicationsByGroup($entrys, $attributes, $group) {
                     $position=0;
+                    ?>
+                    <div class="documents" id="<?php echo $group; ?>">
+                    <?php    
                     while ($position != count($entrys)){
                         $currentElem= $entrys[$position];
                         $title = $this->group($currentElem, $group);
@@ -192,6 +195,9 @@ class View {
                         </div>
                     <?php    
                     }
+                    ?>
+                    </div> <!-- end div=group-->  
+            <?php        
             return ;
 	}
         public function printTitle($title,$lastTitle){
@@ -214,6 +220,9 @@ class View {
         
         public function publicationsByDateSubtype($entrys, $attributes,$group,$subgroup) {
            $position=0; $title="";
+           ?>
+           <div class="documents" id="DateSubtype">
+           <?php    
            while ($position != count($entrys)){
                 $currentElem= $entrys[$position];
                 $lastTitle = $title;
@@ -237,12 +246,15 @@ class View {
             <?php    
                 }// end if(cerrarDiv)
             }//end while
+            ?>
+            </div> <!-- close div=DateSubtype -->
+            <?php    
             return ;
 	}
         
         
         public function allPublications($entrys, $attributes) {
-            ?><div id="allPublications"><ul><?php
+            ?><div class="documents" id="allPublications"><ul><?php
 			foreach ($entrys as $item){
                             $this->document($item, $attributes);
 			}
