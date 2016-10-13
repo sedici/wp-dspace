@@ -33,7 +33,7 @@ class Shortcode {
             $handle = $instance ['handle'] ;
             $author = $instance ['author']; 
             $keywords = $instance ['keywords'];
-            if ($this->validation->validete($author,$handle,$keywords)){
+            if ($this->validation->labelValidation($author,$handle,$keywords)){
                     $subtypes="";
                     $description = $instance ['description'] === 'true' ? "description" : false;
                     $date = ($instance ['date'] === 'true');

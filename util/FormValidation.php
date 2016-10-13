@@ -13,7 +13,7 @@ class FormValidation {
                  );
     }   
     
-    public function validete($author,$handle,$keywords){
+    public function labelValidation($author,$handle,$keywords){
             if (( is_null($author) && is_null($handle) && is_null($keywords)) ||
                 ( empty($author) && empty($handle) && empty($keywords)) ){
                 echo "Ingrese al menos una de las opciones: handle - author - keywords";

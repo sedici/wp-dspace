@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Sedici-Plugin
+ * Plugin Name: Dspace-Plugin
  * Plugin URI: http://sedici.unlp.edu.ar/
  * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
  * Version: 1.0
@@ -23,30 +23,30 @@ require_once 'model/SimplepieModel.php';
 
 function dspace_styles() {
 	//include the style
-	wp_register_style ( 'Sedici', plugins_url ( 'media/css/styles.css', __FILE__ ));
-	wp_enqueue_style ( 'Sedici' );
+	wp_register_style ( 'Dspace', plugins_url ( 'media/css/styles.css', __FILE__ ));
+	wp_enqueue_style ( 'Dspace' );
 }
 
 function dspace_scripts_method() {
 	// include js archives
 	wp_enqueue_script ( 'jquery' );
-	wp_register_script ( 'sedici', plugins_url ( 'media/js/scrips.js', __FILE__ ), array ("jquery"), null, true );
-	wp_enqueue_script ( 'sedici' );
+	wp_register_script ( 'Dspace', plugins_url ( 'media/js/scrips.js', __FILE__ ), array ("jquery"), null, true );
+	wp_enqueue_script ( 'Dspace' );
 }
 
-class Sedici extends WP_Widget {
+class Dspace extends WP_Widget {
 	protected $filter;
 	protected $util;
         protected $validation;
         protected $showShortcode;
                 
-	function Sedici() {
+	function Dspace() {
                 $this->filter = new WidgetFilter();
 		$this->util = new Query();
                 $this->validation = new WidgetValidation();
                 $this->showShortcode = new ShowShortcode();
 		$option = array ('description' => 'This plugin connects the repository SEDICI in wordpress');
-		parent::WP_Widget ( 'Sedici', 'Plugin Sedici', $option );
+		parent::WP_Widget ( 'Dspace', 'Dspace Plugin', $option );
 	}
 
 	function widget($args, $instance) {
@@ -54,7 +54,7 @@ class Sedici extends WP_Widget {
 		$handle = apply_filters ( 'handle', $instance ['handle'] );
                 $author = apply_filters ( 'author', $instance ['author'] ); 
                 $keywords = apply_filters ( 'keywords', $instance ['keywords'] ); 	
-                if($this->validation->validete($author,$handle,$keywords)){
+                if($this->validation->labelValidation($author,$handle,$keywords)){
                         $description = $this->validation->description($instance ['description'], $instance ['summary']);
 			$maxlenght = $this->validation->limit_text($instance ['limit'],$instance ['maxlenght']);
                         $share = ('on' == $instance ['share']);
@@ -102,7 +102,7 @@ class Sedici extends WP_Widget {
 		return $instance;
 	}
 
-    function show_imput ($type,$text,$id,$placeholder=""){
+    function show_input ($type,$text,$id,$placeholder=""){
         ?>    
         <p>
         <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text); ?> 
@@ -152,9 +152,9 @@ class Sedici extends WP_Widget {
             $handle = esc_attr ( $instance ['handle'] );
             $author = esc_attr ( $instance ['author'] );
             $keywords = esc_attr ( $instance ['keywords'] );
-            $this->show_imput($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
-            $this->show_imput($author, 'Autores:', 'author','Apellidos, Nombres como en SEDICI');
-            $this->show_imput($keywords, 'Palabras claves:', 'keywords','Palabra1; Palabra2; etc');
+            $this->show_input($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
+            $this->show_input($author, 'Autores:', 'author','Apellidos, Nombres como en SEDICI');
+            $this->show_input($keywords, 'Palabras claves:', 'keywords','Palabra1; Palabra2; etc');
             ?>
         <p>
              <?php $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year'); ?>
@@ -190,13 +190,12 @@ class Sedici extends WP_Widget {
             <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <?php $this->show_checkbox($instance['summary'], 'Mostrar Sumario', 'summary') ?>
             </p>
-
+            
         <div class="conditionally-description"
             <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <p class="limit">
                 <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit') ?>
             </p>
-
         <p class="conditionally-limit"
         <?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:'); ?> 
@@ -234,6 +233,7 @@ class Sedici extends WP_Widget {
         <?php
            return;
         }
+        
         public function show_subtypes($instance){?>
             <p class="show-filter">
                 <?php $this->show_checkbox($instance['all'], 'Todas las publicaciones sin filtros', 'all'); ?>
@@ -270,6 +270,6 @@ class Sedici extends WP_Widget {
 }//end class
 add_action ( 'admin_enqueue_scripts', 'dspace_scripts_method' );
 add_action ( 'admin_enqueue_scripts', 'dspace_styles' );
-add_action ( 'widgets_init', create_function ( '', 'return register_widget("Sedici");' ) );
+add_action ( 'widgets_init', create_function ( '', 'return register_widget("Dspace");' ) );
 add_action( 'admin_menu', 'dspace_config' );
 print_r( add_shortcode ( 'get_publications', 'DspaceShortcode' ));

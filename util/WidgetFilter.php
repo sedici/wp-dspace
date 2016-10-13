@@ -1,16 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of WidgetFilter
- *
- * @author paw
- */
 require_once 'Filter.php';
 class WidgetFilter extends Filter {
     public function WidgetFilter(){

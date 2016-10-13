@@ -1,16 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of config
- *
- * @author paw
- */
 define ( 'Q_RPP', '100' );
 define ( 'Q_FORMAT', 'atom' );
 define ( 'Q_SORTBY', '2' );
