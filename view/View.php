@@ -1,15 +1,14 @@
 <?php
 class View {
+        protected $configuration;
 	function View() {
 		// Register style sheet.
 		wp_register_style ( 'Vista', plugin_dir_url (__FILE__). '../media/css/styles.css' );
 		wp_enqueue_style ( 'Vista' );
 	}
-
-	public function subtype($sub){
-		return ucfirst($sub);
-	}
-
+        public function set_configuration($config){
+            $this->configuration = $config;
+        }
 	public function html_especial_chars($texto){
 		return (htmlspecialchars_decode($texto));
 	}
@@ -17,7 +16,7 @@ class View {
 		return str_replace(" ", S_CONECTOR5, $text);
 	}
 	public function link_author( $author){
-		$link = get_protocol_domain().S_FILTER;
+		$link = $this->configuration->get_protocol_domain().S_FILTER;
                 $name = str_replace(",", S_CONECTOR4, $author);
                 $name = $this->remplace($name);
                 $link .= strtolower($name). S_SEPARATOR . $name;

@@ -6,7 +6,8 @@ include_once dirname(__DIR__)."/view/View.php";
 class Query {	
         protected $view;
         protected $model;
-        protected $order;
+        protected $order; 
+        protected $subtype_query;
 	public function Query() {
                 $this-> model = new SimplepieModel();
                 $this-> order = new XmlOrder();
@@ -23,7 +24,7 @@ class Query {
         public function remplace($text){
 		return str_replace(" ", S_CONECTOR5, $text);
 	}
-        public function queryAuthor($words){
+        public function queryAuthor($words,$configuration){
             $Authors = Array();
             foreach ( $words as $author ) {
                 $name = str_replace(",", S_CONECTOR4, $author);
@@ -31,10 +32,11 @@ class Query {
                 $query= strtolower($name). S_SEPARATOR . $name;
                 array_push($Authors, $query);
             }    
-            return $this->concatenarCondiciones($Authors,SQ_AUTHORFILTER);
+            return $Authors;
         }
-        public function concatenarCondiciones($words, $filterPrefix = ''){
+        public function concatenarCondiciones($words){
             $conditions = '';
+            $filterPrefix = '';
             foreach ( $words as $word ) {
 		$conditions[]= $filterPrefix. "\"" .$word ."\"" ;
             }
@@ -46,13 +48,14 @@ class Query {
             return explode(';',$imput);
         }
         
-        public function standarQuery($handle, $author, $keywords,$max_results){
-            $queryEstandar = standar_query($max_results);
+        public function standarQuery($handle, $author, $keywords,$max_results,$configuration){
+            $this->subtype_query = $configuration->get_subtype_query();
+            $queryEstandar = $configuration->standar_query($max_results);
             $query= Array();
                 if (!empty($handle)) {$queryEstandar .="&". SQ_HANDLE . "=".$handle;}
                 if (!empty($author)) {
                     $words = $this->splitImputs($author);
-                    array_push($query, $this->queryAuthor($words));
+                    array_push($query, $configuration->author($this->queryAuthor($words)));
                 }
                 if (!empty($keywords)) {
                     $words = $this->splitImputs($keywords);
@@ -76,7 +79,7 @@ class Query {
             else {
                 $query .= '%20AND%20';
             }
-            return  $query."(".SQ_SUBTYPE."\"" .$type ."\"".")";
+            return  $query."(".$this->subtype_query."\"" .$type ."\"".")";
         }
         
         function entrysBySubtype ($queryStandar,$subtype,$cache){
@@ -113,7 +116,8 @@ class Query {
 		));
 	}
 
-	function render ($results,$attributes,$cmp){
+	function render ($results,$attributes,$cmp,$configuration){
+            $this->view->set_configuration($configuration);
                 if(strcmp($cmp, CMP_DATE_SUBTYPE)==0){
                     return ($this->view->publicationsByDateSubtype ( $results, $attributes,ACTIVE_DATE,ACTIVE_SUBTYPE));
                 }

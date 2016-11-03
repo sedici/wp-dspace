@@ -27,3 +27,4 @@
 .tony a {display:inline-block; border:none!important; color:black !important;}
 .tony a:hover {text-decoration: underline; background-color: white !important;}
 .tony a::before {content: "√";}
+.fade-transition { transition-duration: 0s }

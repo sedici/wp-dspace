@@ -20,6 +20,7 @@ require_once 'util/Query.php';
 require_once 'util/XmlOrder.php';
 require_once 'view/ShowShortcode.php';
 require_once 'model/SimplepieModel.php';
+require_once 'util/Configuration.php';
 
 function dspace_styles() {
 	//include the style
@@ -39,12 +40,14 @@ class Dspace extends WP_Widget {
 	protected $util;
         protected $validation;
         protected $showShortcode;
+        protected $configuration;
                 
 	function Dspace() {
                 $this->filter = new WidgetFilter();
 		$this->util = new Query();
                 $this->validation = new WidgetValidation();
                 $this->showShortcode = new ShowShortcode();
+                $this->configuration = new Configuration();
 		$option = array ('description' => 'This plugin connects the repository SEDICI in wordpress');
 		parent::WP_Widget ( 'Dspace', 'Dspace Plugin', $option );
 	}
@@ -55,6 +58,7 @@ class Dspace extends WP_Widget {
                 $author = apply_filters ( 'author', $instance ['author'] ); 
                 $keywords = apply_filters ( 'keywords', $instance ['keywords'] ); 	
                 if($this->validation->labelValidation($author,$handle,$keywords)){
+                        $config = $instance ['config'];
                         $description = $this->validation->description($instance ['description'], $instance ['summary']);
 			$maxlenght = $this->validation->limit_text($instance ['limit'],$instance ['maxlenght']);
                         $share = ('on' == $instance ['share']);
@@ -66,11 +70,13 @@ class Dspace extends WP_Widget {
                         $all = ('on' == $instance ['all']); //$all: all publications without subtype filter
                         $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
+                        
+                        $this->configuration->set_configuration($config);
+                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,  $this->configuration);
                         $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_year']);
                         $this->util->setCmp($cmp);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );
-                        $this->util->render ($results,$attributes, $cmp);        
+                        $this->util->render ($results,$attributes, $cmp,  $this->configuration);        
 		} 
         }   
 
@@ -80,6 +86,7 @@ class Dspace extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		$subtypes = $this->filter->subtypes();
 		$instance = $old_instance;
+                $instance ['config'] = sanitize_text_field ( $new_instance ['config'] );
 		$instance ['handle'] = sanitize_text_field ( $new_instance ['handle'] );
                 $instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
                 $instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
@@ -255,11 +262,39 @@ class Dspace extends WP_Widget {
             return;
         }
         
+        function show_configs($config){
+            if (empty($config)) { $config = "Sedici";}
+        ?>
+        <p>
+        <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración'); ?> 
+            <select class='widefat'
+		id="<?php echo $this->get_field_id('config'); ?>"
+		name="<?php echo $this->get_field_name('config'); ?>" type="text">
+		<?php
+		$directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config/";
+		foreach (glob($directorio."*.ini") as $value) {
+                    $ini_array = parse_ini_file($value);
+                    ?>
+                    <option value=<?php echo $ini_array['name'];?>
+                    <?php echo ($ini_array['name']==$config)?'selected':''; ?>>
+				<?php echo $ini_array['name']; ?>
+                    </option>
+		<?php
+		}// end for	
+		?>
+            </select>
+        </label>
+        </p>  
+        <?php
+            return;
+        }
+        
         /**
 	 * @see WP_Widget::form
 	 */         
 	function form($instance) {
                 $this->showShortcode->show_shortcode($instance);
+                $this->show_configs($instance['config']);
                 $this->show_options($instance);
                 $this->show_description($instance);
                 $this->show_cache(esc_attr ( $instance ['cache'] )); 
