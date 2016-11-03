@@ -7,7 +7,7 @@ class ShortcodeFilter extends Filter {
 		'handle' => null,
 		'author' => null,
                 'keywords' => null,
-                'config' =>'Sedici',
+                'config' =>'sedici',
                 'share' => false,
 		'max_results' => 10,
 		'max_lenght' => null,

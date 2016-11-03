@@ -37,7 +37,7 @@ class XmlOrder {
         }
         
         function cmpDateSubtype($a, $b)
-        { 
+        {
             $model = $this->get_model();
             if ($model->year($b) == $model->year($a)){
                 return $this->cmpSubtype($a, $b);}

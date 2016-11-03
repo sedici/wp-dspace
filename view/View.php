@@ -16,11 +16,15 @@ class View {
 		return str_replace(" ", S_CONECTOR5, $text);
 	}
 	public function link_author( $author){
+            if (strcmp($this->configuration->get_name(),"cic")!== 0) {
 		$link = $this->configuration->get_protocol_domain().S_FILTER;
                 $name = str_replace(",", S_CONECTOR4, $author);
                 $name = $this->remplace($name);
                 $link .= strtolower($name). S_SEPARATOR . $name;
 		return  ('<a href='.$link.' target="_blank">'.$author.'</a>') ;
+            }else {
+                return $author;
+            }    
 	}
 	
 	public function author($authors){ 
@@ -33,7 +37,7 @@ class View {
             if (!empty($names)){
             ?>
             <div id="sedici-title">
-            <?php _e('Autores:');
+            <?php _e('Autores: ');
                 print_r(implode("-", $names));
             ?>
             </div>
@@ -93,7 +97,7 @@ class View {
         function share($link,$title){
         ?>
         <div class="a_unline">
-            Compartir: 
+            Compartir
              <a href="https://www.facebook.com/sharer/sharer.php?p[title]=<?php echo $title;?>&p[url]=<?php echo $link;?>" target="_blank">
                  <?php echo '<img src="' . plugins_url( 'media/img/share-facebook.png', dirname(__FILE__) ) . '" alt="Facebook logo" title="Compartir en Facebook">';?>
              </a>
