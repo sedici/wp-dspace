@@ -263,7 +263,7 @@ class Dspace extends WP_Widget {
         }
         
         function show_configs($config){
-            if (empty($config)) { $config = "Sedici";}
+            if (empty($config)) { $config = "sedici";}
         ?>
         <p>
         <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración'); ?> 
@@ -276,7 +276,7 @@ class Dspace extends WP_Widget {
                     $ini_array = parse_ini_file($value);
                     ?>
                     <option value=<?php echo $ini_array['name'];?>
-                    <?php echo ($ini_array['name']==$config)?'selected':''; ?>>
+                    <?php echo (strcmp($ini_array['name'], $config) == 0)?'selected':''; ?>>
 				<?php echo $ini_array['name']; ?>
                     </option>
 		<?php

@@ -34,9 +34,10 @@ class ShowShortcode {
             }
         }
     public function show_label($instance){
+        echo $this->get_label('config', $instance['config']);
         echo $this->get_label('handle', $instance['handle']);
         echo $this->get_label('author', $instance['author']);
-        echo $this->get_label('free', $instance['keywords']);
+        echo $this->get_label('keywords', $instance['keywords']);
         echo $this->get_label('max_results', $instance['max_results']);
         if ('on' == $instance ['limit']){
             echo $this->get_label('max_lenght', $instance['maxlenght']);

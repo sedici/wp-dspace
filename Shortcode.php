@@ -22,10 +22,12 @@ class Shortcode {
         protected $filter;
         protected $validation;
         protected $util;
+        protected $configuration;
         public function Shortcode(){
             $this->filter = new ShortcodeFilter();
             $this->validation = new ShortcodeValidation();
             $this->util = new Query();
+            $this->configuration = new Configuration();
         }   
         
 	function plugin_sedici($atts) {
@@ -35,6 +37,7 @@ class Shortcode {
             $keywords = $instance ['keywords'];
             if ($this->validation->labelValidation($author,$handle,$keywords)){
                     $subtypes="";
+                    $config  = $instance ['config'];
                     $description = $instance ['description'] === 'true' ? "description" : false;
                     $date = ($instance ['date'] === 'true');
                     $show_author = ($instance ['show_author'] === 'true');
@@ -47,9 +50,11 @@ class Shortcode {
                     $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_date']);
                     $this->util->setCmp($cmp);
                     $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                    $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results);
+                    
+                    $this->configuration->set_configuration($config);
+                    $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,$this->configuration);
                     $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
-                    $this->util->render ($results,$attributes,$cmp);   
+                    $this->util->render ($results,$attributes,$cmp,$this->configuration);   
             }
         }    
 }

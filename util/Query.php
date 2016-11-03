@@ -24,13 +24,21 @@ class Query {
         public function remplace($text){
 		return str_replace(" ", S_CONECTOR5, $text);
 	}
-        public function queryAuthor($words,$configuration){
-            $Authors = Array();
-            foreach ( $words as $author ) {
+        public function search_author($type,$author){
+            if($type == 'sedici'){
                 $name = str_replace(",", S_CONECTOR4, $author);
                 $name = $this->remplace($name);
                 $query= strtolower($name). S_SEPARATOR . $name;
-                array_push($Authors, $query);
+            }
+            if ($type == 'cic'){
+                $query = $author;
+            }
+            return $query;
+        }
+        public function queryAuthor($words,$type_name){
+            $Authors = Array();
+            foreach ( $words as $author ) {
+                array_push($Authors, $this->search_author($type_name, $author));
             }    
             return $Authors;
         }
@@ -55,7 +63,7 @@ class Query {
                 if (!empty($handle)) {$queryEstandar .="&". SQ_HANDLE . "=".$handle;}
                 if (!empty($author)) {
                     $words = $this->splitImputs($author);
-                    array_push($query, $configuration->author($this->queryAuthor($words)));
+                    array_push($query, $configuration->author($this->queryAuthor($words,  $configuration->get_name())));
                 }
                 if (!empty($keywords)) {
                     $words = $this->splitImputs($keywords);

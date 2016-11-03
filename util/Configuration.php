@@ -24,6 +24,9 @@ class Configuration {
             }
         }    
     }
+    function get_name(){
+        return $this->config['name'];
+    }
     function get_protocol_domain() {
 	//return _PROTOCOL . $this->config['domain'];
         return _PROTOCOL . 'sedici.unlp.edu.ar';
