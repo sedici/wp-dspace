@@ -30,7 +30,8 @@ class View {
 	public function author($authors){ 
             $names = array ();
             foreach ( $authors as $author ) {
-                if(!empty($author->get_name ())){
+            if( isset($author ) && ($author != FALSE)){
+            //    if(!empty($author->get_name ())){
                     array_push ($names, "<author><name>".$this->link_author($author->get_name ())."</name></author>");
                 }
             }//end foreach autores
