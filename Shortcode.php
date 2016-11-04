@@ -27,7 +27,6 @@ class Shortcode {
             $this->filter = new ShortcodeFilter();
             $this->validation = new ShortcodeValidation();
             $this->util = new Query();
-            $this->configuration = new Configuration();
         }   
         
 	function plugin_sedici($atts) {
