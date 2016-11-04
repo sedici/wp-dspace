@@ -1,14 +1,10 @@
 <?php
-define ( 'S_CONECTOR2', '%5C' );
-define ( 'S_CONECTOR3', '%7C' );
-define ('S_CONECTOR4' , '%2C');
-define ('S_CONECTOR5', '\+');
+
 define ('S_TEXT' , 150);
 define ('S_CACHE',86400);
 define('S_MAXRESULT', 100);
 define('S_MINRESULT',1);
-define ('S_FILTER' , '/discover?fq=author_filter%3A');
-define ('S_SEPARATOR', '\|\|\|');
+define ('S_MEDRESULT',10);
 define ( '_PROTOCOL', "http://" );
 define ( '_BASE_PATH', "/open-search/discover" );
 define ( 'SQ_HANDLE', "scope");
@@ -18,7 +14,15 @@ define ( 'Q_FORMAT', 'atom' );
 define ( 'Q_SORTBY', '2' );
 define ( 'Q_ORDER', 'desc' );
 define ( 'Q_QUERY', "query");
+define ('S_REPOSITORY',"sedici");
 
+function medium_results(){
+    return S_MEDRESULT;
+}
+
+function default_repository(){
+    return S_REPOSITORY;
+}
 function cache_days(){
     return array (3,7,14);
  }

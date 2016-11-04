@@ -1,26 +1,24 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Configuration
  *
  * @author Paula Salamone
  */
+require_once 'Sedici_config.php';
+require_once 'Cic_config.php';
 class Configuration {
     //put your code here
     protected $config;
+    protected $configuration;
     
     function set_configuration($configuration){
-        $directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config/";
+        $directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config-files/";
 	foreach (glob($directorio."*.ini") as $value) {
             $ini_array = parse_ini_file($value);
             if ($ini_array['name'] == $configuration){
                 $this->config= $ini_array;
+                $config = ucfirst($configuration)."_config";
+                $this->configuration = new $config;
             }
         }    
     }
@@ -28,8 +26,7 @@ class Configuration {
         return $this->config['name'];
     }
     function get_protocol_domain() {
-	//return _PROTOCOL . $this->config['domain'];
-        return _PROTOCOL . 'sedici.unlp.edu.ar';
+        return _PROTOCOL . $this->config['domain'];
 }
     
     function get_subtype_query(){

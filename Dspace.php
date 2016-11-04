@@ -13,14 +13,14 @@
 <?php
 require_once 'Shortcode.php';
 require_once 'Dspace-config.php';
-require_once 'util/config.php';
+require_once 'configuration/config.php';
 require_once 'util/WidgetFilter.php';
 require_once 'util/WidgetValidation.php';
 require_once 'util/Query.php';
 require_once 'util/XmlOrder.php';
 require_once 'view/ShowShortcode.php';
 require_once 'model/SimplepieModel.php';
-require_once 'util/Configuration.php';
+require_once 'configuration/Configuration.php';
 
 function dspace_styles() {
 	//include the style
@@ -70,7 +70,6 @@ class Dspace extends WP_Widget {
                         $all = ('on' == $instance ['all']); //$all: all publications without subtype filter
                         $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                        
                         $this->configuration->set_configuration($config);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,  $this->configuration);
                         $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_year']);
@@ -263,7 +262,7 @@ class Dspace extends WP_Widget {
         }
         
         function show_configs($config){
-            if (empty($config)) { $config = "sedici";}
+            if (empty($config)) { $config = default_repository();}
         ?>
         <p>
         <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración'); ?> 
@@ -271,7 +270,7 @@ class Dspace extends WP_Widget {
 		id="<?php echo $this->get_field_id('config'); ?>"
 		name="<?php echo $this->get_field_name('config'); ?>" type="text">
 		<?php
-		$directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config/";
+		$directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config-files/";
 		foreach (glob($directorio."*.ini") as $value) {
                     $ini_array = parse_ini_file($value);
                     ?>
