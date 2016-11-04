@@ -2,7 +2,10 @@
 define ( 'CMP_DATE_SUBTYPE', "cmpDateSubtype" );
 define ( 'CMP_DATE', "cmpDate" );
 define ( 'CMP_SUBTYPE', "cmpSubtype");
-        
+require_once  WP_CONTENT_DIR."/plugins/wp-dspace/configuration/Configuration.php";
+foreach ( glob ( WP_CONTENT_DIR."/plugins/wp-dspace/configuration/*_config.php" ) as $app ) { 
+    require_once $app;
+}        
 class FormValidation {
     protected $order;
     
@@ -12,6 +15,16 @@ class FormValidation {
                              'group_subtype'=>CMP_SUBTYPE
                  );
     }   
+    
+    public function create_configuration($configuration){
+        $config = ucfirst($configuration)."_config";
+        if (class_exists($config,true)){
+            return (new $config($configuration));
+        }
+        else {
+            return new Configuration($configuration);
+        }
+    }
     
     public function labelValidation($author,$handle,$keywords){
             if (( is_null($author) && is_null($handle) && is_null($keywords)) ||

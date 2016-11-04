@@ -12,19 +12,9 @@ class View {
 	public function html_especial_chars($texto){
 		return (htmlspecialchars_decode($texto));
 	}
-	public function remplace($text){
-		return str_replace(" ", S_CONECTOR5, $text);
-	}
+	
 	public function link_author( $author){
-            if (strcmp($this->configuration->get_name(),"cic")!== 0) {
-		$link = $this->configuration->get_protocol_domain().S_FILTER;
-                $name = str_replace(",", S_CONECTOR4, $author);
-                $name = $this->remplace($name);
-                $link .= strtolower($name). S_SEPARATOR . $name;
-		return  ('<a href='.$link.' target="_blank">'.$author.'</a>') ;
-            }else {
-                return $author;
-            }    
+            return $this->configuration->print_author($author);
 	}
 	
 	public function author($authors){ 

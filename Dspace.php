@@ -21,6 +21,9 @@ require_once 'util/XmlOrder.php';
 require_once 'view/ShowShortcode.php';
 require_once 'model/SimplepieModel.php';
 require_once 'configuration/Configuration.php';
+foreach ( glob ( "configuration/*_config.php" ) as $app ) { 
+    require_once $app;
+}
 
 function dspace_styles() {
 	//include the style
@@ -47,7 +50,6 @@ class Dspace extends WP_Widget {
 		$this->util = new Query();
                 $this->validation = new WidgetValidation();
                 $this->showShortcode = new ShowShortcode();
-                $this->configuration = new Configuration();
 		$option = array ('description' => 'This plugin connects the repository SEDICI in wordpress');
 		parent::WP_Widget ( 'Dspace', 'Dspace Plugin', $option );
 	}
@@ -59,6 +61,7 @@ class Dspace extends WP_Widget {
                 $keywords = apply_filters ( 'keywords', $instance ['keywords'] ); 	
                 if($this->validation->labelValidation($author,$handle,$keywords)){
                         $config = $instance ['config'];
+                        $this->configuration = $this->validation->create_configuration($config);
                         $description = $this->validation->description($instance ['description'], $instance ['summary']);
 			$maxlenght = $this->validation->limit_text($instance ['limit'],$instance ['maxlenght']);
                         $share = ('on' == $instance ['share']);
@@ -70,7 +73,6 @@ class Dspace extends WP_Widget {
                         $all = ('on' == $instance ['all']); //$all: all publications without subtype filter
                         $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                        $this->configuration->set_configuration($config);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,  $this->configuration);
                         $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_year']);
                         $this->util->setCmp($cmp);

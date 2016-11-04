@@ -38,23 +38,24 @@ class Shortcode {
             if ($this->validation->labelValidation($author,$handle,$keywords)){
                     $subtypes="";
                     $config  = $instance ['config'];
-                    $description = $instance ['description'] === 'true' ? "description" : false;
-                    $date = ($instance ['date'] === 'true');
-                    $show_author = ($instance ['show_author'] === 'true');
-                    $cache = $instance ['cache'];//default value from filer.php
-                    $max_results = $this->validation->maxResults($instance ['max_results']);
-                    $maxlenght = $this->validation->maxLenght($instance ['max_lenght']);
-                    $all = $this->filter->selectedSubtypes($instance, $subtypes);
-                    $show_subtypes=($instance ['show_subtype'] === 'true');
-                    $share=($instance ['share'] === 'true');
-                    $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_date']);
-                    $this->util->setCmp($cmp);
-                    $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                    
-                    $this->configuration->set_configuration($config);
-                    $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,$this->configuration);
-                    $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
-                    $this->util->render ($results,$attributes,$cmp,$this->configuration);   
+                    $this->configuration = $this->validation->create_configuration($config);
+                    if (!is_null($this->configuration)){
+                        $description = $instance ['description'] === 'true' ? "description" : false;
+                        $date = ($instance ['date'] === 'true');
+                        $show_author = ($instance ['show_author'] === 'true');
+                        $cache = $instance ['cache'];//default value from filter.php
+                        $max_results = $this->validation->maxResults($instance ['max_results']);
+                        $maxlenght = $this->validation->maxLenght($instance ['max_lenght']);
+                        $all = $this->filter->selectedSubtypes($instance, $subtypes);
+                        $show_subtypes=($instance ['show_subtype'] === 'true');
+                        $share=($instance ['share'] === 'true');
+                        $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_date']);
+                        $this->util->setCmp($cmp);
+                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
+                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,$this->configuration);
+                        $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
+                        $this->util->render ($results,$attributes,$cmp,$this->configuration);   
+                    }
             }
         }    
 }

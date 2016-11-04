@@ -1,5 +1,4 @@
 <?php
-
 define ('S_TEXT' , 150);
 define ('S_CACHE',86400);
 define('S_MAXRESULT', 100);
