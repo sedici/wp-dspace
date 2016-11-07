@@ -3,10 +3,11 @@ require_once 'FormValidation.php';
 class ShortcodeValidation extends FormValidation{
    
     public function create_configuration($configuration){
-        $b=FALSE;
+        $b=FALSE; $names = Array();
         $directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config-files/";
 	foreach (glob($directorio."*.ini") as $value) {
             $ini_array = parse_ini_file($value);
+            array_push($names, $ini_array['name']);
             if ($ini_array['name'] == $configuration){
                 $b=TRUE;
             }
@@ -15,10 +16,8 @@ class ShortcodeValidation extends FormValidation{
             return parent::create_configuration($configuration);
         } else {
             echo "Configuración incorrecta. Configuraciones permitidas: ";
-            foreach (glob($directorio."*.ini") as $value) {
-                $ini_array = parse_ini_file($value);
-                echo '"'.$ini_array['name'].'" ';
-            }    
+            $print_names=implode(" - ",$names);
+            echo $print_names;
             return null;
         }    
     }
