@@ -22,9 +22,6 @@ class Configuration {
         return $author;
     }
     
-    final function set_configuration($configuration){
-        
-    }
     final function get_name(){
         return $this->config['name'];
     }
@@ -48,7 +45,8 @@ class Configuration {
         return $this->get_base_url () . $this->get_standar_query($max_results);
     }
     
-    final function author($Authors){
+    final function author($words){
+        $Authors = $this->queryAuthor($words);
         $conditions = '';
         foreach ( $Authors as $author ) {
             $conditions[]= $this->config['author']. "\"" .$author ."\"" ;
@@ -56,4 +54,14 @@ class Configuration {
         return "(".implode('%20OR%20', $conditions).")";
     }
     
+    function search_author($author){
+        return $author;
+    }
+    final public function queryAuthor($words){
+            $Authors = Array();
+            foreach ( $words as $author ) {
+                array_push($Authors, $this->search_author($author));
+            }    
+            return $Authors;
+        }   
 }

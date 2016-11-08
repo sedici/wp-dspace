@@ -26,4 +26,12 @@ class Sedici_config extends Configuration{
 	return  ('<a href='.$link.' target="_blank">'.$author.'</a>') ;
             
     }
+    
+    function search_author($author){
+        $name = str_replace(",", S_CONECTOR4, $author);
+        $name = $this->remplace($name);
+        $query= strtolower($name). S_SEPARATOR . $name;
+        return $query;
+    }
+    
 }

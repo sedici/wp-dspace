@@ -43,7 +43,7 @@ git pull origin master
 ## Configuración Shortcode
 
 El shortcode para su correcto funcionamiento necesita alguno de los criterios de búsqueda: hable - author - keywords.
-Y si se quieren las últimas publicaciones indistintamente del subtipo de documento (all=true), o si se desea filtrar por algun criterio (article=true).
+Y si se quieren las últimas publicaciones indistintamente del subtipo de documento, o si se desea filtrar por algun criterio (article=true).
 
 [get_publications handle="Un/handle" author"Autor1;Autor2" keywords="Palabras;claves" ]
 
@@ -55,6 +55,8 @@ Ejemplo:
 [get_publications handle=10915/25293 author="De Giusti, Marisa Raquel;Gonzalo Luján" keywords=" DSpace ; CMS" thesis=true  article=true description=true ]
 
 Opciones y sus valores por defecto:
+
+'config' = "sedici" // ver las configuraciones posibles en el widget
 
 'all' => true, // Al especificar al menos un subtipo de documento, cambia a false.
 

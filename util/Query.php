@@ -1,6 +1,7 @@
 <?php
 define ( 'ACTIVE_SUBTYPE', "subtype" );
 define ( 'ACTIVE_DATE', "date" );
+define ('DEFAULT_QUERY',"&query=*:*");
 
 include_once dirname(__DIR__)."/view/View.php";
 class Query {	
@@ -20,28 +21,7 @@ class Query {
         public function setCmp($value){
             $this->order->setCmp($value);
         }
-
-        public function remplace($text){
-		return str_replace(" ", S_CONECTOR5, $text);
-	}
-        public function search_author($type,$author){
-            if($type == 'sedici'){
-                $name = str_replace(",", S_CONECTOR4, $author);
-                $name = $this->remplace($name);
-                $query= strtolower($name). S_SEPARATOR . $name;
-            }
-            if ($type == 'cic'){
-                $query = $author;
-            }
-            return $query;
-        }
-        public function queryAuthor($words,$type_name){
-            $Authors = Array();
-            foreach ( $words as $author ) {
-                array_push($Authors, $this->search_author($type_name, $author));
-            }    
-            return $Authors;
-        }
+        
         public function concatenarCondiciones($words){
             $conditions = '';
             $filterPrefix = '';
@@ -50,12 +30,11 @@ class Query {
             }
             return "(".implode('%20OR%20', $conditions).")";
         }
-        
            
         public function splitImputs($imput){
             return explode(';',$imput);
         }
-        
+
         public function standarQuery($handle, $author, $keywords,$max_results,$configuration){
             $this->subtype_query = $configuration->get_subtype_query();
             $queryEstandar = $configuration->standar_query($max_results);
@@ -63,14 +42,14 @@ class Query {
                 if (!empty($handle)) {$queryEstandar .="&". SQ_HANDLE . "=".$handle;}
                 if (!empty($author)) {
                     $words = $this->splitImputs($author);
-                    array_push($query, $configuration->author($this->queryAuthor($words,  $configuration->get_name())));
+                    array_push($query, $configuration->author($words));
                 }
                 if (!empty($keywords)) {
                     $words = $this->splitImputs($keywords);
                     array_push($query, $this->concatenarCondiciones($words));
                 }
                 if (!empty($query)) { $queryEstandar.="&". Q_QUERY."=". implode('%20AND%20', $query); }
-                return $queryEstandar;
+                return $queryEstandar.DEFAULT_QUERY;
         }
         
         function executeQuery($query ,$cache) {
