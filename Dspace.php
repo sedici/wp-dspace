@@ -37,7 +37,6 @@ function dspace_scripts_method() {
 	wp_register_script ( 'Dspace', plugins_url ( 'media/js/scrips.js', __FILE__ ), array ("jquery"), null, true );
 	wp_enqueue_script ( 'Dspace' );
 }
-
 class Dspace extends WP_Widget {
 	protected $filter;
 	protected $util;
@@ -167,9 +166,12 @@ class Dspace extends WP_Widget {
         <p>
              <?php $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year'); ?>
         </p>
+        <div class="conditional_config" 
+            <?php echo checked($instance['config'], 'conicet') === '' ? '' : 'style="display: none;"'; ?>>
         <p>
             <?php $this->show_checkbox($instance['group_subtype'], 'Agrupar por subtipos de documentos', 'group_subtype'); ?>
         </p>
+        </div>
         <p>
             <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
         </p>
@@ -266,13 +268,13 @@ class Dspace extends WP_Widget {
         function show_configs($config){
             if (empty($config)) { $config = default_repository();}
         ?>
-        <p>
-        <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración'); ?> 
-            <select class='widefat'
+        <div class="config">
+        <label id="origen" for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración'); ?> 
+            <select autocomplete="off" class='widefat'
 		id="<?php echo $this->get_field_id('config'); ?>"
 		name="<?php echo $this->get_field_name('config'); ?>" type="text">
 		<?php
-		$directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config-files/";
+		$directorio = get_configuration_directory();
 		foreach (glob($directorio."*.ini") as $value) {
                     $ini_array = parse_ini_file($value);
                     ?>
@@ -285,7 +287,7 @@ class Dspace extends WP_Widget {
 		?>
             </select>
         </label>
-        </p>  
+        </div>
         <?php
             return;
         }

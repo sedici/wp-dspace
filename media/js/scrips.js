@@ -22,6 +22,17 @@ jQuery(document).ready(function() {
 		jQuery(value.conditional).toggle();
          }); 
         });
+        
+    jQuery( "#origen select").on('change',function(){
+    var selection = jQuery(this).val();
+    switch(selection){
+        case "conicet":
+            jQuery("div.conditional_config").hide()
+        break;
+        default:
+            jQuery("div.conditional_config").show()
+    }
+    });
 
 });
 

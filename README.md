@@ -102,3 +102,5 @@ Subtipos de documentos:
 
 'learning_object' (objeto de aprendizaje)=>false
 
+'conference_document' (documento de conferencia) => false
+

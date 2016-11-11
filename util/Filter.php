@@ -5,6 +5,7 @@ class Filter {
 	public function Filter(){
 		$this->subtypes =  array(
                 'article' => 'Articulo',
+                'conference_document' => 'Documento de conferencia',    
                 'book' => 'Libro',
                 'working_paper' =>  "Documento de trabajo",
                 'technical_report' => "Informe tecnico",

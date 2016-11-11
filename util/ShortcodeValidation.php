@@ -4,7 +4,7 @@ class ShortcodeValidation extends FormValidation{
    
     public function create_configuration($configuration){
         $b=FALSE; $names = Array();
-        $directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config-files/";
+        $directorio = get_configuration_directory();
 	foreach (glob($directorio."*.ini") as $value) {
             $ini_array = parse_ini_file($value);
             array_push($names, $ini_array['name']);
@@ -34,10 +34,10 @@ class ShortcodeValidation extends FormValidation{
             return $max_lenght;
     }
     public function getOrder($subtype,$date){
-        if (('true' === $subtype) && ('true' === $date)){
+        if (($subtype) && ('true' === $date)){
             return $this->order['group_year_subtype'];
         }
-        elseif ('true' === $subtype){
+        elseif ($subtype){
             return $this->order['group_subtype'];
         }
         elseif ('true' === $date){

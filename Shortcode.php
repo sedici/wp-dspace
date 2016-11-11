@@ -38,17 +38,21 @@ class Shortcode {
                     $subtypes="";
                     $config  = $instance ['config'];
                     $this->configuration = $this->validation->create_configuration($config);
-                    if (!is_null($this->configuration)){
-                        $description = $instance ['description'] === 'true' ? "description" : false;
+                    if (!is_null($this->configuration)){ 
+                        $description = $this->configuration->is_description($instance['description']);
                         $date = ($instance ['date'] === 'true');
                         $show_author = ($instance ['show_author'] === 'true');
                         $cache = $instance ['cache'];//default value from filter.php
                         $max_results = $this->validation->maxResults($instance ['max_results']);
                         $maxlenght = $this->validation->maxLenght($instance ['max_lenght']);
-                        $all = $this->filter->selectedSubtypes($instance, $subtypes);
-                        $show_subtypes=($instance ['show_subtype'] === 'true');
+                        $all = $instance ['all'];
+                        if ($this->configuration->all_documents()){
+                            $all = $this->filter->selectedSubtypes($instance, $subtypes);
+                        }
+                        $show_subtypes= $this->configuration->is_label_true( $instance ['show_subtype']);
                         $share=($instance ['share'] === 'true');
-                        $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_date']);
+                        $group_subtype = $this->configuration->is_label_true( $instance ['group_subtype']);
+                        $cmp=$this->validation->getOrder($group_subtype,$instance ['group_date']);
                         $this->util->setCmp($cmp);
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,$this->configuration);

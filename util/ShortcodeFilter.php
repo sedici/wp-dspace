@@ -28,7 +28,8 @@ class ShortcodeFilter extends Filter {
 		'revision' => false,
 		'work_specialization' => false,
                 'learning_object'=>false,
-		'thesis' => false 
+		'thesis' => false,
+                'conference_document' => false
 	));
     }
     

@@ -14,6 +14,11 @@ define ( 'Q_SORTBY', '2' );
 define ( 'Q_ORDER', 'desc' );
 define ( 'Q_QUERY', "query");
 define ('S_REPOSITORY',"sedici");
+define ('Q_CONFIGURATION',"/plugins/wp-dspace/config-files/");
+
+function get_configuration_directory(){
+    return WP_CONTENT_DIR.Q_CONFIGURATION;
+}
 
 function medium_results(){
     return S_MEDRESULT;
