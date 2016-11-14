@@ -64,11 +64,22 @@ class ShowShortcode {
         echo $this->is_on('show_author', $instance['show_author']);
         return;
     }    
+    
+    public function is_conicet($instance){
+        if (strcmp($instance["config"], "conicet") == 0) {
+            $instance['all'] = 'on';
+            $instance['show_subtype'] = 'off';
+            $instance['group_subtype']= 'off';        
+        }
+    }
+    
     public function show_shortcode($instance){
+            $instace_copy = $instance;
         ?>    
             <hr>
             El shortcode de la configuración guardada es:
             <?php 
+                $this->is_conicet($instance);
                 echo "[".get_shortcode()." ";
                 $this->show_label($instance);
                 $this->show_subtypes($instance);
@@ -76,7 +87,8 @@ class ShowShortcode {
                 echo " ]";
             ?>
             <hr>
-        <?php    
+        <?php   
+            $instace = $instace_copy;
         return;
         }
     

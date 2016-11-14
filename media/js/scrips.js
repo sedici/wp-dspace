@@ -17,13 +17,13 @@ jQuery(document).ready(function() {
                                   {selector:checkLimit, conditional:conditionalLimit});
 
 	// binding
-	jQuery.each( filters, function( i, value ) {
+    jQuery.each( filters, function( i, value ) {
             jQuery(value.selector).live('change', function() {
 		jQuery(value.conditional).toggle();
          }); 
-        });
+    });
         
-    jQuery( "#origen select").on('change',function(){
+    jQuery( "#origen select").live('change',function(){
     var selection = jQuery(this).val();
     switch(selection){
         case "conicet":
