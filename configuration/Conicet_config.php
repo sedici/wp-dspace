@@ -20,6 +20,14 @@ class Conicet_config extends Configuration {
             return false;
         }
     }
+    function print_author($author){
+        $link = $this->get_protocol_domain();
+	$link = $link. C_FILTER;
+        $link .= $author;
+	return  ('<a href="'.$link.'" target="_blank">'.$author.'</a>') ;
+            
+    }
+    
     public function is_label_true($instance){
            return false;
     } 
