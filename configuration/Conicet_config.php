@@ -12,13 +12,21 @@
  * @author paw
  */
 class Conicet_config extends Configuration {
-    public function is_description($instance){
-           return ($instance === 'true' ? "summary" : false);
+    public function is_description($description){
+        if ($description){
+            return "summary";
+        }
+        else {
+            return false;
+        }
     }
     public function is_label_true($instance){
            return false;
     } 
     public function all_documents(){
         return false; 
+    }
+    public function instance_all($instance){
+        return true;
     }
 }

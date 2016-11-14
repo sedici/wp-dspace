@@ -61,7 +61,9 @@ class Dspace extends WP_Widget {
                 if($this->validation->labelValidation($author,$handle,$keywords)){
                         $config = $instance ['config'];
                         $this->configuration = $this->validation->create_configuration($config);
-                        $description = $this->validation->description($instance ['description'], $instance ['summary']);
+                        $description = ('on' == $instance ['description']);
+                        $description = $this->configuration->is_description($description);  
+                        $description = $this->validation->description($description, $instance ['summary']);
 			$maxlenght = $this->validation->limit_text($instance ['limit'],$instance ['maxlenght']);
                         $share = ('on' == $instance ['share']);
 			$show_author = ('on' == $instance ['show_author']); // $show_author: if ON, then $show_author = true
@@ -69,11 +71,17 @@ class Dspace extends WP_Widget {
                         $max_results = apply_filters ( 'max_results', $instance ['max_results'] ); //$max_results: total results of subtype
                         $cache = apply_filters ( 'cache', $instance ['cache'] );  //$cache: duration in seconds of cache
                         $show_subtypes = ('on' == $instance ['show_subtype']); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
+                        $show_subtypes= $this->configuration->is_label_true($show_subtypes);
                         $all = ('on' == $instance ['all']); //$all: all publications without subtype filter
-                        $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
+                        $all = $this->configuration->instance_all($all);
+                        if ($this->configuration->all_documents()){
+                            $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
+                        }
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,  $this->configuration);
-                        $cmp=$this->validation->getOrder($instance ['group_subtype'],$instance ['group_year']);
+                        $group_subtype = ($instance ['group_subtype'] === 'on');
+                        $group_subtype = $this->configuration->is_label_true( $group_subtype);
+                        $cmp=$this->validation->getOrder($group_subtype,$instance ['group_year']);
                         $this->util->setCmp($cmp);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );
                         $this->util->render ($results,$attributes, $cmp,  $this->configuration);        

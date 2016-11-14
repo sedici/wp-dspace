@@ -66,13 +66,21 @@ class Configuration {
     }   
     
 /** ------------------- SHORTCODE DEFAULT --------------------- */    
-    public function is_description($instance){
-           return ($instance === 'true' ? "description" : false);
+    public function is_description($description){
+        if ($description){
+            return "description";
+        }
+        else {
+            return false;
+        }
     }   
     public function is_label_true($instance){
-           return ($instance === 'true');
+           return $instance;
     } 
     public function all_documents(){
         return true; 
+    }
+    public function instance_all($instance){
+        return $instance;
     }
 }
