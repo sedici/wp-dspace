@@ -167,7 +167,7 @@ class Dspace extends WP_Widget {
              <?php $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year'); ?>
         </p>
         <div class="conditional_config" 
-            <?php echo checked($instance['config'], 'conicet') === '' ? '' : 'style="display: none;"'; ?>>
+            <?php echo selected($instance['config'], 'conicet') ? 'style="display: none;"' : ''; ?>>
         <p>
             <?php $this->show_checkbox($instance['group_subtype'], 'Agrupar por subtipos de documentos', 'group_subtype'); ?>
         </p>
@@ -196,11 +196,13 @@ class Dspace extends WP_Widget {
                 <?php $this->show_checkbox($instance['description'], 'Mostrar Resumen', 'description') ?>
             </p>
             </div>
+        <div class="conditional_config"
+            <?php echo selected($instance['config'], 'conicet') ? 'style="display: none;"' : ''; ?>>
             <p class="conditionally-description"
             <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <?php $this->show_checkbox($instance['summary'], 'Mostrar Sumario', 'summary') ?>
             </p>
-            
+        </div>    
         <div class="conditionally-description"
             <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <p class="limit">
@@ -245,9 +247,11 @@ class Dspace extends WP_Widget {
         }
         
         public function show_subtypes($instance){?>
-            <p class="show-filter">
+        <div class="conditional_config"
+            <?php echo selected($instance['config'], 'conicet') ? 'style="display: none;"' : ''; ?>>
+        <p class="show-filter">
                 <?php $this->show_checkbox($instance['all'], 'Todas las publicaciones sin filtros', 'all'); ?>
-            </p>
+        </p>
             <hr>
             <hr>
         <p class="conditionally-filter"
@@ -261,6 +265,7 @@ class Dspace extends WP_Widget {
                 <?php
 		}//end foreach subtypes
         ?></p>
+        </div>
         <?php
             return;
         }
