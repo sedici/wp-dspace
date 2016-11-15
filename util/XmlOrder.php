@@ -47,7 +47,9 @@ class XmlOrder {
     
         function cmpXml($results){
             $cmp=$this->getCmp();
-            usort($results, array($this,$cmp));
+            if(!is_null($cmp)){
+                usort($results, array($this,$cmp));
+            }    
             return $results;
         }
 }
