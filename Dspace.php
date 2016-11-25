@@ -189,9 +189,12 @@ class Dspace extends WP_Widget {
         <p>
             <?php $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date') ?>
         </p>
+        <div class="conditional_config"
+            <?php echo selected($instance['config'], 'conicet') ? 'style="display: none;"' : ''; ?>>
         <p>
             <?php $this->show_checkbox($instance['show_subtype'], 'Mostrar el tipo de documento', 'show_subtype'); ?>
         </p>
+        </div>
         <?php
             return;
         }
