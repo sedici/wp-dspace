@@ -10,7 +10,7 @@ define ( 'SQ_HANDLE', "scope");
 define ('S_START', 0);
 define ( 'Q_RPP', '100' );
 define ( 'Q_FORMAT', 'atom' );
-define ( 'Q_SORTBY', '2' );
+define ( 'Q_SORTBY', '3' );
 define ( 'Q_ORDER', 'desc' );
 define ( 'Q_QUERY', "query");
 define ('S_REPOSITORY',"sedici");
