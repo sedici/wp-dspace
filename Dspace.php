@@ -57,8 +57,10 @@ class Dspace extends WP_Widget {
 		extract ( $args );
 		$handle = apply_filters ( 'handle', $instance ['handle'] );
                 $author = apply_filters ( 'author', $instance ['author'] ); 
-                $keywords = apply_filters ( 'keywords', $instance ['keywords'] ); 	
+                $keywords = apply_filters ( 'keywords', $instance ['keywords'] );
+
                 if($this->validation->labelValidation($author,$handle,$keywords)){
+
                         $config = $instance ['config'];
                         $this->configuration = $this->validation->create_configuration($config);
                         $description = ('on' == $instance ['description']);
@@ -74,9 +76,10 @@ class Dspace extends WP_Widget {
                         $show_subtypes= $this->configuration->is_label_true($show_subtypes);
                         $all = ('on' == $instance ['all']); //$all: all publications without subtype filter
                         $all = $this->configuration->instance_all($all);
-                        if ($this->configuration->all_documents()){
+                         if ($this->configuration->all_documents()){
                             $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
                         }
+                        
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,  $this->configuration);
                         $group_subtype = ($instance ['group_subtype'] === 'on');
@@ -84,7 +87,8 @@ class Dspace extends WP_Widget {
                         $cmp=$this->validation->getOrder($group_subtype,$instance ['group_year']);
                         $this->util->setCmp($cmp);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );
-                        $this->util->render ($results,$attributes, $cmp,  $this->configuration);        
+                       
+                        $this->util->render ($results,$attributes, $cmp,  $this->configuration);      
 		} 
         }   
 
@@ -132,9 +136,11 @@ class Dspace extends WP_Widget {
         function show_checkbox($instance,$text,$id){
         ?>    
             <input class="checkbox" type="checkbox"
-            <?php checked($instance, 'on'); ?>
+            <?php 
+                echo  checked($instance, 'on');
+            ?>
             id="<?php echo $this->get_field_id($id); ?>"
-            name="<?php echo $this->get_field_name($id); ?>" /> 
+            name="<?php echo $this->get_field_name($id); ?>" <?php  ?> /> 
             <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text); ?></label>
         <?php
         }
@@ -266,20 +272,20 @@ class Dspace extends WP_Widget {
             <hr>
             <hr>
         <p class="conditionally-filter"
-            <?php echo checked($instance['all'], 'on') === '' ? '' : 'style="display: none;"'; ?>>
-            <?php
+            <?php echo checked($instance['all'], 'on') !== '' ? 'style="display: none;"' : ''; ?>>
+            <?php 
 		$subtypes = $this->filter->subtypes();
 		foreach ( $subtypes as $subtype ) {
                     $this->show_checkbox($instance[$subtype], $subtype, $subtype);
 			?>
                     <br />
                 <?php
-		}//end foreach subtypes
+		}//end foreach subtypes 
         ?></p>
         </div>
         <?php
             return;
-        }
+        } 
         
         function show_configs($config){
             if (empty($config)) { $config = default_repository();}
@@ -312,6 +318,12 @@ class Dspace extends WP_Widget {
 	 * @see WP_Widget::form
 	 */         
 	function form($instance) {
+
+        if (empty($instance))
+        {
+            $instance = array('all'=>'on');
+        }
+
                 $this->showShortcode->show_shortcode($instance);
                 $this->show_configs($instance['config']);
                 $this->show_options($instance);
