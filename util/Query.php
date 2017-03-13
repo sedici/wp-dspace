@@ -56,7 +56,7 @@ class Query {
 		$model = $this->get_model();
 		$xpath = $model->loadPath ( $query, $cache );
 		$entrys = $model->entry ( $xpath ); //all documents
-		return $entrys;
+        return $entrys;
 	}
         
         public function querySubtype ($query , $type) {

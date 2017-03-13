@@ -16,3 +16,50 @@
 .a_unline a{
     text-decoration:none;   
 }
+
+
+.ellipse{
+	float: left;
+}
+
+
+.page_navigation , .alt_page_navigation{
+	padding-bottom: 10px;
+}
+
+.page_navigation a, .alt_page_navigation a{
+	padding:3px 5px;
+	margin:2px;
+	color:black !important;
+	border-top: solid 1px #d2d2d2;
+    border-left: solid 1px #c3c3c3;
+    border-right: solid 1px #c3c3c3;
+    border-bottom: solid 1px #9f9f9f;
+    border-radius: 5px;
+	text-decoration:none;
+	float: left;
+	font-family: Tahoma;
+	font-size: 10px;
+	background-color:#dfdfdf ;
+}
+.noList{
+list-style-type: none;
+}
+.noPagination .page_navigation{
+display: none;
+}
+.itemsPagination{
+	margin-bottom: 50px !important;
+}
+.active_page{
+	background-color:#808080 !important;
+	color:black !important;
+}	
+
+.content, .alt_content{
+	color: black;
+}
+
+.content li, .alt_content li, .content > p{
+	padding: 5px
+}

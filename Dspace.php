@@ -85,10 +85,9 @@ class Dspace extends WP_Widget {
                         $group_subtype = ($instance ['group_subtype'] === 'on');
                         $group_subtype = $this->configuration->is_label_true( $group_subtype);
                         $cmp=$this->validation->getOrder($group_subtype,$instance ['group_year']);
-                        $this->util->setCmp($cmp);
-                        $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );
-                       
-                        $this->util->render ($results,$attributes, $cmp,  $this->configuration);      
+                        $this->util->setCmp($cmp); 
+                        $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );    
+                       echo $this->util->render ($results,$attributes, $cmp,  $this->configuration);      
 		} 
         }   
 
