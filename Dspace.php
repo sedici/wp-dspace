@@ -21,6 +21,7 @@ require_once 'util/XmlOrder.php';
 require_once 'view/ShowShortcode.php';
 require_once 'model/SimplepieModel.php';
 require_once 'configuration/Configuration.php';
+
 foreach ( glob ( "configuration/*_config.php" ) as $app ) { 
     require_once $app;
 }

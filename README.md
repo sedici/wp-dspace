@@ -6,6 +6,7 @@ Este plugin de Wordpress permite a cualquier sitio web hecho en WP recuperar con
 dentro de Widgets o como shortcodes dentro de páginas y posts. La recuperación de los contenidos puede realizarse mediante una expresión de búsqueda,
 que se transforma a OpenSearch, o a partir de una colección particular del repositorio
 
+
 ## Instalación
 
 ```bash
