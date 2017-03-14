@@ -169,7 +169,7 @@ class View {
                  $c = $this->corte($anArray[$position], $corte, $condition);
                  $c2 = $this->corte($anArray[$position], $corte2, $condition2);
                  if (($c) && ($c2)) {
-                    $stringHtml=$this->document($anArray[$position], $attributes);
+                    $stringHtml=$stringHtml.$this->document($anArray[$position], $attributes);
                     $position++;
                  }   
              }
@@ -179,22 +179,16 @@ class View {
         public function publicationsByGroup($entrys, $attributes, $group) {
                     $position=0;
                     $stringItem=""; 
-                    $stringHtml='<div class="documents itemsPagination '.$this->classPagination($entrys).'"" id="'. uniqid('page_container_') .'">';    
+                    $stringHtml='<div class="documents itemsPagination '.$this->classPagination($entrys).'"" id="'. uniqid('page_container_') .'"> <ul class="content">';    
                     while ($position != count($entrys)){
                         $currentElem= $entrys[$position];
                         $title = $this->group($currentElem, $group);
-                    
-                     $stringHtml=$stringHtml .'
-                        
-                        <ul class="content"><li class="noList"><h2>' . $title . '</h2></li>';
+                        $stringHtml=$stringHtml .'<li class="noList"><h2>' . $title . '</h2></li>';
                         $arrayCorteControl = $this->corteControl($entrys,$attributes,$position,$group);
                         $position=$arrayCorteControl['position'];
-                        $stringItem=$arrayCorteControl['stringHtml'].$stringItem;
-                    
-                      $stringHtml=$stringHtml . $stringItem .' </ul>';
-                       
-                    }              
-        return $stringHtml . '<div class="page_navigation " ></div></div>' ; // end div=group
+                        $stringHtml=$stringHtml.$arrayCorteControl['stringHtml'];   
+                    }           
+        return $stringHtml .' </ul><div class="page_navigation " ></div></div>' ; // end div=group
 	}
         public function printTitle($title,$lastTitle){
             $stringHtml="";
@@ -221,22 +215,21 @@ class View {
             return $stringHtml;
         }
         public function publicationsByDateSubtype($entrys, $attributes,$group,$subgroup) {
-           $position=0; $title=""; $stringItem="";
-           $stringHtml='<div class="documents itemsPagination'.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'">';  
+           $position=0; $title=""; $stringItem=""; 
+           $stringHtml='<div class="documents itemsPagination'.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'">
+                <ul class="content">';  
            while ($position != count($entrys)){
                 $currentElem= $entrys[$position];
                 $lastTitle = $title;
                 $title = $this->group($currentElem, $group);
                 $subtitle = $this->group($currentElem, $subgroup);
-                $stringHtml=$stringHtml.'
-                <ul class="content">' . $this->printTitle($title, $lastTitle) .
+                $stringHtml=$stringHtml . $this->printTitle($title, $lastTitle) .
                 '<li class="noList"><h3>' . $subtitle . '</h3></li>';
             
                 $arrayCorteControl = $this->corteControl($entrys,$attributes,$position,$group,$subgroup);
                 $position=$arrayCorteControl['position'];
-                $stringItem=$arrayCorteControl['stringHtml'].$stringItem;
-            
-                $stringHtml=$stringHtml . $stringItem . '</ul>';    
+                $stringItem=$arrayCorteControl['stringHtml'];
+                $stringHtml=$stringHtml . $stringItem ;   
             
                /* if($this->closeDiv($title, $entrys, $position, $group)){ 
                     
@@ -244,10 +237,10 @@ class View {
                     //<!-- Close the Div open in function printTitle  -->   
                 }// end if(cerrarDiv)*/
             }//end while
-        
+          
             
                 
-            return $stringHtml . '<div class="page_navigation " ></div></div>'; //<!-- close div=DateSubtype --> ;
+            return $stringHtml . '</ul><div class="page_navigation " ></div></div>'; //<!-- close div=DateSubtype --> ;
 	}
         
         

@@ -105,7 +105,7 @@ class Query {
 
 	function render ($results,$attributes,$cmp,$configuration){
             $this->view->set_configuration($configuration);
-                if(strcmp($cmp, CMP_DATE_SUBTYPE)==0){
+                if(strcmp($cmp, CMP_DATE_SUBTYPE)==0){ 
                     return ($this->view->publicationsByDateSubtype ( $results, $attributes,ACTIVE_DATE,ACTIVE_SUBTYPE));
                 }
                 if (strcmp($cmp, CMP_DATE)==0){
