@@ -5,22 +5,30 @@
  * @author Paula Salamone
  */
 class Configuration {
-    //put your code here
+
     protected $config;
     
     public function Configuration($configuration){
-        $directorio = get_configuration_directory();
-	foreach (glob($directorio."*.ini") as $value) {
-            $ini_array = parse_ini_file($value);
-            if ($ini_array['name'] == $configuration){
-                $this->config= $ini_array;
-            }
+        
+		foreach ($this->get_config_files( get_configuration_directory() ) as $value) {
+				$ini_array = parse_ini_file($value);
+				if ($ini_array['name'] == $configuration){
+					$this->config= $ini_array;
+				}
         }    
     }
-            
-    function print_author($author){
-        return $author;
-    }
+    
+    /** 
+     * Returns a list (array) of a .ini file names (config files) stored in $base_path directory. If $base_path is not a valid directory, or if it's unreadable,
+     * returns an empty list
+     * @param $base_path string: Required. Full path (including trailing slash) to the directory where .ini files are stored
+     * TODO Instead of returning an empty array, this should throw an exception for each condition error
+     **/        
+    private function get_config_files($base_path) {
+		return (file_exists($base_path) && is_dir($base_path) && is_readable($base_path)) 
+		   ? glob($base_path."*.ini")
+		   : array();
+	}
     
     final function get_name(){
         return $this->config['name'];
