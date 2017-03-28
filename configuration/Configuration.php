@@ -9,13 +9,12 @@ class Configuration {
     protected $config;
     
     public function Configuration($configuration){
-        
-		foreach ($this->get_config_files( get_configuration_directory() ) as $value) {
-				$ini_array = parse_ini_file($value);
-				if ($ini_array['name'] == $configuration){
-					$this->config= $ini_array;
-				}
-        }    
+
+       $ini_files = $this->getConfigFiles( get_configuration_directory() );
+
+       $this->config = $this->findConfigFileBy('name',$configuration, $ini_files);
+       
+    
     }
     
     /** 
@@ -24,10 +23,30 @@ class Configuration {
      * @param $base_path string: Required. Full path (including trailing slash) to the directory where .ini files are stored
      * TODO Instead of returning an empty array, this should throw an exception for each condition error
      **/        
-    private function get_config_files($base_path) {
+    private function getConfigFiles($base_path) {
 		return (file_exists($base_path) && is_dir($base_path) && is_readable($base_path)) 
 		   ? glob($base_path."*.ini")
 		   : array();
+	}
+	
+	/**
+	 * Looks up the first ini file in $files_list collection having $key value as $configuration
+	 * Returns the array corresponding to the ini file, if found, or null otherwise
+	 * @param $key string required: value to search into ini files (e.g. 'name')
+	 * @param $configuration string required: configuration value to compare against ini[$key] (e.g. 'conicet')
+	 * @param $files_list  array required: list of ini files list to be parsed, searching for $key value 
+	 * TODO maybe null isn't a good return value here!
+	 **/
+	private function findConfigFileBy($key,$configuration, $files_list) {
+		foreach ($files_list as $config_file) {
+
+				$parsed_ini_array = parse_ini_file($config_file);
+
+				if ($parsed_ini_array[$key] == $configuration)
+					return $parsed_ini_array;
+        }
+
+        return null; //config file not found
 	}
     
     final function get_name(){
