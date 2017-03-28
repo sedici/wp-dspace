@@ -8,10 +8,16 @@ class Configuration {
 
     protected $config;
     
+    
+    /**
+     * Creates a new Configuration object for $configuration repository from its configuration file
+     * @param $configuration strting required: name of the repository (to be searched as "name" field inside all config files)
+     **/
     public function Configuration($configuration){
 
        $ini_files = $this->getConfigFiles( get_configuration_directory() );
 
+		//FIXME what if file is not found?
        $this->config = $this->findConfigFileBy('name',$configuration, $ini_files);
        
     

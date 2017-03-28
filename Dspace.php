@@ -41,56 +41,62 @@ function dspace_scripts_method() {
 class Dspace extends WP_Widget {
 	protected $filter;
 	protected $util;
-        protected $validation;
-        protected $showShortcode;
-        protected $configuration;
+    protected $validation;
+    protected $showShortcode;
+    protected $configuration;
                 
 	function Dspace() {
-                $this->filter = new WidgetFilter();
+        $this->filter = new WidgetFilter();
 		$this->util = new Query();
-                $this->validation = new WidgetValidation();
-                $this->showShortcode = new ShowShortcode();
-		$option = array ('description' => 'This plugin connects the repository SEDICI in wordpress');
+        $this->validation = new WidgetValidation();
+        $this->showShortcode = new ShowShortcode();
+		$option = array ('description' => 'Allows to displace contents from DSpace repositories in Wordpress sites by using OpenSearch protocol');
 		parent::WP_Widget ( 'Dspace', 'Dspace Plugin', $option );
 	}
 
-	function widget($args, $instance) {
+	/**
+	 * @overrides
+	 * Executes when the widget is displayed 
+	 * 
+	 * FIXME : OMG such a long method
+	 */
+	public function widget($args, $instance) {
 		extract ( $args );
 		$handle = apply_filters ( 'handle', $instance ['handle'] );
-                $author = apply_filters ( 'author', $instance ['author'] ); 
-                $keywords = apply_filters ( 'keywords', $instance ['keywords'] );
+        $author = apply_filters ( 'author', $instance ['author'] ); 
+        $keywords = apply_filters ( 'keywords', $instance ['keywords'] );
 
-                if($this->validation->labelValidation($author,$handle,$keywords)){
+        if($this->validation->labelValidation($author,$handle,$keywords)){
 
-                        $config = $instance ['config'];
-                        $this->configuration = $this->validation->create_configuration($config);
-                        $description = ('on' == $instance ['description']);
-                        $description = $this->configuration->is_description($description);  
-                        $description = $this->validation->description($description, $instance ['summary']);
+            $config = $instance ['config'];
+            $this->configuration = $this->validation->create_configuration($config);
+            $description = ('on' == $instance ['description']);
+            $description = $this->configuration->is_description($description);  
+            $description = $this->validation->description($description, $instance ['summary']);
 			$maxlenght = $this->validation->limit_text($instance ['limit'],$instance ['maxlenght']);
-                        $share = ('on' == $instance ['share']);
+            $share = ('on' == $instance ['share']);
 			$show_author = ('on' == $instance ['show_author']); // $show_author: if ON, then $show_author = true
-                        $date = ('on' == $instance ['date']); // $date: if checkbox date is ON, $date=true
-                        $max_results = apply_filters ( 'max_results', $instance ['max_results'] ); //$max_results: total results of subtype
-                        $cache = apply_filters ( 'cache', $instance ['cache'] );  //$cache: duration in seconds of cache
-                        $show_subtypes = ('on' == $instance ['show_subtype']); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
-                        $show_subtypes= $this->configuration->is_label_true($show_subtypes);
-                        $all = ('on' == $instance ['all']); //$all: all publications without subtype filter
-                        $all = $this->configuration->instance_all($all);
-                         if ($this->configuration->all_documents()){
-                            $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
-                        }
+            $date = ('on' == $instance ['date']); // $date: if checkbox date is ON, $date=true
+            $max_results = apply_filters ( 'max_results', $instance ['max_results'] ); //$max_results: total results of subtype
+            $cache = apply_filters ( 'cache', $instance ['cache'] );  //$cache: duration in seconds of cache
+            $show_subtypes = ('on' == $instance ['show_subtype']); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
+            $show_subtypes= $this->configuration->is_label_true($show_subtypes);
+            $all = ('on' == $instance ['all']); //$all: all publications without subtype filter
+            $all = $this->configuration->instance_all($all);
+            if ($this->configuration->all_documents()){
+                $subtypes_selected = $this->filter->selectedSubtypes($instance,$all); //$subtypes: all selected documents subtypes
+            }
                         
-                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,  $this->configuration);
-                        $group_subtype = ($instance ['group_subtype'] === 'on');
-                        $group_subtype = $this->configuration->is_label_true( $group_subtype);
-                        $cmp=$this->validation->getOrder($group_subtype,$instance ['group_year']);
-                        $this->util->setCmp($cmp); 
-                        $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );    
-                       echo $this->util->render ($results,$attributes, $cmp,  $this->configuration);      
+            $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
+            $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,  $this->configuration);
+            $group_subtype = ($instance ['group_subtype'] === 'on');
+            $group_subtype = $this->configuration->is_label_true( $group_subtype);
+            $cmp=$this->validation->getOrder($group_subtype,$instance ['group_year']);
+            $this->util->setCmp($cmp); 
+            $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );    
+            echo $this->util->render ($results,$attributes, $cmp,  $this->configuration);      
 		} 
-        }   
+    }   
 
 	/**
 	 * @see WP_Widget::update
@@ -98,11 +104,11 @@ class Dspace extends WP_Widget {
 	function update($new_instance, $old_instance) {
 		$subtypes = $this->filter->subtypes();
 		$instance = $old_instance;
-                $instance ['config'] = sanitize_text_field ( $new_instance ['config'] );
+        $instance ['config'] = sanitize_text_field ( $new_instance ['config'] );
 		$instance ['handle'] = sanitize_text_field ( $new_instance ['handle'] );
-                $instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
-                $instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
-                $instance ['share'] = sanitize_text_field ( $new_instance ['share'] );
+        $instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
+        $instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
+        $instance ['share'] = sanitize_text_field ( $new_instance ['share'] );
 		$instance ['maxlenght'] = sanitize_text_field ( $new_instance ['maxlenght'] );
 		$instance ['description'] = sanitize_text_field ( $new_instance ['description'] );
 		$instance ['summary'] = sanitize_text_field ( $new_instance ['summary'] );
@@ -112,9 +118,9 @@ class Dspace extends WP_Widget {
 		$instance ['cache'] = sanitize_text_field ( $new_instance ['cache'] );
 		$instance ['all'] = sanitize_text_field ( $new_instance ['all'] );
 		$instance ['limit'] = sanitize_text_field ( $new_instance ['limit'] );
-                $instance ['group_subtype'] = sanitize_text_field ( $new_instance ['group_subtype'] );
-                $instance ['group_year'] = sanitize_text_field ( $new_instance ['group_year'] );
-                $instance ['show_subtype'] = sanitize_text_field ( $new_instance ['show_subtype'] );
+        $instance ['group_subtype'] = sanitize_text_field ( $new_instance ['group_subtype'] );
+        $instance ['group_year'] = sanitize_text_field ( $new_instance ['group_year'] );
+        $instance ['show_subtype'] = sanitize_text_field ( $new_instance ['show_subtype'] );
 		foreach ( $subtypes as $s) {
 			$instance [$s] = sanitize_text_field ( $new_instance [$s] );
 		}
