@@ -1,11 +1,10 @@
-
 <?php
 class View {
         protected $configuration;
 
 	function View() {
 		// Register style sheet.
-	    wp_register_style ( 'Vista', plugin_dir_url (__FILE__). '../media/css/styles.css' );
+	    wp_register_style ( 'Vista', plugin_dir_url (__FILE__).'../media/css/styles.css' );
 		wp_enqueue_style ( 'Vista' );
         wp_register_script( 'jquery.Pagination',plugin_dir_url (__FILE__ ).'../media/js/jquery.pajinate.js', array ("jquery"), null, true );
         wp_register_script( 'scripspagination',plugin_dir_url (__FILE__ ).'../media/js/scripspagination.js' , array (), null, true);
@@ -257,5 +256,3 @@ class View {
 	}
         
 } // end class
-?>
-

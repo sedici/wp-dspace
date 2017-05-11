@@ -37,4 +37,3 @@ class WidgetValidation extends FormValidation{
         return null;
     }
 }
-

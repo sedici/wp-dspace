@@ -1,8 +1,9 @@
 jQuery(document).ready(function($){
-                jQuery('.itemsPagination').map(function  ()
+
+                jQuery('.itemsPagination').map(function()
                 	{ 
-                		return jQuery(this).attr("id"); 
-                	}).each(function ()
+                    	return jQuery(this).attr("id"); 
+                	}).each(function()
                 		{
                 			jQuery("#".concat(this)).pajinate({
 
@@ -15,6 +16,21 @@ jQuery(document).ready(function($){
 
                 			});
                 		});
-                
+                jQuery('.itemsPagination').map(
+                function()
+                { 
+                    return  jQuery(this).attr("id");;
+                }).each(
+                    function()
+                    {   var idPagination = "#".concat (this);
+                        jQuery(idPagination.concat(' .page_navigation')).click(
+                            function()
+                            {
+                                jQuery('body').animate({scrollTop : jQuery(idPagination).position().top *0.95 } , 500);
+                                return false;
+                            });
+                    });
+
             });
+
 

@@ -32,7 +32,8 @@ class FormValidation {
                 echo "Ingrese al menos una de las opciones: handle - author - keywords";
                 return false;
             } 
-            else { return true; }
+            else 
+               return true; 
         }
 
     public function maxResults($max_results){

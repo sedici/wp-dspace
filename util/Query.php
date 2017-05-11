@@ -2,9 +2,8 @@
 define ( 'ACTIVE_SUBTYPE', "subtype" );
 define ( 'ACTIVE_DATE', "date" );
 define ('DEFAULT_QUERY',"&query=*:*");
-
 include_once dirname(__DIR__)."/view/View.php";
-class Query {	
+class Query {
         protected $view;
         protected $model;
         protected $order; 
@@ -49,7 +48,7 @@ class Query {
                     array_push($query, $this->concatenarCondiciones($words));
                 }
                 if (!empty($query)) { $queryEstandar.="&". Q_QUERY."=". implode('%20AND%20', $query); }
-                return $queryEstandar.DEFAULT_QUERY;
+                return $queryEstandar;//.DEFAULT_QUERY;
         }
         
         function executeQuery($query ,$cache) {
@@ -99,7 +98,7 @@ class Query {
 				'max_lenght' => $maxlenght,
                                 'show_subtypes' => $show_subtypes,
                                 'share'=> $share,
-				'date' => $date 
+				'date' => $date
 		));
 	}
 
