@@ -97,7 +97,9 @@ class Configuration {
             }    
             return $Authors;
     }   
-    
+    function get_default_query(){
+        return "";
+    }
 /** ------------------- SHORTCODE DEFAULT --------------------- */    
     public function is_description($description){
         if ($description){

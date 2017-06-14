@@ -35,12 +35,14 @@ class Query {
         }
 
         public function standarQuery($handle, $author, $keywords,$max_results,$configuration){
+            var_dump($author);
             $this->subtype_query = $configuration->get_subtype_query();
             $queryEstandar = $configuration->standar_query($max_results);
             $query= Array();
                 if (!empty($handle)) {$queryEstandar .="&". SQ_HANDLE . "=".$handle;}
                 if (!empty($author)) {
                     $words = $this->splitImputs($author);
+                    var_dump($configuration->author($words));
                     array_push($query, $configuration->author($words));
                 }
                 if (!empty($keywords)) {
@@ -48,10 +50,11 @@ class Query {
                     array_push($query, $this->concatenarCondiciones($words));
                 }
                 if (!empty($query)) { $queryEstandar.="&". Q_QUERY."=". implode('%20AND%20', $query); }
-                return $queryEstandar;//.DEFAULT_QUERY;
+                return $queryEstandar.$configuration->get_default_query();//.DEFAULT_QUERY;
         }
         
         function executeQuery($query ,$cache) {
+            echo "$query";
 		$model = $this->get_model();
 		$xpath = $model->loadPath ( $query, $cache );
 		$entrys = $model->entry ( $xpath ); //all documents

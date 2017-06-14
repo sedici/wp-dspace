@@ -37,4 +37,7 @@ class Conicet_config extends Configuration {
     public function instance_all($instance){
         return true;
     }
+    function get_default_query(){
+        return "&query=*";
+    }
 }
