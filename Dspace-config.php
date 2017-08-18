@@ -1,4 +1,5 @@
 <?php
+include_once '/configuration/config.php';
 /**
  * Description of Dspace-config
  *
@@ -10,10 +11,10 @@ function dspace_config() {
         'Dspace configuration',
         'manage_options',
         'dspace_extra_information',
-        'dspace_options_page' 
+        'dspace_options_page'
     );
 }
- 
+
 /**
  * Register the settings
  */
@@ -23,7 +24,7 @@ function dspace_register_settings() {
         'configuration' // setting name
      );
 }
-add_action( 'admin_init', 'dspace_register_settings' ); 
+add_action( 'admin_init', 'dspace_register_settings' );
 
 
 /**
@@ -32,7 +33,7 @@ add_action( 'admin_init', 'dspace_register_settings' );
 function dspace_options_page() {
     $directorio =  WP_CONTENT_DIR."/plugins/wp-dspace/config-files/";
     foreach (glob($directorio."*.ini") as $value) {
-        $ini_array = parse_ini_file($value);
+        $ini_array = parseFile($value);
         echo $ini_array['name'];
     }
 

@@ -1,17 +1,18 @@
 <?php
 require_once 'FormValidation.php';
+include_once ('../configuration/config.php');
 class ShortcodeValidation extends FormValidation{
-   
+
     public function create_configuration($configuration){
         $b=FALSE; $names = Array();
         $directorio = get_configuration_directory();
 	foreach (glob($directorio."*.ini") as $value) {
-            $ini_array = parse_ini_file($value);
+            $ini_array = parseFile($value);
             array_push($names, $ini_array['name']);
             if ($ini_array['name'] == $configuration){
                 $b=TRUE;
             }
-        }  
+        }
         if($b){
             return parent::create_configuration($configuration);
         } else {
@@ -19,9 +20,9 @@ class ShortcodeValidation extends FormValidation{
             $print_names=implode(" - ",$names);
             echo $print_names;
             return null;
-        }    
+        }
     }
-    
+
     function maxResults($max_results){
             if ( $max_results < min_results()) { $max_results = min_results();}
             else { if ( $max_results > max_results()) { $max_results = max_results();} }
@@ -45,5 +46,5 @@ class ShortcodeValidation extends FormValidation{
         }
         return null;
     }
-    
+
 }

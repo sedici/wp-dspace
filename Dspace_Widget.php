@@ -1,5 +1,5 @@
 <?php
-
+ include_once('configuration/config.php');
 class Dspace extends WP_Widget {
 	protected $filter;
 	protected $util;
@@ -12,7 +12,7 @@ class Dspace extends WP_Widget {
         $this->validation = new WidgetValidation();
         $this->showShortcode = new ShowShortcode();
 		$option = array ('description' => 'Allows to displace contents from DSpace repositories in Wordpress sites by using OpenSearch protocol');
-		parent::WP_Widget ( 'Dspace', 'Dspace Plugin', $option );
+		parent::__construct( 'Dspace', 'Dspace Plugin', $option );
 	}
 
 	/**
@@ -53,8 +53,8 @@ class Dspace extends WP_Widget {
             $group_subtype = $this->configuration->is_label_true( $group_subtype);
             $cmp=$this->validation->getOrder($group_subtype,$instance ['group_year']);
             $this->util->setCmp($cmp);
-            $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );    
-            echo $this->util->render ($results,$attributes, $cmp,  $this->configuration);      
+            $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected );
+            echo $this->util->render ($results,$attributes, $cmp,  $this->configuration);
 		}
     }
 
@@ -114,7 +114,7 @@ class Dspace extends WP_Widget {
             if (empty($duration)) { $duration = defaultCache();}
             ?>
         <p>
-	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?> 
+	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:'); ?>
             <select class='widefat'
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
@@ -190,7 +190,7 @@ class Dspace extends WP_Widget {
             </p>
         <p class="conditionally-limit"
         <?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
-            <label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:'); ?> 
+            <label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:'); ?>
             <input class="widefat" type="number" onKeyPress="return justNumbers(event);"
                 min="10"
 		id="<?php echo $this->get_field_id('maxlenght'); ?>"
@@ -203,7 +203,7 @@ class Dspace extends WP_Widget {
         }
         public function show_totalResults($max_results){ ?>
         <p>
-        <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Cantidad de Resultados a mostrar'); ?> 
+        <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Cantidad de Resultados a mostrar'); ?>
             <select class='widefat'
 		id="<?php echo $this->get_field_id('max_results'); ?>"
 		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
@@ -251,21 +251,21 @@ class Dspace extends WP_Widget {
             if (empty($config)) { $config = default_repository();}
         ?>
         <div class="config">
-        <label id="origen" for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración'); ?> 
+        <label id="origen" for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración'); ?>
             <select autocomplete="off" class='widefat'
 		id="<?php echo $this->get_field_id('config'); ?>"
 		name="<?php echo $this->get_field_name('config'); ?>" type="text">
 		<?php
 		$directorio = get_configuration_directory();
 		foreach (glob($directorio."*.ini") as $value) {
-                    $ini_array = parse_ini_file($value);
+                    $ini_array = parseFile($value);
                     ?>
                     <option value=<?php echo $ini_array['name'];?>
                     <?php echo (strcmp($ini_array['name'], $config) == 0)?'selected':''; ?>>
 				<?php echo $ini_array['name']; ?>
                     </option>
 		<?php
-		}// end for	
+		}// end for
 		?>
             </select>
         </label>
@@ -273,10 +273,10 @@ class Dspace extends WP_Widget {
         <?php
             return;
         }
-        
+
         /**
 	 * @see WP_Widget::form
-	 */         
+	 */
 	function form($instance) {
 
         if (empty($instance))
@@ -288,9 +288,9 @@ class Dspace extends WP_Widget {
                 $this->show_configs($instance['config']);
                 $this->show_options($instance);
                 $this->show_description($instance);
-                $this->show_cache(esc_attr ( $instance ['cache'] )); 
+                $this->show_cache(esc_attr ( $instance ['cache'] ));
 		$this->show_totalResults(esc_attr ( $instance ['max_results'] ));
 		$this->show_subtypes($instance);
 	}
-        
+
 }//end class
