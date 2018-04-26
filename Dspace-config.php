@@ -1,5 +1,5 @@
 <?php
-include_once '/configuration/config.php';
+include_once plugin_dir_path( __FILE__ ).'/configuration/config.php';
 /**
  * Description of Dspace-config
  *

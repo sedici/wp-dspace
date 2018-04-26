@@ -1,6 +1,6 @@
 <?php
 require_once 'FormValidation.php';
-include_once ('../configuration/config.php');
+include_once ( plugin_dir_path( __FILE__ ).'../configuration/config.php');
 class ShortcodeValidation extends FormValidation{
 
     public function create_configuration($configuration){
