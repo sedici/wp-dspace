@@ -82,7 +82,7 @@ class Configuration {
 
     final function author($words){
         $Authors = $this->queryAuthor($words);
-        $conditions = '';
+        $conditions = array();
         foreach ( $Authors as $author ) {
             $conditions[]= $this->config['author']. "\"" .$author ."\"" ;
         }
