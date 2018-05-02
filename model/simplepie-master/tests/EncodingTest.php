@@ -7,7 +7,7 @@
  * A PHP-Based RSS and Atom Feed Framework.
  * Takes the hard work out of managing a complete RSS/Atom solution.
  *
- * Copyright (c) 2004-2012, Ryan Parman, Geoffrey Sneddon, Ryan McCue, and contributors
+ * Copyright (c) 2004-2016, Ryan Parman, Geoffrey Sneddon, Ryan McCue, and contributors
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
@@ -35,8 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package SimplePie
- * @version 1.4-dev
- * @copyright 2004-2011 Ryan Parman, Geoffrey Sneddon, Ryan McCue
+ * @copyright 2004-2016 Ryan Parman, Geoffrey Sneddon, Ryan McCue
  * @author Ryan Parman
  * @author Geoffrey Sneddon
  * @author Ryan McCue
@@ -46,28 +45,8 @@
 
 require_once dirname(__FILE__) . '/bootstrap.php';
 
-class EncodingTest extends PHPUnit_Framework_TestCase
+class EncodingTest extends PHPUnit\Framework\TestCase
 {
-	/**
-	 * Test if we have mbstring
-	 *
-	 * Used for depends
-	 */
-	public function test_has_mbstring()
-	{
-		$this->assertTrue(function_exists('mb_convert_encoding'));
-	}
-
-	/**
-	 * Test if we have iconv (crazy if we don't)
-	 *
-	 * Used for depends
-	 */
-	public function test_has_iconv()
-	{
-		$this->assertTrue(function_exists('iconv'));
-	}
-
 	/**#@+
 	 * UTF-8 methods
 	 */
@@ -111,6 +90,16 @@ class EncodingTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * Special cases with uconverter handling
+	 */
+	public static function toUTF8_uconverter()
+	{
+		return array(
+			array("\xfe\xff\x22\x1e", "\xe2\x88\x9e", 'UTF-16'),
+		);
+	}
+
+	/**
 	 * Convert * to UTF-8
 	 *
 	 * @dataProvider toUTF8
@@ -125,18 +114,12 @@ class EncodingTest extends PHPUnit_Framework_TestCase
 	 * Convert * to UTF-8 using mbstring
 	 *
 	 * Special cases only
-	 * @depends test_has_mbstring
 	 * @dataProvider toUTF8_mbstring
 	 */
 	public function test_convert_UTF8_mbstring($input, $expected, $encoding)
 	{
 		$encoding = SimplePie_Misc::encoding($encoding);
-		if (version_compare(phpversion(), '5.3', '<'))
-		{
-			$this->assertEquals($expected, Mock_Misc::__callStatic('change_encoding_mbstring', array($input, $encoding, 'UTF-8')));
-		}
-		else
-		{
+		if (extension_loaded('mbstring')) {
 			$this->assertEquals($expected, Mock_Misc::change_encoding_mbstring($input, $encoding, 'UTF-8'));
 		}
 	}
@@ -145,18 +128,29 @@ class EncodingTest extends PHPUnit_Framework_TestCase
 	 * Convert * to UTF-8 using iconv
 	 *
 	 * Special cases only
-	 * @depends test_has_iconv
 	 * @dataProvider toUTF8_iconv
 	 */
 	public function test_convert_UTF8_iconv($input, $expected, $encoding)
 	{
 		$encoding = SimplePie_Misc::encoding($encoding);
-		if (version_compare(phpversion(), '5.3', '<'))
-		{
-			$this->assertEquals($expected, Mock_Misc::__callStatic('change_encoding_iconv', array($input, $encoding, 'UTF-8')));
-		}
-		else {
+		if (extension_loaded('iconv')) {
 			$this->assertEquals($expected, Mock_Misc::change_encoding_iconv($input, $encoding, 'UTF-8'));
+		}
+	}
+
+	/**
+	 * Convert * to UTF-8 using UConverter
+	 *
+	 * Special cases only
+	 * @dataProvider toUTF8_uconverter
+	 */
+	public function test_convert_UTF8_uconverter($input, $expected, $encoding)
+	{
+		$encoding = SimplePie_Misc::encoding($encoding);
+		if (version_compare(phpversion(), '5.5', '>=') &&
+			extension_loaded('intl')
+		) {
+			$this->assertEquals($expected, Mock_Misc::change_encoding_uconverter($input, $encoding, 'UTF-8'));
 		}
 	}
 	/**#@-*/

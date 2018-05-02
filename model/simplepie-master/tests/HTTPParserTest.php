@@ -7,7 +7,7 @@
  * A PHP-Based RSS and Atom Feed Framework.
  * Takes the hard work out of managing a complete RSS/Atom solution.
  *
- * Copyright (c) 2004-2012, Ryan Parman, Geoffrey Sneddon, Ryan McCue, and contributors
+ * Copyright (c) 2004-2016, Ryan Parman, Geoffrey Sneddon, Ryan McCue, and contributors
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification, are
@@ -35,8 +35,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * @package SimplePie
- * @version 1.4-dev
- * @copyright 2004-2011 Ryan Parman, Geoffrey Sneddon, Ryan McCue
+ * @copyright 2004-2016 Ryan Parman, Geoffrey Sneddon, Ryan McCue
  * @author Ryan Parman
  * @author Geoffrey Sneddon
  * @author Ryan McCue
@@ -46,7 +45,7 @@
 
 require_once dirname(__FILE__) . '/bootstrap.php';
 
-class HTTPParserTest extends PHPUnit_Framework_TestCase
+class HTTPParserTest extends PHPUnit\Framework\TestCase
 {
 	public static function chunkedProvider()
 	{
@@ -72,6 +71,7 @@ class HTTPParserTest extends PHPUnit_Framework_TestCase
 	public function testChunkedNormal($data, $expected)
 	{
 		$data = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n" . $data;
+		$data = SimplePie_HTTP_Parser::prepareHeaders($data);
 		$parser = new SimplePie_HTTP_Parser($data);
 		$this->assertTrue($parser->parse());
 		$this->assertEquals(1.1, $parser->http_version);
@@ -80,5 +80,37 @@ class HTTPParserTest extends PHPUnit_Framework_TestCase
 		$this->assertEquals(array('content-type' => 'text/plain'), $parser->headers);
 		$this->assertEquals($expected, $parser->body);
 
+	}
+
+	/**
+	 * @dataProvider chunkedProvider
+	 */
+	public function testChunkedProxy($data, $expected)
+	{
+		$data = "HTTP/1.0 200 Connection established\r\n\r\nHTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n" . $data;
+		$data = SimplePie_HTTP_Parser::prepareHeaders($data);
+		$parser = new SimplePie_HTTP_Parser($data);
+		$this->assertTrue($parser->parse());
+		$this->assertEquals(1.1, $parser->http_version);
+		$this->assertEquals(200, $parser->status_code);
+		$this->assertEquals('OK', $parser->reason);
+		$this->assertEquals(array('content-type' => 'text/plain'), $parser->headers);
+		$this->assertEquals($expected, $parser->body);
+	}
+
+	/**
+	 * @dataProvider chunkedProvider
+	 */
+	public function testChunkedProxy11($data, $expected)
+	{
+		$data = "HTTP/1.1 200 Connection established\r\n\r\nHTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n" . $data;
+		$data = SimplePie_HTTP_Parser::prepareHeaders($data);
+		$parser = new SimplePie_HTTP_Parser($data);
+		$this->assertTrue($parser->parse());
+		$this->assertEquals(1.1, $parser->http_version);
+		$this->assertEquals(200, $parser->status_code);
+		$this->assertEquals('OK', $parser->reason);
+		$this->assertEquals(array('content-type' => 'text/plain'), $parser->headers);
+		$this->assertEquals($expected, $parser->body);
 	}
 }
