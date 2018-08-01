@@ -61,7 +61,7 @@ class Configuration {
         return $this->config['name'];
     }
     final function get_protocol_domain() {
-        return _PROTOCOL . $this->config['domain'];
+        return $this->config['protocol'] . $this->config['domain'];
     }
 
     final function get_subtype_query(){
@@ -73,7 +73,7 @@ class Configuration {
     }
 
     final function get_base_url() {
-	return  _PROTOCOL. $this->config['domain']. _BASE_PATH;
+	return  $this->config['protocol']. $this->config['domain']. _BASE_PATH;
     }
 
     final function standar_query($max_results){

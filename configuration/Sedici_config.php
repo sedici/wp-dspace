@@ -5,9 +5,11 @@
  * @author Paula Salamone
  */
 define ('S_CONECTOR4' , '%2C');
-define ('S_CONECTOR5', '\+');
+define ('S_CONECTOR5', '%20');
 define ('S_SEPARATOR', '\|\|\|');
-define ('S_FILTER' , '/discover?fq=author_filter%3A');
+define ('S_FILTER2' , '/discover?fq=author_filter%3A');
+define ('S_FILTER' , '/discover?filtertype=author&filter_relational_operator=equals&filter=');
+
 class Sedici_config extends Configuration{
     public function Sedici_config($conf){
        parent::__construct ($conf);
@@ -22,16 +24,16 @@ class Sedici_config extends Configuration{
 	$link = $link. S_FILTER;
         $name = str_replace(",", S_CONECTOR4, $author);
         $name = $this->remplace($name);
-        $link .= strtolower($name). S_SEPARATOR . $name;
+        $link .=  $name;
 	return  ('<a href='.$link.' target="_blank">'.$author.'</a>') ;
             
     }
     
-    function search_author($author){
+  /*  function search_author($author){
         $name = str_replace(",", S_CONECTOR4, $author);
         $name = $this->remplace($name);
         $query= strtolower($name). S_SEPARATOR . $name;
         return $query;
-    }
+    }*/
     
 }
