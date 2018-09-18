@@ -22,7 +22,7 @@ class Query {
         }
         
         public function concatenarCondiciones($words){
-            $conditions = '';
+            $conditions = array();
             $filterPrefix = '';
             foreach ( $words as $word ) {
 		$conditions[]= $filterPrefix. "\"" .$word ."\"" ;
