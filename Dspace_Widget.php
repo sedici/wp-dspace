@@ -1,4 +1,5 @@
 <?php
+//namespace Wp_dspace;
  include_once('configuration/config.php');
 class Dspace extends WP_Widget {
 	protected $filter;
@@ -15,7 +16,7 @@ class Dspace extends WP_Widget {
 		parent::__construct( 'Dspace', 'Dspace Plugin', $option );
 	}
 
-	/**
+	/** 
 	 * @overrides
 	 * Executes when the widget is displayed
 	 *
@@ -25,7 +26,7 @@ class Dspace extends WP_Widget {
 		extract ( $args );
 		$handle = apply_filters ( 'handle', $instance ['handle'] );
         $author = apply_filters ( 'author', $instance ['author'] );
-        $keywords = apply_filters ( 'keywords', $instance ['keywords'] );
+        $keywords = apply_filters ( 'keywords', $instance['keywords'] );
 
         if($this->validation->labelValidation($author,$handle,$keywords)){
 
@@ -58,18 +59,28 @@ class Dspace extends WP_Widget {
 		}
     }
 
+
+     function sanitizar($key,$instance) {
+        $instance[$key] = sanitize_text_field($instance[$key]);
+     }
 	/**
 	 * @see WP_Widget::update
 	 */
 	function update($new_instance, $old_instance) {
 		$subtypes = $this->filter->subtypes();
 		$instance = $old_instance;
-        $instance ['config'] = sanitize_text_field ( $new_instance ['config'] );
-		$instance ['handle'] = sanitize_text_field ( $new_instance ['handle'] );
-        $instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
-        $instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
-        $instance ['share'] = sanitize_text_field ( $new_instance ['share'] );
-		$instance ['maxlenght'] = sanitize_text_field ( $new_instance ['maxlenght'] );
+       foreach ($new_instance as $key => $value) {
+            $new_instance[$key]= sanitize_text_field($new_instance[$key]);
+        }
+        foreach ( $this->filter->subtypes() as $s) {
+            $new_instance [$s] = sanitize_text_field ( $new_instance [$s] );
+        }
+        /*$new_instance ['config'] = sanitize_text_field ( $new_instance ['config'] );
+		$new_instance ['handle'] = sanitize_text_field ( $new_instance ['handle'] );
+        $new_instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
+        $new_instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
+        $new_instance ['share'] = sanitize_text_field ( $new_instance ['share'] );*/
+		/*$instance ['maxlenght'] = sanitize_text_field ( $new_instance ['maxlenght'] );
 		$instance ['description'] = sanitize_text_field ( $new_instance ['description'] );
 		$instance ['summary'] = sanitize_text_field ( $new_instance ['summary'] );
 		$instance ['date'] = sanitize_text_field ( $new_instance ['date'] );
@@ -80,11 +91,8 @@ class Dspace extends WP_Widget {
 		$instance ['limit'] = sanitize_text_field ( $new_instance ['limit'] );
         $instance ['group_subtype'] = sanitize_text_field ( $new_instance ['group_subtype'] );
         $instance ['group_year'] = sanitize_text_field ( $new_instance ['group_year'] );
-        $instance ['show_subtype'] = sanitize_text_field ( $new_instance ['show_subtype'] );
-		foreach ( $subtypes as $s) {
-			$instance [$s] = sanitize_text_field ( $new_instance [$s] );
-		}
-		return $instance;
+        $instance ['show_subtype'] = sanitize_text_field ( $new_instance ['show_subtype'] ); */
+		return $new_instance;
 	}
 
     function show_input ($type,$text,$id,$placeholder=""){
