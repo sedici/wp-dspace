@@ -1,6 +1,6 @@
 <?php
-require_once 'Filter.php';
-class ShortcodeFilter extends Filter {
+require_once 'class-filter.php';
+class ShortcodeFilter extends Wp_dspace\Util\Filter {
 
     function default_shortcode(){
 	return ( array (

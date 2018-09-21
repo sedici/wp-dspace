@@ -17,7 +17,7 @@ function DspaceShortcode($atts) {
 	return LoadShortcode ( $atts );
 }
 require_once 'util/ShortcodeFilter.php';
-require_once 'util/ShortcodeValidation.php';
+require_once 'util/class-showshortcodevalidation.php';
 class Shortcode {
         protected $filter;
         protected $validation;
