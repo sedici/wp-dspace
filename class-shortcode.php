@@ -1,10 +1,8 @@
 <?php
-define('SHORTCODE', 'get_publications');
+namespace Wp_dspace;
 
-function get_shortcode(){
-    return SHORTCODE;
-}
 
+/*
 function LoadShortcode($atts) {
 	$shortcode = new Shortcode ();
         ob_start();
@@ -15,18 +13,18 @@ function LoadShortcode($atts) {
 }
 function DspaceShortcode($atts) {
 	return LoadShortcode ( $atts );
-}
-require_once 'util/ShortcodeFilter.php';
+}*/
+require_once 'util/class-shortcodefilter.php';
 require_once 'util/class-showshortcodevalidation.php';
 class Shortcode {
         protected $filter;
         protected $validation;
         protected $util;
         protected $configuration;
-        public function Shortcode(){
-            $this->filter = new ShortcodeFilter();
-            $this->validation = new ShortcodeValidation();
-            $this->util = new Query();
+        public function __construct(){
+            $this->filter = new Util\ShortcodeFilter();
+            $this->validation = new Util\ShortcodeValidation();
+            $this->util = new Util\Query();
         }   
         
 	function plugin_sedici($atts) {

@@ -1,5 +1,8 @@
 <?php
 namespace Wp_dspace\View;
+define('SHORTCODE', 'get_publications');
+
+
 class ShowShortcode {
     protected $filter;
     public function __construct(){
@@ -21,7 +24,9 @@ class ShowShortcode {
         }
         return;
     }
-    
+    public function get_shortcode(){
+        return SHORTCODE;
+    }
     public function show_thesis($instance){
             $show_thesis=false;
             $thesis = $this->filter->vectorTesis();
@@ -81,7 +86,7 @@ class ShowShortcode {
             El shortcode de la configuración guardada es:
             <?php 
                 $this->is_conicet($instance);
-                echo "[".get_shortcode()." ";
+                echo "[".$this->get_shortcode()." ";
                 $this->show_label($instance);
                 $this->show_subtypes($instance);
                 $this->show_checkbox($instance);

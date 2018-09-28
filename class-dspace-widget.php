@@ -76,23 +76,6 @@ class Dspace_Widget extends \WP_Widget {
         foreach ( $this->filter->subtypes() as $s) {
             $new_instance [$s] = sanitize_text_field ( $new_instance [$s] );
         }
-        /*$new_instance ['config'] = sanitize_text_field ( $new_instance ['config'] );
-		$new_instance ['handle'] = sanitize_text_field ( $new_instance ['handle'] );
-        $new_instance ['author'] = sanitize_text_field ( $new_instance ['author'] );
-        $new_instance ['keywords'] = sanitize_text_field ( $new_instance ['keywords'] );
-        $new_instance ['share'] = sanitize_text_field ( $new_instance ['share'] );*/
-		/*$instance ['maxlenght'] = sanitize_text_field ( $new_instance ['maxlenght'] );
-		$instance ['description'] = sanitize_text_field ( $new_instance ['description'] );
-		$instance ['summary'] = sanitize_text_field ( $new_instance ['summary'] );
-		$instance ['date'] = sanitize_text_field ( $new_instance ['date'] );
-		$instance ['show_author'] = sanitize_text_field ( $new_instance ['show_author'] );
-		$instance ['max_results'] = sanitize_text_field ( $new_instance ['max_results'] );
-		$instance ['cache'] = sanitize_text_field ( $new_instance ['cache'] );
-		$instance ['all'] = sanitize_text_field ( $new_instance ['all'] );
-		$instance ['limit'] = sanitize_text_field ( $new_instance ['limit'] );
-        $instance ['group_subtype'] = sanitize_text_field ( $new_instance ['group_subtype'] );
-        $instance ['group_year'] = sanitize_text_field ( $new_instance ['group_year'] );
-        $instance ['show_subtype'] = sanitize_text_field ( $new_instance ['show_subtype'] ); */
 		return $new_instance;
 	}
 

@@ -19,23 +19,22 @@ function dspace_options_page() {
 
 
 function register_my_setting() {
-	$args = array( 'Canciones' => array());
+	// $args = array( 'repositorios' => array());
 
-	array_push($args['Canciones'],array('title' => 'titulo1',
-		'autor' => 'autor1')
-	);
-	array_push($args['Canciones'],array(
-		'title' => 'titulo2',
-		'autor' => 'autor2'
-	));
-	array_push($args['Canciones'],array(
-		'title' => 'titulo3',
-		'autor' => 'autor3'
-	));
-	//var_dump($args);
-	//die;
+	// array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'sedici',
+		// 'domain' => 'sedici.unlp.edu.ar','protocol'=>'http://','subtype' =>'sedici.subtype:','handle'=>'scope','author'=>'author:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query' )
+	// );
+	// array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'cic',
+		// 'domain' => 'digital.cic.gba.gob.ar','protocol'=>'https://','subtype' =>'dc.type:','handle'=>'scope','author'=>'author:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query' )
+	// );
+	// /*array_push($args['Canciones'],array(
+		// 'title' => 'titulo2',
+		// 'autor' => 'autor2'
+	// ));*/
+	// 
+	
 
-	//update_option('eze_canciones',$args);
+	// update_option('config_repositorios',$args);
 
 
 }

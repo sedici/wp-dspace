@@ -22,37 +22,28 @@ define( DS . 'PLUGIN_TEXT_DOMAIN', 'wp-dspace' );
 /**
  * Autoload Classes
  */
-
 require_once( PLUGIN_NAME_DIR . 'inc/libraries/autoloader_wp_dspace.php' );
-
-
-require_once 'Shortcode.php';
 require_once 'Dspace-config.php';
 require_once 'configuration/config.php';
-require_once 'util/class-widgetfilter.php';
-require_once 'util/class-widgetvalidation.php';
-require_once 'util/class-query.php';
-require_once 'util/class-xmlorder.php';
-require_once 'view/class-showshortcode.php';
-require_once 'model/class-simplepiemodel.php';
 require_once 'configuration/Configuration.php';
 foreach ( glob ( "configuration/*_config.php" ) as $app ) {
     require_once $app;
 }
 
 
+/**
+ * Register Activation and Deactivation Hooks
+ * This action is documented in inc/core/class-activator.php
+ */
 
-//require_once 'class-dspace-widget.php';
-add_action( 'widgets_init', function(){
-	register_widget( 'Wp_dspace\Dspace_Widget' );
-});
+register_activation_hook( __FILE__, array( DS . 'Inc\Core\Activator', 'activate' ) );
 
-//add_action ( 'widgets_init', create_function ( '', 'return register_widget("Dspace");' ) );
-print_r( add_shortcode ( 'get_publications', 'DspaceShortcode' ));
+/**
+ * The code that runs during plugin deactivation.
+ * This action is documented inc/core/class-deactivator.php
+ */
 
-
-
-
+register_deactivation_hook( __FILE__, array( DS . 'Inc\Core\Deactivator', 'deactivate' ) );
 
 /**
  * Plugin Singleton Container

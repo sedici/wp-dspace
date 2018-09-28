@@ -39,7 +39,7 @@ class Init {
 		$this->plugin_text_domain = DS\PLUGIN_TEXT_DOMAIN;
 
 		$this->load_dependencies();
-		//$this->set_locale();
+		$this->set_locale();
 		$this->define_admin_hooks();
 		//$this->define_public_hooks();
 	}
@@ -94,6 +94,10 @@ class Init {
 
 		// Register admin notices
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'print_plugin_admin_notices');
+		// Inicio widget
+		$this->loader->add_action( 'widgets_init',$plugin_admin,'load_widget_dspace' );
+		// Incio shorcode
+		add_shortcode ( 'get_publications', array($plugin_admin,'DspaceShortcode' ));
 
 	}
 	/**

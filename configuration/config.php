@@ -4,16 +4,15 @@ define ('S_CACHE',86400);
 define('S_MAXRESULT', 100);
 define('S_MINRESULT',1);
 define ('S_MEDRESULT',10);
-define ( '_PROTOCOL', "http://" );
-define ( '_BASE_PATH', "/open-search/discover" );
-define ( 'SQ_HANDLE', "scope");
+define ( '_BASE_PATH', "/open-search/discover" ); //uno
+define ( 'SQ_HANDLE', "scope");  //2
 define ('S_START', 0);
 define ( 'Q_RPP', '100' );
-define ( 'Q_FORMAT', 'atom' );
+define ( 'Q_FORMAT', 'atom' ); //3
 define ( 'Q_SORTBY', '3' );
 define ( 'Q_ORDER', 'desc' );
-define ( 'Q_QUERY', "query");
-define ('S_REPOSITORY',"sedici");
+define ( 'Q_QUERY', "query");   //4
+define ('S_REPOSITORY',"sedici");//5
 define ('Q_CONFIGURATION',"/plugins/wp-dspace/config-files/");
 
 function get_configuration_directory(){
