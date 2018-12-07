@@ -88,12 +88,17 @@ class Init {
 		//Add a top-level admin menu for our plugin
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_plugin_admin_menu' );
 
-		//when a form is submitted to admin-post.php
-		$this->loader->add_action( 'admin_post_form_config', $plugin_admin, 'the_form_response');
-
-
+		
+		// request ajax para admin. 
+		$this->loader->add_action( 'wp_ajax_get_repositorios', $plugin_admin, 'get_repositorios');
+		$this->loader->add_action( 'wp_ajax_edit_repo', $plugin_admin, 'edit_repo');
+		$this->loader->add_action( 'wp_ajax_new_repo', $plugin_admin, 'new_repo');
+		$this->loader->add_action( 'wp_ajax_add_repo', $plugin_admin, 'add_repo');
+		$this->loader->add_action( 'wp_ajax_notice_result', $plugin_admin, 'notice_result');
+		$this->loader->add_action( 'wp_ajax_delete_repo', $plugin_admin, 'delete_repo');
+		$this->loader->add_action( 'wp_ajax_update_repo', $plugin_admin, 'update_repo');
 		// Register admin notices
-		$this->loader->add_action( 'admin_notices', $plugin_admin, 'print_plugin_admin_notices');
+		// $this->loader->add_action( 'admin_notices', $plugin_admin, 'print_plugin_admin_notices');
 		// Inicio widget
 		$this->loader->add_action( 'widgets_init',$plugin_admin,'load_widget_dspace' );
 		// Incio shorcode

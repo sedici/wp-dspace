@@ -25,7 +25,7 @@ define( DS . 'PLUGIN_TEXT_DOMAIN', 'wp-dspace' );
 require_once( PLUGIN_NAME_DIR . 'inc/libraries/autoloader_wp_dspace.php' );
 require_once 'Dspace-config.php';
 require_once 'configuration/config.php';
-require_once 'configuration/Configuration.php';
+require_once 'configuration/class-configuration.php';
 foreach ( glob ( "configuration/*_config.php" ) as $app ) {
     require_once $app;
 }

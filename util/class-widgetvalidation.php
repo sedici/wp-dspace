@@ -1,6 +1,5 @@
 <?php
 namespace Wp_dspace\Util;
-//require_once 'class-formvalidation.php';
 class WidgetValidation extends FormValidation{
     public function WidgetValidation(){
          parent::__construct();

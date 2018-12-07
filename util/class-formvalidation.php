@@ -3,7 +3,7 @@ namespace Wp_dspace\Util;
 define ( 'CMP_DATE_SUBTYPE', "cmpDateSubtype" );
 define ( 'CMP_DATE', "cmpDate" );
 define ( 'CMP_SUBTYPE', "cmpSubtype");
-require_once  WP_CONTENT_DIR."/plugins/wp-dspace/configuration/Configuration.php";
+require_once  WP_CONTENT_DIR."/plugins/wp-dspace/configuration/class-configuration.php";
 foreach ( glob ( WP_CONTENT_DIR."/plugins/wp-dspace/configuration/*_config.php" ) as $app ) { 
     require_once $app;
 }        
@@ -18,15 +18,19 @@ class FormValidation {
     }   
     
     public function create_configuration($configuration){
-        $config = ucfirst($configuration)."_config";
-        if (class_exists($config,true)){
-            return (new $config($configuration));
-        }
-        else {
-            return new Configuration($configuration);
-        }
+        // $config = ucfirst($configuration)."_config";
+        // if (class_exists($config,true)){
+        //     return (new $config($configuration));
+        // }
+        // else {
+        //     return new Configuration($configuration);
+        // }
+        return new \Wp_dspace\Configuration\Configuration($configuration);
     }
-    
+    public function get_support_subtype($configuration){
+        $config= $this-> create_configuration($configuration);
+        return $config->get_support_subtype();
+    }
     public function labelValidation($author,$handle,$keywords){
             if (( is_null($author) && is_null($handle) && is_null($keywords)) ||
                 ( empty($author) && empty($handle) && empty($keywords)) ){

@@ -48,7 +48,7 @@ class Query {
                     $words = $this->splitImputs($keywords);
                     array_push($query, $this->concatenarCondiciones($words));
                 }
-                if (!empty($query)) { $queryEstandar.="&". Q_QUERY."=". implode('%20AND%20', $query); }
+                if (!empty($query)) { $queryEstandar.="&". $configuration->get_key_query()."=". implode('%20AND%20', $query); }
                 else{
                     $queryEstandar.=$configuration->get_default_query();
                 }
