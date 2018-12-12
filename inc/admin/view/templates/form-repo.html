@@ -9,73 +9,73 @@
             <tr>
                 <th scope="row">Nombre del Repositorio</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.name}}" id="name" name="name" required>
-                    <p class='description'>Descripión</p>
+                    <input type="text" value="{{result.repo.name}}" id="name" name="name" required placeholder="seidici"> *
+                    <p class='description'>Ejemplo: "sedici"</p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Protocolo</th>
+                <th scope="row">Protocolo(http/https)</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.protocol}}" name="protocol" required>
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.protocol}}" name="protocol" required placeholder="http/https"> *
+                    <p class='description'><strong>http</strong>://sedici.unlp.edu.ar/open-search/discover?format=atom&query=("interoperabilidad")</p>
                 </td>
             </tr>
             <tr>
                 <th scope="row">Dominio</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.domain}}" name="domain" required>
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.domain}}" name="domain" required placeholder="sedici.unlp.edu.ar"> *
+                    <p class='description'>http://<strong>sedici.unlp.edu.ar</strong>/open-search/discover?format=atom&query=("interoperabilidad")</p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Path OpenSearch</th>
+                <th scope="row">Ruta de OpenSearch</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.base_path}}" name="base_path" required>
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.base_path}}" name="base_path" required placeholder="/open-search/discover"> *
+                    <p class='description'>http://sedici.unlp.edu.ar<strong>/open-search/discover</strong>?format=atom&query=("interoperabilidad")</p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Formato</th>
+                <th scope="row">Nombre del parámetro GET para el formato de consulta</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.format}}" name="format" required>
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.format}}" name="format" required placeholder="atom"> *
+                    <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?format=<strong>atom</strong>&query=("interoperabilidad")</p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Query</th>
+                <th scope="row">Nombre del parámetro GET para realizar la consulta</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.query}}" name="query" required>
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.query}}" name="query" required placeholder="query"> *
+                    <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?format=stom&<strong>query</strong>=("interoperabilidad")</p>
                 </td>
             </tr>
 
             <tr>
-                <th scope="row">Handle</th>
+                <th scope="row">Nombre del parámetro GET para consular por scope</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.handle}}" name="handle" required>
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.handle}}" name="handle" required placeholder="scope"> *
+                    <p class='description'>http://ri.conicet.gov.ar/open-search/discover?<strong>scope</strong>=11336/3&query=*</p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Default Query</th>
+                <th scope="row">Consulta por defecto</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.default_query}}" name="default_query">
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.default_query}}" name="default_query" placeholder="*">
+                    <p class='description'>http://ri.conicet.gov.ar/open-search/discover?scope=11336/3&query=<strong>*</strong></p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Autor</th>
+                <th scope="row"> Nombre de la propiedad para consultar por autor</th>
                 <td scope="row">
-                    <input type="text" value="{{result.repo.author}}" name="author" required>
-                    <p class='description'>Descripción</p>
+                    <input type="text" value="{{result.repo.author}}" name="author" required placeholder="autor:"> *
+                    <p class='description'>https://digital.cic.gba.gob.ar/open-search/discover?rpp=10&format=atom&query=(<strong>author:</strong>"De Giusti, Marisa Raquel")</p>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Subtipo de documento</th>
+                <th scope="row"> Nombre de la propiedad para consultar por subtipo de documento</th>
                 <td scope="row">
                     <input type="text" value="{{result.repo.subtype}}" name="subtype"
-                        {{result.config_subtype.disabled}} {{result.config_subtype.required}}>
-                    <p class='description'>Descripción</p>
+                        {{result.config_subtype.disabled}} {{result.config_subtype.required}} placeholder="dc.type:"> *
+                    <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?format=atom&query=(<strong>sedici.subtype:</strong>"Articulo")"</p>
                 </td>
                 <td scope="row">
                     <input type="checkbox" name="support" class="checkSupport" {{result.config_subtype.checked}}>

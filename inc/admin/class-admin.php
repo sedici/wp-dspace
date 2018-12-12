@@ -44,7 +44,7 @@ class Admin
     /**
      * Registrar estilos en stylesheets admin area.
      *
-     * @since    1.0.0
+     * 
      */
     public function register_styles()
     {
@@ -61,17 +61,16 @@ class Admin
     /**
      * Registrar scripts admin area.
      *
-     * @since    1.0.0
+     * 
      */
     public function register_scripts()
     {
         wp_register_script($this->plugin_name, plugin_dir_url(__FILE__) . 'js/wp-dspace-admin.js', array("jquery"), null, true);
            
     }
-    public function enqueue_scripts($hook)
-    {
+    public function enqueue_scripts($hook){
         /**  scripts para realizar y procesar peticiones ajax*/
-         if ('dspace_page_config-repo'==  $hook){        
+         if ('conector-opensearch_page_config-repo'==  $hook){        
             $params = array('ajaxurl' => admin_url('admin-ajax.php'));
             wp_enqueue_script('dspace_ajax_handle', plugin_dir_url(__FILE__) . 'js/ajax_dspace.js', array('jquery'), $this->version, false);
             wp_localize_script('dspace_ajax_handle', 'params', $params);
@@ -82,22 +81,22 @@ class Admin
 
     }
     /**
-     * Callback for the admin menu
+     * Menu del plugin en el area de admin 
      *
-     * @since    1.0.0
+     * 
      */
     public function add_plugin_admin_menu()
     {
-        add_menu_page(__('Dspace', $this->plugin_text_domain), //page title
-            __('Dspace', $this->plugin_text_domain), //menu title
+        add_menu_page(__('Conector OpenSearch', $this->plugin_text_domain), //page title
+            __('Conector OpenSearch', $this->plugin_text_domain), //menu title
             'manage_options', //capability
             $this->plugin_name, //menu_slug
             array($this, 'wp_dspace_pagina')
         ); // pagina para Descripción del plugin
         $ajax_form_page_hook = add_submenu_page(
             $this->plugin_name, //parent slug
-            __('Administrador Form repo', $this->plugin_text_domain), //page title
-            __('Ajax Configuracion repo', $this->plugin_text_domain), //menu title
+            __('Repositorios', $this->plugin_text_domain), //page title
+            __('Repositorios', $this->plugin_text_domain), //menu title
             'manage_options', //capability
             'config-repo', //menu_slug
             array($this, 'ajax_form_page_content') // pagina para configurar repositorios.
@@ -105,25 +104,30 @@ class Admin
 
         add_action('load-' . $html_form_page_hook, array($this, 'loaded_html_form_submenu_page'));
     }
+
+    /**
+     * Vistas para cada opción del menu en el area de admin
+     * 
+     */
     public function wp_dspace_pagina()
     {
         //Fixme include_once dirname(__DIR__) . '/admin/view/html-descrition-plugin.php';
         echo "<h1> Pagina de descripción del plugin</h1>";
     }
 
-    /*
-     * Callback for the add_submenu_page action hook
-     *
-     * The plugin's HTML Ajax is loaded from here
-     *
-     * @since    1.0.0
-     */
+    
     public function ajax_form_page_content()
     {
         include_once dirname(__DIR__) . '/admin/view/html-form-view-ajax.php';
     }
 
-    // Funciones para los request ajax.
+    /**  
+     * Funciones para los request ajax.
+     * 
+     */
+    /**
+     * Retorna el html de los template para la libreria handlebarsjs
+     */
     public function get_template($template)
     {
         return file_get_contents(dirname(__DIR__) . '/admin/view/templates/' . $template . '.html');
@@ -168,7 +172,9 @@ class Admin
     }
     public function add_form()
     {
+        $config_subtype = array( 'required' => 'required');
         $response['template'] = $this->get_template($_GET['template']);
+        $respose['result'] = array('config_subtype' => $config_subtype);
         wp_send_json($response);
     }
     public function get_option_repositorios()
@@ -186,7 +192,15 @@ class Admin
     {
         $repo = $this->add_repo_in_option($_POST['repo']);
         $response['template'] = $this->get_template($_POST['template']);
-        $notificacion = array("mensaje" => 'Se agrego de forma correcta', 'type_notice' => 'notice-success');
+        if($repo){
+            $mensaje= 'Se agrego de forma correcta';
+            $type_notice = 'notice-success';
+        }
+        else{
+            $mensaje= 'Ya existe un repositorio con ese nombre ';
+            $type_notice = 'notice-error';
+        }
+        $notificacion = array("mensaje" => $mensaje, 'type_notice' => $type_notice);
         $response['result'] = array('notificacion' => $notificacion);
         wp_send_json($response);
 
@@ -202,14 +216,23 @@ class Admin
         return $repo;
 
     }
-    public function add_repo_in_option($repo)
+    private function validate_name_in_repo($name_repo,$repositorios){
+        $repos_name=array_column($repositorios, 'name');
+        return in_array($name_repo,$repos_name);
+
+    }
+    private function add_repo_in_option($repo)
     {
         $repositorios = $this->get_option_repositorios();
-        $repo['id'] = uniqid();
-        $repo = $this->validate_option_params($repo);
-        array_push($repositorios, $repo);
-        $args['repositorios'] = $repositorios;
-        update_option('config_repositorios', $args);
+        if(! $this->validate_name_in_repo($repo['name'],$repositorios)){
+            $repo['id'] = uniqid();
+            $repo = $this->validate_option_params($repo);
+            array_push($repositorios, $repo);
+            $args['repositorios'] = $repositorios;
+            update_option('config_repositorios', $args);
+        }
+        else
+            $repo=false;
         return $repo;
 
     }

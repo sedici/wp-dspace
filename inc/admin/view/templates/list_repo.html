@@ -1,7 +1,7 @@
 {{#each result}}
 <tr >
     <td scope='row'>{{toUpperCase this.name}} </td>
-    <td scope='row'><a target="_blank" href="{{this.protocol}}{{this.domain}}">{{this.protocol}}{{this.domain}}</a></td>
+    <td scope='row'><a target="_blank" href="{{this.protocol}}://{{this.domain}}">{{this.protocol}}://{{this.domain}}</a></td>
     <td scope='row'> <button id_repo="{{this.id}}"  class="editar-repo button button-primary">Editar</button></td>
     <td scope='row'><button id_repo="{{this.id}}" class="emilinar-repo button button-primary">Borrar</button> </td>
 </tr>

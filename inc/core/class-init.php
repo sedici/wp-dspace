@@ -48,7 +48,7 @@ class Init {
 	 * - Loader - Administra  los hooks del plugin.
 	 * - Internationalization_i18n - Define la funcionalidad de internacionalización.
 	 * - Admin - Define todos los hooks de admin.
-	 * - Frontend - Defines all hooks for the public side of the site.
+	 * - Frontend - Defines los hooks de la parte publica del sitio.
 	 *
 	 * @access    private
 	 */
@@ -106,59 +106,54 @@ class Init {
 
 	}
 	/**
-	 * Register all of the hooks related to the public-facing functionality
-	 * of the plugin.
+	 * Registrar hooks parte pública. 
 	 *
 	 * @access    private
 	 */
 	private function define_public_hooks() {
+		//Fixme Definir la clase frontend
+		// $plugin_public = new Frontend\Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
 
-		$plugin_public = new Frontend\Frontend( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
-
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
+		// $this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 
 	}
 
 	/**
-	 * Run the loader to execute all of the hooks with WordPress.
+	 * Ejecuta el cargado Loader. 
 	 */
 	public function run() {
 		$this->loader->run();
 	}
 
 	/**
-	 * The name of the plugin used to uniquely identify it within the context of
-	 * WordPress and to define internationalization functionality.
+	 * Nombre del complemento utilizado para identificarlo de forma única en el contexto de
+	 * WordPress y para definir la funcionalidad de internacionalización.
 	 */
 	public function get_plugin_name() {
 		return $this->plugin_basename;
 	}
 
 	/**
-	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
-	 * @return    Loader    Orchestrates the hooks of the plugin.
+	 * @return    Loader   
 	 */
 	public function get_loader() {
 		return $this->loader;
 	}
 
 	/**
-	 * Retrieve the version number of the plugin.
 	 *
-	 * @since     1.0.0
-	 * @return    string    The version number of the plugin.
+	 * @return    string   Número de version del plugin.
 	 */
 	public function get_version() {
 		return $this->version;
 	}
 
 	/**
-	 * Retrieve the text domain of the plugin.
 	 *
 	 * @since     1.0.0
-	 * @return    string    The text domain of the plugin.
+	 * @return    string    Text domain del plugin.
 	 */
 	public function get_plugin_text_domain() {
 		return $this->plugin_text_domain;

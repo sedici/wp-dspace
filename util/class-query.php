@@ -50,12 +50,14 @@ class Query {
                 }
                 if (!empty($query)) { $queryEstandar.="&". $configuration->get_key_query()."=". implode('%20AND%20', $query); }
                 else{
-                    $queryEstandar.=$configuration->get_default_query();
+            
+                    $queryEstandar = (empty($configuration->get_default_query())) ? $queryEstandar : $queryEstandar.'&query='.$configuration->get_default_query() ;
                 }
                 return $queryEstandar;//.DEFAULT_QUERY;
         }
         
         function executeQuery($query ,$cache) {
+            // var_dump($query);die;
     		$model = $this->get_model();
     		$xpath = $model->loadPath ( $query, $cache );
     		$entrys = $model->entry ( $xpath ); //all documents

@@ -3,24 +3,18 @@
 namespace Wp_dspace\Inc\Core;
 
 /**
- * Define the internationalization functionality.
+ * Define la funcionalidad de internalizacion.
  *
- * Loads and defines the internationalization files for this plugin
- * so that it is ready for translation.
  *
- * @link       https://www.nuancedesignstudio.in
- * @since      1.0.0
  *
- * @author     Karan NA Gupta
+ * @author     Sedici - Manzur Ezequiel
  */
 class Internationalization_i18n {
 
 	private $text_domain;
 
 	/**
-	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.0.0
 	 * @param      string $plugin_name       The name of this plugin.
 	 * @param      string $version    The version of this plugin.
 	 */
