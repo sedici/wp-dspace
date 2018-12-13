@@ -112,7 +112,12 @@ class Admin
     public function wp_dspace_pagina()
     {
         //Fixme include_once dirname(__DIR__) . '/admin/view/html-descrition-plugin.php';
-        echo "<h1> Pagina de descripción del plugin</h1>";
+        $url=plugins_url();
+        echo "<h1> Pagina de descripción del plugin</h1>
+        
+        <a href=$url/wp-dspace/UtilizaciondelPLuginWP-Dspace.docx>Descargar Manual</a>
+        
+        ";
     }
 
     
