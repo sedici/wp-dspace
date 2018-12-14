@@ -114,6 +114,12 @@ class Admin
         //Fixme include_once dirname(__DIR__) . '/admin/view/html-descrition-plugin.php';
         $url=plugins_url();
         echo "<h1> Pagina de descripción del plugin</h1>
+        <p>Este plugin de Wordpress permite a cualquier sitio web hecho en WP recuperar 
+        contenidos alojados en repositorios DSpace y mostrarlos dentro de Widgets o como 
+        shortcodes dentro de páginas y posts. La recuperación de los contenidos puede realizarse 
+        mediante una expresión de búsqueda, que se transforma a OpenSearch, o a partir de una 
+        colección particular del repositorio</p>
+
         
         <a href=$url/wp-dspace/UtilizaciondelPLuginWP-Dspace.docx>Descargar Manual</a>
         
