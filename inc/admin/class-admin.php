@@ -287,8 +287,7 @@ class Admin
         $shortcode = new \Wp_dspace\Shortcode();
         ob_start();
         $shortcode->plugin_sedici($atts);
-        $res = ob_get_contents();
-        ob_clean();
+        $res = ob_get_clean();
         return $res;
     }
     public function DspaceShortcode($atts)

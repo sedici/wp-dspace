@@ -180,7 +180,7 @@ class View {
         public function publicationsByGroup($entrys, $attributes, $group) {
                     $position=0;
                     $stringItem=""; 
-                    $stringHtml='<div class="wpDspace itemsPagination '.$this->classPagination($entrys).'"" id="'. uniqid('page_container_') .'"> <ul class="content">';    
+                    $stringHtml='<div class="wpDspace itemsPagination '.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'"> <ul class="content">';
                     while ($position != count($entrys)){
                         $currentElem= $entrys[$position];
                         $title = $this->group($currentElem, $group);
@@ -246,7 +246,7 @@ class View {
         
         
         public function allPublications($entrys, $attributes) {
-            $stringHtml='<div class="wpDspace itemsPagination '.$this->classPagination($entrys).'"" id="'. uniqid('page_container_') .'"><ul class="content">'; 
+            $stringHtml='<div class="wpDspace itemsPagination '.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'"><ul class="content">';
             $stringItem="";
 			foreach ($entrys as $item){
                           $stringItem=$stringItem . $this->document($item, $attributes);
