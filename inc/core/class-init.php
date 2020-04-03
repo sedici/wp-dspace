@@ -101,6 +101,8 @@ class Init {
 		// $this->loader->add_action( 'admin_notices', $plugin_admin, 'print_plugin_admin_notices');
 		// Inicio widget
 		$this->loader->add_action( 'widgets_init',$plugin_admin,'load_widget_dspace' );
+		//Creo filtro para pasar repositorios.
+        $this->loader->add_action('init',$plugin_admin,'createFilterGetRepositorios');
 		// Incio shorcode
 		add_shortcode ( 'get_publications', array($plugin_admin,'DspaceShortcode' ));
 

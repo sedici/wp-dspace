@@ -67,3 +67,7 @@ display: none;
 .wpDspace .content li, .alt_content li, .content > p{
 	padding: 5px
 }
+
+.wpDspace .content li{
+	list-style: none;
+}

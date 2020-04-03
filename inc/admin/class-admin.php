@@ -295,4 +295,9 @@ class Admin
         return $this->LoadShortcode($atts);
     }
 
+    public function createFilterGetRepositorios(){
+        $repositorios= $this->get_option_repositorios();
+        apply_filters( 'get_repositorios', $repositorios );
+    }
+
 }
