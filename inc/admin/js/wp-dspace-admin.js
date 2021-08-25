@@ -21,12 +21,12 @@ jQuery(document).ready(function () {
         
     })
     jQuery.each(filters, function (i, value) {
-        jQuery(value.selector).live('change', function () {
+        jQuery(value.selector).on('change', function () {
             jQuery(value.conditional).toggle();
         });
     });
 
-    jQuery("#origen select").live('change', function () {
+    jQuery("#origen select").on('change', function () {
         var selection = jQuery(this).val();
         if (jQuery(`#option_${selection}`).attr('support')){
             jQuery("div.conditional_config").show();
