@@ -29,43 +29,6 @@ jQuery(document).ready(function ($) {
 
 });
 
-jQuery('.editar-repo').live('click', function () {
-	var repo_id = jQuery(this).attr('id_repo');
-	var data_params = { action: 'edit_repo', template: 'form-repo', id: repo_id };
-	get_data_and_template('GET', data_params, 'form-repo');
-
-});
-jQuery('.emilinar-repo').live('click', function () {
-	if (confirm("¿Estas seguro?") ) {
-	var repo_id = jQuery(this).attr('id_repo');
-	
-	var data_params = { action: 'delete_repo', template: 'notice', id: repo_id };
-	get_data_and_template('POST', data_params, 'notice_result',after_delete_repo);
-}
-});
-
-jQuery('.agregar-nuevo-repo').live('click', function () {
-	var data_params = { action: 'new_repo', template: 'form-repo' };
-	get_data_and_template('GET', data_params, 'form-repo');
-});
-jQuery('#form-new-repo').live('submit', function (e) {
-	var repo =  get_form_repo();
-	var data_params = { action: 'add_repo', template: 'notice', repo: repo };
-	var params_fuction ={id_element: '#template-repo'}
-	get_data_and_template('POST', data_params, 'notice_result',after_add_and_update_repo,params_fuction);
-	e.preventDefault();
-});
-jQuery('#form-update-repo').live('submit', function (e) {
-	var repo =  get_form_repo();
-	var data_params = { action: 'update_repo', template: 'notice', repo: repo };
-	var params_fuction ={id_element: '#template-repo'}
-
-	get_data_and_template('POST', data_params, 'notice_result',after_add_and_update_repo,params_fuction);
-	e.preventDefault();
-});
-
-
-jQuery(".checkSupport").live('change', do_onchange);
 
 function do_onchange() {
 	support_subtype(this);
@@ -139,3 +102,53 @@ function list_repositorios() {
 // 	});
 
 // });
+
+
+(function( $ ) {
+	'use strict';
+
+	$(document).ready(function(){
+		$(document.body).on('click','.agregar-nuevo-repo', function () {
+			console.log("entre");
+			var data_params = { action: 'new_repo', template: 'form-repo' };
+			get_data_and_template('GET', data_params, 'form-repo');
+		});
+		
+
+		$(document.body).on('click','.editar-repo' ,function () {
+			var repo_id = jQuery(this).attr('id_repo');
+			var data_params = { action: 'edit_repo', template: 'form-repo', id: repo_id };
+			get_data_and_template('GET', data_params, 'form-repo');
+		
+		});
+		$(document.body).on('click','.emilinar-repo', function () {
+			if (confirm("¿Estas seguro?") ) {
+			var repo_id = jQuery(this).attr('id_repo');
+			
+			var data_params = { action: 'delete_repo', template: 'notice', id: repo_id };
+			get_data_and_template('POST', data_params, 'notice_result',after_delete_repo);
+		}
+		});
+		
+		
+		$(document.body).on('submit','#form-new-repo', function (e) {
+			var repo =  get_form_repo();
+			var data_params = { action: 'add_repo', template: 'notice', repo: repo };
+			var params_fuction ={id_element: '#template-repo'}
+			get_data_and_template('POST', data_params, 'notice_result',after_add_and_update_repo,params_fuction);
+			e.preventDefault();
+		});
+		$(document.body).on('submit','#form-update-repo', function (e) {
+			var repo =  get_form_repo();
+			var data_params = { action: 'update_repo', template: 'notice', repo: repo };
+			var params_fuction ={id_element: '#template-repo'}
+		
+			get_data_and_template('POST', data_params, 'notice_result',after_add_and_update_repo,params_fuction);
+			e.preventDefault();
+		});
+		
+		
+		$(document.body).on('change', ".checkSupport",do_onchange);
+		
+	});
+})( jQuery );
