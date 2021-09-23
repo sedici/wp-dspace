@@ -42,7 +42,7 @@ class ShortcodeFilter extends \Wp_dspace\Util\Filter {
 	// $subtypes: all names of subtypes
 	foreach ($subtypes as $key => $subtype){
             // compares the user marked subtypes, if TRUE, save the subtype.
-            if ('true' === $instance [$key]) {
+            if (isset($instance [$key]) and 'true' === $instance [$key]) {
                 array_push($groups, $subtype);
                 $all=false;
             }

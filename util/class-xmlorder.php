@@ -22,17 +22,21 @@ class XmlOrder {
      function cmpDate($a, $b)
         {
             $model = $this->get_model();
-            if ($model->date($b) == $model->date($a)){
+
+            
+           if ($model->date_utf_fotmat($b) == $model->date_utf_fotmat($a)){
                 return strcmp($model->type($a), $model->type($b));}
-            else {
-            return strcmp($model->date($b), $model->date($a));}
+            else 
+            return strtotime($model->date_utf_fotmat($b)) - strtotime($model->date_utf_fotmat($a)) ;  
+        
         } 
         
         function cmpSubtype($a, $b)
         {
             $model = $this->get_model();
+    
             if ($model->type($b) == $model->type($a)){
-                return strcmp($model->date($b), $model->date($a));}
+                return strtotime($model->date_utf_fotmat($b)) - strtotime($model->date_utf_fotmat($a)) ;}
             else {
                 return strcmp($model->type($a), $model->type($b));}
         }
@@ -47,10 +51,16 @@ class XmlOrder {
         }
     
         function cmpXml($results){
+            
             $cmp=$this->getCmp();
+            $array_results= array();
+            foreach ($results as $key => $value) {
+               $array_results[]= $value;
+            }
             if(!is_null($cmp)){
-                usort($results, array($this,$cmp));
+                usort($array_results, array($this,$cmp));
             }    
-            return $results;
+            return $array_results;
         }
+
 }

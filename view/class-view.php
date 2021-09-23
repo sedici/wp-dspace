@@ -31,7 +31,7 @@ class View {
             foreach ( $authors as $author ) {
             if( isset($author ) && ($author != FALSE)){
             //    if(!empty($author->get_name ())){
-                    array_push ($names, "<author><name>".$this->link_author($author->get_name ())."</name></author>");
+                    array_push ($names, "<author><name>".$this->link_author($author->name)."</name></author>");
                 }
             }//end foreach autores
             if (!empty($names)){
@@ -59,14 +59,15 @@ class View {
 	}
 	
 	public function show_description ($description,$item,$maxlenght){
+       
 		if ($description == "description") { 
                      $stringHtml=' <div id="sedici-title">'.__("Resumen:");  
-                        $show_text = $item->get_item_tags(SIMPLEPIE_NAMESPACE_DC_11,'description') ;
-                        $show_text = $show_text[0]['data'];
+                        $show_text = explode("\n", $item->summary );
+                        $show_text = $show_text[2];
 
                 } else {  
                      $stringHtml='<div id="sedici-title">'.__('Sumario:'); 
-                        $show_text = $item->get_description ();
+                        $show_text = $item->summary;
                 } 
 
                 $stringHtml=$stringHtml.'<span class="sedici-content">'. 
@@ -79,7 +80,7 @@ class View {
 	
         public function dctype($entry){
 		//return subtype document
-		$description = $entry->get_description();
+		$description = $entry->summary;
 		$dctype = explode ( "\n", $description );
 		return ($dctype[0]);
 	}
@@ -113,24 +114,26 @@ class View {
         return $stringHtml;   
         }
 	public function document($item,$attributes){
-		$link = $item->get_link ();	
-		
+        $link = $item->link->attributes()->href;
+        $dc_values= $item->children('dc', TRUE);
+        $date=date_create($dc_values->date);
+         	
 		$stringHtml = '<li><article>
-			<title>' . $item->get_title () . '</title>
+			<title>' . $item->title . '</title>
                         <div id="sedici-title">
                             <a href="' . $link . '" target="_blank">' . 
-                            ($this->html_especial_chars($item->get_title ())) .  
+                            ($this->html_especial_chars($item->title)) .  
                             '</a>
                         </div>';  
-				if ($attributes['show_author']){ $stringHtml=$stringHtml . $this->author($item->get_authors ()); }
+				if ($attributes['show_author']){  $stringHtml=$stringHtml . $this->author($item->author); }
 				if ($attributes['date']) 
                                 { 
                                    $stringHtml= $stringHtml.'<published>
                                         <div id="sedici-title">'.__('Fecha: ') .  
-                                        '<span class="sedici-content">' .$item->get_date ( 'Y-m-d' ) . '</span></div>
+                                        '<span class="sedici-content">' .date_format($date,"d/m/Y")  . '</span></div>
                                     </published>';
 				} //end if fecha  
-                                if ($attributes['show_subtypes']) 
+                                if ($attributes['show_subtypes'] ) 
                                 { 
                                     $stringHtml=$stringHtml . '<dc:type>
                                         <div id="sedici-title">' . __('Tipo de documento: '). 
@@ -138,29 +141,32 @@ class View {
                                     </dc:type>';
 				} //end if fecha
 				$stringHtml=$stringHtml . $this->description($attributes['description'], $item,$attributes['max_lenght']);
-                                if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->get_title ()); }
+                                if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->title ); }
 				
 		return $stringHtml . '</article></li>';;
 
 	}
 	
         public function group($item,$group){
-            if ($group == "date") {
-                return $item->get_date ( 'Y' );
-            } else if ( $group == "subtype") {
+           if ($group == "date") {
+                $dc_values= $item->children('dc', TRUE);
+                $date=date_create($dc_values->date);
+                return (int) date_format($date,"Y") ; // cambiar
+            } elseif ( $group == "subtype") {
                 return $this->dctype($item);
             }
             return true;
         }
         public function corte($elem,$comparator,$value){
-            if($comparator=="date"){
-                return ($elem->get_date ( 'Y' )==$value);
+           if($comparator=="date"){
+                return ($elem->published==$value); // cambiar
             }
             elseif ($comparator=="subtype") {
                 return ($this->dctype($elem)==$value);
             }
-            return true;
         }
+
+        //Todo eliminar
         public function corteControl($anArray,$attributes,$position,$corte,$corte2=""){
             $c=true; $c2=true; 
             $stringHtml="";
@@ -180,15 +186,27 @@ class View {
         public function publicationsByGroup($entrys, $attributes, $group) {
                     $position=0;
                     $stringItem=""; 
+                    
+                  
                     $stringHtml='<div class="wpDspace itemsPagination '.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'"> <ul class="content">';
-                    while ($position != count($entrys)){
-                        $currentElem= $entrys[$position];
-                        $title = $this->group($currentElem, $group);
+
+                    $array_for_groups = array();
+                    foreach ($entrys as $entry) {
+                        $title = $this->group($entry, $group);
+                        if (empty($array_for_groups[$title]))
+                            $array_for_groups[$title]= array($entry);
+                        else
+                            array_push( $array_for_groups[$title],$entry);
+                        
+                    }
+                   
+                    foreach ($array_for_groups as $title => $values) {
                         $stringHtml=$stringHtml .'<li class="noList"><h2>' . $title . '</h2></li>';
-                        $arrayCorteControl = $this->corteControl($entrys,$attributes,$position,$group);
-                        $position=$arrayCorteControl['position'];
-                        $stringHtml=$stringHtml.$arrayCorteControl['stringHtml'];   
-                    }           
+                        foreach ($values as  $value) {
+                            $stringHtml=$stringHtml.$this->document($value, $attributes);
+                        }
+                    }
+                       
         return $stringHtml .' </ul><div class="page_navigation " ></div></div>' ; // end div=group
 	}
         public function printTitle($title,$lastTitle){
@@ -219,25 +237,29 @@ class View {
            $position=0; $title=""; $stringItem=""; 
            $stringHtml='<div class="wpDspace itemsPagination'.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'">
                 <ul class="content">';  
-           while ($position != count($entrys)){
-                $currentElem= $entrys[$position];
-                $lastTitle = $title;
-                $title = $this->group($currentElem, $group);
-                $subtitle = $this->group($currentElem, $subgroup);
-                $stringHtml=$stringHtml . $this->printTitle($title, $lastTitle) .
-                '<li class="noList"><h3>' . $subtitle . '</h3></li>';
-            
-                $arrayCorteControl = $this->corteControl($entrys,$attributes,$position,$group,$subgroup);
-                $position=$arrayCorteControl['position'];
-                $stringItem=$arrayCorteControl['stringHtml'];
-                $stringHtml=$stringHtml . $stringItem ;   
-            
-               /* if($this->closeDiv($title, $entrys, $position, $group)){ 
-                    
-                    $stringHtml= $stringHtml .'</div>'; 
-                    //<!-- Close the Div open in function printTitle  -->   
-                }// end if(cerrarDiv)*/
-            }//end while
+            $array_for_groups = array();
+            foreach ($entrys as $entry) {
+                $title = $this->group($entry, $group);
+                $subtitle = $this->group($entry, $subgroup);
+                if (empty($array_for_groups[$title]) or empty($array_for_groups[$title][$subtitle]))
+                    $array_for_groups[$title][$subtitle]= array($entry);
+                else   
+                    array_push( $array_for_groups[$title][$subtitle],$entry);
+                
+                
+            }
+            krsort($array_for_groups);
+            foreach ($array_for_groups as $year => $values_for_date) {
+                $stringHtml=$stringHtml .'<li class="noList"><h2>' . $year . '</h2></li>';
+                foreach ($values_for_date as $subtype => $values) {
+                    $stringHtml=$stringHtml .
+                    '<li class="noList"><h3>' . $subtype . '</h3></li>';
+                    foreach ($values as  $value) {
+                        $stringHtml=$stringHtml.$this->document($value, $attributes);
+                    }
+                }
+            }
+        
           
             
                 
@@ -246,6 +268,7 @@ class View {
         
         
         public function allPublications($entrys, $attributes) {
+            
             $stringHtml='<div class="wpDspace itemsPagination '.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'"><ul class="content">';
             $stringItem="";
 			foreach ($entrys as $item){
