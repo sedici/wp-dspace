@@ -101,8 +101,8 @@ class Admin
             'config-repo', //menu_slug
             array($this, 'ajax_form_page_content') // pagina para configurar repositorios.
         );
-
-        add_action('load-' . $html_form_page_hook, array($this, 'loaded_html_form_submenu_page'));
+        //Todo eliminar
+      //  add_action('load-' . $html_form_page_hook, array($this, 'loaded_html_form_submenu_page'));
     }
 
     /**

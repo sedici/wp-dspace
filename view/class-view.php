@@ -151,37 +151,15 @@ class View {
            if ($group == "date") {
                 $dc_values= $item->children('dc', TRUE);
                 $date=date_create($dc_values->date);
-                return (int) date_format($date,"Y") ; // cambiar
+                return (int) date_format($date,"Y") ;
             } elseif ( $group == "subtype") {
                 return $this->dctype($item);
             }
             return true;
         }
-        public function corte($elem,$comparator,$value){
-           if($comparator=="date"){
-                return ($elem->published==$value); // cambiar
-            }
-            elseif ($comparator=="subtype") {
-                return ($this->dctype($elem)==$value);
-            }
-        }
+      
 
-        //Todo eliminar
-        public function corteControl($anArray,$attributes,$position,$corte,$corte2=""){
-            $c=true; $c2=true; 
-            $stringHtml="";
-            $condition= $this->group($anArray[$position],$corte);
-            $condition2= $this->group($anArray[$position],$corte2);
-            while ( ($position != count($anArray)) && ( $c ) && ($c2)) {
-                 $c = $this->corte($anArray[$position], $corte, $condition);
-                 $c2 = $this->corte($anArray[$position], $corte2, $condition2);
-                 if (($c) && ($c2)) {
-                    $stringHtml=$stringHtml.$this->document($anArray[$position], $attributes);
-                    $position++;
-                 }   
-             }
-             return array("stringHtml" => $stringHtml,"position" => $position);
-        }
+       
 
         public function publicationsByGroup($entrys, $attributes, $group) {
                     $position=0;

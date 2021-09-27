@@ -5,7 +5,7 @@ class XmlOrder {
     protected $cmp;
     protected $model;
     public function __construct() {
-                $this-> model = new \Wp_dspace\Model\SimplepieModel();
+                $this-> model = new \Wp_dspace\Model\SimpleXMLModel();
 	}
     public function get_model (){
             return $this->model;

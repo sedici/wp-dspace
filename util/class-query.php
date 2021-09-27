@@ -14,7 +14,7 @@ class Query
     protected $subtype_query;
     public function __construct()
     {
-        $this->model = new \Wp_dspace\Model\SimplepieModel();
+        $this->model = new \Wp_dspace\Model\SimpleXMLModel();
         $this->order = new XmlOrder();
         $this->view = new \Wp_dspace\View\View();
     }
