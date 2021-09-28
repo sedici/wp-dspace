@@ -61,7 +61,12 @@ class Dspace_Widget extends \WP_Widget
             $cmp = $this->validation->getOrder($group_subtype, $instance['group_year']);
             $this->util->setCmp($cmp);
             $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
-            echo $this->util->render($results, $attributes, $cmp, $this->configuration);
+          
+            
+            if (!empty($results))
+                echo $this->util->render($results, $attributes, $cmp, $this->configuration);
+            else
+                echo "<p> <strong>No se encontraron resultados.</strong></p>";
         }
     }
 

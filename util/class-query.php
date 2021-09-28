@@ -75,7 +75,8 @@ class Query
     {   
         $model = $this->get_model();
         $xpath = $model->loadPath($query, $cache);
-        return $xpath->entry;
+
+        return ($xpath) ? $xpath->entry : false;
     }
 
     public function querySubtype($query, $type)
@@ -114,7 +115,7 @@ class Query
         } else {
             $results = $this->executeQueryBySubtypes($subtypes_selected, $cache, $queryStandar);
         }
-        return  $this->order->cmpXml($results);
+        return ($results) ? $this->order->cmpXml($results) : $results;
     }
 
     function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share)

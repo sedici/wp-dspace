@@ -59,7 +59,10 @@ class Shortcode {
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,$this->configuration);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
-                       echo $this->util->render ($results,$attributes,$cmp,$this->configuration);   
+                        if (!empty($results))
+                                echo $this->util->render ($results,$attributes,$cmp,$this->configuration); 
+                        else
+                                echo "<p> <strong>No se encontraron resultados.</strong></p>";
                     }
             }
         }    
