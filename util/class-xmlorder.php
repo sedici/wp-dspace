@@ -54,13 +54,11 @@ class XmlOrder {
             
             $cmp=$this->getCmp();
             $array_results= array();
-            foreach ($results as $key => $value) {
-               $array_results[]= $value;
-            }
+          
             if(!is_null($cmp)){
-                usort($array_results, array($this,$cmp));
+                usort($results, array($this,$cmp));
             }    
-            return $array_results;
+            return $results;
         }
 
 }

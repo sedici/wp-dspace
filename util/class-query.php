@@ -75,8 +75,12 @@ class Query
     {   
         $model = $this->get_model();
         $xpath = $model->loadPath($query, $cache);
-
-        return ($xpath) ? $xpath->entry : false;
+        $entrys = array();
+        if(!empty($xpath))
+            foreach ($xpath->entry as $key => $value) {
+                $entrys[]= $value;
+            }
+        return $entrys;
     }
 
     public function querySubtype($query, $type)
@@ -91,7 +95,9 @@ class Query
 
     function entrysBySubtype($queryStandar, $subtype, $cache)
     {
+        
         $query = $this->querySubtype($queryStandar, $subtype);
+       
         $entrys =  $this->executeQuery($query,  $cache);
         return $entrys;
     }
@@ -108,8 +114,8 @@ class Query
     function getPublications($all, $queryStandar, $cache, $subtypes_selected)
     {   
         
+      
         if ($all) {
-          
             $results = $this->executeQuery($queryStandar, $cache);
            
         } else {
