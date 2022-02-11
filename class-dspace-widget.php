@@ -135,6 +135,7 @@ $one_day = one_day();
 return;
     }
     public function show_options($instance)
+    // Agregar aca la ópcion de ingresar la materia según la que se quiere filtrar (PASO 3)
     {
         $handle = esc_attr($instance['handle']);
         $author = esc_attr($instance['author']);
