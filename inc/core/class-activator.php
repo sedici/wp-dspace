@@ -22,6 +22,7 @@ class Activator
      */
     public static function activate()
     {
+// Es necesario agregar la consulta por defecto por materia aca
 
         $args = array( 'repositorios' => array());
 
