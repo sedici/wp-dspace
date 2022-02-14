@@ -31,8 +31,9 @@ class Dspace_Widget extends \WP_Widget
         $handle = apply_filters('handle', $instance['handle']);
         $author = apply_filters('author', $instance['author']);
         $keywords = apply_filters('keywords', $instance['keywords']);
+        $subject = apply_filters('subject', $instance['subject']);
 
-        if ($this->validation->labelValidation($author, $handle, $keywords)) {
+        if ($this->validation->labelValidation($author, $handle, $keywords, $subject)) {
 
             $config = $instance['config'];
             // FIXME tiene que ser una instancia de configuracion general. 
@@ -55,7 +56,7 @@ class Dspace_Widget extends \WP_Widget
                 $subtypes_selected = $this->filter->selectedSubtypes($instance, $all); //$subtypes: all selected documents subtypes
             }
             $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share);
-            $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $max_results, $this->configuration);
+            $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $max_results, $this->configuration);
             $group_subtype = ($instance['group_subtype'] === 'on');
             $group_subtype = $this->configuration->is_label_true($group_subtype);
             $cmp = $this->validation->getOrder($group_subtype, $instance['group_year']);
@@ -144,9 +145,12 @@ return;
         $handle = esc_attr($instance['handle']);
         $author = esc_attr($instance['author']);
         $keywords = esc_attr($instance['keywords']);
+        $subject= esc_attr($instance['subject']);
         $this->show_input($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
         $this->show_input($author, 'Autores:', 'author', 'Apellidos, Nombres como en SEDICI');
         $this->show_input($keywords, 'Palabras claves:', 'keywords', 'Palabra1; Palabra2; etc');
+        $this->show_input($subject, 'Materia:','subject', 'Ejemplo: Administración');
+
         ?>
         <p>
              <?php $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year');?>

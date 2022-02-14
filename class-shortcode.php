@@ -32,7 +32,8 @@ class Shortcode {
             $handle = $instance ['handle'] ;
             $author = $instance ['author']; 
             $keywords = $instance ['keywords'];
-            if ($this->validation->labelValidation($author,$handle,$keywords)){
+            $subject = $instance ['subject'];
+            if ($this->validation->labelValidation($author,$handle,$keywords,$subject)){
                     $subtypes="";
                     $config  = $instance ['config'];
                     $this->configuration = $this->validation->create_configuration($config);
@@ -57,7 +58,7 @@ class Shortcode {
                         $cmp=$this->validation->getOrder($group_subtype,$instance ['group_date']);
                         $this->util->setCmp($cmp);
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords,$max_results,$this->configuration);
+                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject,$max_results,$this->configuration);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
                         if (!empty($results))
                                 echo $this->util->render ($results,$attributes,$cmp,$this->configuration); 

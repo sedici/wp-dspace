@@ -83,14 +83,46 @@ class Query
         return $entrys;
     }
 
-    public function querySubtype($query, $type)
-    {
-        if (strpos($query, Q_QUERY) === false) {
-            $query .= "&" . Q_QUERY . "=";
-        } else {
-            $query .= '%20AND%20';
+
+        public function standarQuery($handle, $author, $keywords, $subject, $max_results,$configuration){
+
+            //Aca se estan dividiendo los campos (Autores, palabras clave, etc), hay que hacer lo mismo con las materias.
+
+            $this->subtype_query = $configuration->get_subtype_query();
+            $queryEstandar = $configuration->standar_query($max_results);
+            $query= Array();
+                if (!empty($handle)) {$queryEstandar .="&". SQ_HANDLE . "=".$handle;}
+                if (!empty($author)) {
+                    $words = $this->splitImputs($author);
+                    array_push($query, $configuration->author($words));
+                }
+                if(!empty($subject)) { 
+                    $subjectWords = $this->splitImputs($subject);
+                    array_push($query, $configuration->subject($subjectWords));
+                }
+
+                if (!empty($keywords)) {
+                    $words = $this->splitImputs($keywords);
+                    array_push($query, $this->concatenarCondiciones($words));
+                }
+                if (!empty($query)) { $queryEstandar.="&". $configuration->get_key_query()."=". implode('%20AND%20', $query); }
+                else{
+                    $default_query=$configuration->get_default_query();
+                    $queryEstandar = (empty($default_query)) ? $queryEstandar : $queryEstandar.'&query='.$configuration->get_default_query() ;
+                }
+                echo $queryStandar;
+                return $queryEstandar;//.DEFAULT_QUERY;
         }
         return  $query . "(" . $this->subtype_query . "\"" . $type . "\"" . ")";
+    }
+    public function querySubtype ($query , $type) {
+        if (strpos($query, Q_QUERY) === false) {
+            $query .= "&". Q_QUERY."=";
+        }
+        else {
+            $query .= '%20AND%20';
+        }
+        return  $query."(".$this->subtype_query."\"" .$type ."\"".")";
     }
 
     function entrysBySubtype($queryStandar, $subtype, $cache)

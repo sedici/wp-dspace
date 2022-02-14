@@ -31,10 +31,10 @@ class FormValidation {
         $config= $this-> create_configuration($configuration);
         return $config->get_support_subtype();
     }
-    public function labelValidation($author,$handle,$keywords){
-            if (( is_null($author) && is_null($handle) && is_null($keywords)) ||
-                ( empty($author) && empty($handle) && empty($keywords)) ){
-                echo "Ingrese al menos una de las opciones: handle - author - keywords";
+    public function labelValidation($author,$handle,$keywords,$subject){
+            if (( is_null($author) && is_null($handle) && is_null($keywords)) && is_null($subject)||
+                ( empty($author) && empty($handle) && empty($subject) && empty($keywords)) ){
+                echo "Ingrese al menos una de las opciones: handle - author - keywords - subject";
                 return false;
             } 
             else 
