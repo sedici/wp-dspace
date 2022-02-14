@@ -44,6 +44,7 @@ class ShowShortcode {
         echo $this->get_label('handle', $instance['handle']);
         echo $this->get_label('author', $instance['author']);
         echo $this->get_label('keywords', $instance['keywords']);
+        echo $this->get_label('subject', $instance['subject']);
         echo $this->get_label('max_results', $instance['max_results']);
         if ('on' == $instance ['limit']){
             echo $this->get_label('max_lenght', $instance['maxlenght']);

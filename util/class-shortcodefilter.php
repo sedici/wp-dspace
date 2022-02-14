@@ -7,6 +7,7 @@ class ShortcodeFilter extends \Wp_dspace\Util\Filter {
 	return ( array (
 		'handle' => null,
 		'author' => null,
+        'subject' => null,
                 'keywords' => null,
                 'config' =>default_repository(),
                 'share' => false,

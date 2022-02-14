@@ -35,7 +35,7 @@ class Query {
             return explode(';',$imput);
         }
 
-        public function standarQuery($handle, $author, $keywords,$max_results,$configuration){
+        public function standarQuery($handle, $author, $keywords, $subject, $max_results,$configuration){
 
             //Aca se estan dividiendo los campos (Autores, palabras clave, etc), hay que hacer lo mismo con las materias.
 
@@ -47,9 +47,9 @@ class Query {
                     $words = $this->splitImputs($author);
                     array_push($query, $configuration->author($words));
                 }
-
-                if(!empty($subject)){
-                    // $queryEstandar .=   ----Me falta saber de donde obtener el nombre que usa X repositorio para las materias
+                if(!empty($subject)) { 
+                    $subjectWords = $this->splitImputs($subject);
+                    array_push($query, $configuration->subject($subjectWords));
                 }
 
                 if (!empty($keywords)) {
@@ -61,6 +61,7 @@ class Query {
                     $default_query=$configuration->get_default_query();
                     $queryEstandar = (empty($default_query)) ? $queryEstandar : $queryEstandar.'&query='.$configuration->get_default_query() ;
                 }
+                echo $queryStandar;
                 return $queryEstandar;//.DEFAULT_QUERY;
         }
         

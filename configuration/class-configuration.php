@@ -100,6 +100,7 @@ class Configuration
         }
         return "(" . implode('%20OR%20', $conditions) . ")";
     }
+    
 
     public function search_author($author)
     {
@@ -113,6 +114,38 @@ class Configuration
         }
         return $Authors;
     }
+
+    
+   // Arma el string de la consulta:
+
+    final public function subject($subjectWords)      
+      {
+        $Subjects = $this->querySubject($subjectWords);
+        $conditions = array();
+        foreach ($Subjects as $subject) {
+            $conditions[] = $this->config['subject'] . "\"" . $subject . "\"";
+        }
+        return "(" . implode('%20OR%20', $conditions) . ")";
+    }
+    
+   // Pone las palabras ingresadas en un arreglo
+
+    public function querySubject($subjectWords)
+    {
+        $Subjects = array();
+        foreach ($subjectWords as $subject) 
+        {
+            array_push($Subjects, $this-> search_subject($subject));
+        }
+        return $Subjects;
+    }
+
+    public function search_subject($subject) 
+    {
+        return $subject;
+    }
+
+    
     public function get_default_query()
     {
         return $this->config['default_query'];
@@ -144,6 +177,7 @@ class Configuration
             return false;
         }
     }
+
     public function is_label_true($instance)
     {
 
