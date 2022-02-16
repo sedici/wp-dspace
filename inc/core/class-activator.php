@@ -32,7 +32,7 @@ class Activator
             'domain' => 'digital.cic.gba.gob.ar','support'=>true,'protocol'=>'https','subtype' =>'dc.type:','handle'=>'scope','author'=>'author:','subject'=>'subject:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"" )
 		);
 		array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'conicet',
-            'domain' => 'ri.conicet.gov.ar','false'=>true,'protocol'=>'http','subtype' =>'','handle'=>'scope','author'=>'dc.contributor.author:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"&query=*" )
+            'domain' => 'ri.conicet.gov.ar','support'=>false,'protocol'=>'https','subtype' =>'','handle'=>'scope','author'=>'dc.contributor.author:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"*" )
         );
 
         update_option('config_repositorios',$args);

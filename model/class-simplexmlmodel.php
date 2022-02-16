@@ -16,15 +16,14 @@ class SimpleXMLModel
 		$transient_data_id = self::PREFIJO_TRANSIENT . hash('md5', $str);
 		$transient_data_permanent_id = $transient_data_id . '_permanent';
 		$transient_data = get_transient($transient_data_id);
-		if (!$transient_data or true) {
-			$request = wp_remote_get($str);
-			if (is_wp_error($request))
+		if (empty($transient_data)) {
+			$request = wp_remote_get($str,array('sslverify' => FALSE));
+			if (is_wp_error($request)){
 				// Guardo un resultado de forma permanente por si hay algún error en el repositorio a la hora de devolver los datos
 				$transient_data = get_transient($transient_data_permanent_id);
-
+			}
 			else {
 				$transient_data = wp_remote_retrieve_body($request);
-
 				// Guardamos los datos en el transient
 				set_transient($transient_data_id, $transient_data, $duration * HOUR_IN_SECONDS);
 				set_transient($transient_data_permanent_id, $transient_data);
