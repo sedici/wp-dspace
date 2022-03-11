@@ -4,11 +4,15 @@ function get_data_and_template(method, data_params, selector, refreshCallback, f
 		type: method,
 		data: data_params,
 		success: function (response) {
-			console.log(response);
-			var source = response['template'];
-			var template = Handlebars.compile(source);
-			var result = response['result'];
-			var html = template({ result });
+			if (typeof response['template'] !== 'undefined'){
+			  var source = response['template'];
+		      var template = Handlebars.compile(source);
+			  var result = response['result'];
+			  var html = template({ result });
+			}
+			else {
+			  var html = response;
+			}
 			jQuery('#' + selector).html(html);
 			if ( refreshCallback ) {
 				refreshCallback(function_params);
@@ -62,8 +66,6 @@ function support_subtype(item) {
 		elem.prop('required', false);
 		elem.prop('value','');
 	}
-
-
 }
 function tasks_after_all(){
 	list_repositorios();
@@ -81,6 +83,7 @@ function list_repositorios() {
 	var data_params = { action: 'get_repositorios', template: 'list_repo' };
 	get_data_and_template('GET', data_params, 'list_repo');
 }
+
 // $(document).on('click', '#prueba', function (e) {
 // 	e.preventDefault();
 // 	link = $(this);
@@ -110,12 +113,19 @@ function list_repositorios() {
 
 	$(document).ready(function(){
 		$(document.body).on('click','.agregar-nuevo-repo', function () {
-			console.log("entre");
 			var data_params = { action: 'new_repo', template: 'form-repo' };
 			get_data_and_template('GET', data_params, 'form-repo');
 		});
-		
 
+        var $WidgetForm = jQuery("input[name^='widget-dspace']").parents("form");
+		
+		$(document.body).on('change',$WidgetForm,function (){
+			var form_data = $('form').serializeArray();
+			var data_params = { action: 'show_shortcode', instanceData: form_data};
+			get_data_and_template('GET', data_params, 'view-Shortcode');
+		});
+
+		
 		$(document.body).on('click','.editar-repo' ,function () {
 			var repo_id = jQuery(this).attr('id_repo');
 			var data_params = { action: 'edit_repo', template: 'form-repo', id: repo_id };
@@ -147,7 +157,6 @@ function list_repositorios() {
 			get_data_and_template('POST', data_params, 'notice_result',after_add_and_update_repo,params_fuction);
 			e.preventDefault();
 		});
-		
 		
 		$(document.body).on('change', ".checkSupport",do_onchange);
 		

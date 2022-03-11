@@ -97,6 +97,7 @@ class Init {
 		$this->loader->add_action( 'wp_ajax_notice_result', $plugin_admin, 'notice_result');
 		$this->loader->add_action( 'wp_ajax_delete_repo', $plugin_admin, 'delete_repo');
 		$this->loader->add_action( 'wp_ajax_update_repo', $plugin_admin, 'update_repo');
+		$this->loader->add_action( 'wp_ajax_show_shortcode', $plugin_admin, 'show_shortcode');
 		// Register admin notices
 		// $this->loader->add_action( 'admin_notices', $plugin_admin, 'print_plugin_admin_notices');
 		// Inicio widget

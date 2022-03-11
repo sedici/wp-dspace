@@ -70,7 +70,7 @@ class Admin
     }
     public function enqueue_scripts($hook){
         /**  scripts para realizar y procesar peticiones ajax*/
-         if ('conector-opensearch_page_config-repo'==  $hook){        
+         if (('conector-opensearch_page_config-repo'==  $hook) or ('widgets.php' == $hook)) {
             $params = array('ajaxurl' => admin_url('admin-ajax.php'));
             wp_enqueue_script('dspace_ajax_handle', plugin_dir_url(__FILE__) . 'js/ajax_dspace.js', array('jquery'), $this->version, false);
             wp_localize_script('dspace_ajax_handle', 'params', $params);
@@ -294,10 +294,17 @@ class Admin
     {
         return $this->LoadShortcode($atts);
     }
+    
 
     public function createFilterGetRepositorios(){
         $repositorios= $this->get_option_repositorios();
         apply_filters( 'get_repositorios', $repositorios );
     }
 
+    public function show_shortcode(){
+        $instance= $_GET['instanceData'];
+        $shortcode_Gen= new \Wp_dspace\View\ShowShortcode();
+        $shortcode = $shortcode_Gen->show_shortcode($instance);
+        wp_send_json($shortcode);
+    }
 }

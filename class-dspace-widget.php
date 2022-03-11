@@ -18,7 +18,7 @@ class Dspace_Widget extends \WP_Widget
         $option = array('description' => 'Allows to displace contents from DSpace repositories in Wordpress sites by using OpenSearch protocol');
         parent::__construct('Dspace', 'Dspace Plugin', $option);
     }
-
+    
     /**
      * @overrides
      * Executes when the widget is displayed
@@ -295,12 +295,20 @@ return;
      * @see WP_Widget::form
      */
     public function form($instance)
-    {
+    { 
         $this->configuration = $this->validation->create_configuration($instance['config']);
         if (empty($instance)) {
             $instance = array('all' => 'on');
         }
-        $this->showShortcode->show_shortcode($instance);
+        ?>
+        <p id="view-Shortcode"> 
+        <?php 
+        if (!empty($instance)){
+            echo $this->showShortcode->show_shortcode(array(), $instance); // Invoco a la función asi porque no necesita el primer parametro al ser invocada desde PHP
+        } 
+        ?>
+    </p> 
+       <?php 
         $this->show_configs($instance['config']);
         $this->show_options($instance);
         $this->show_description($instance);
