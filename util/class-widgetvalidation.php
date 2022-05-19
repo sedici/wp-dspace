@@ -31,7 +31,7 @@ class WidgetValidation extends FormValidation{
         elseif ($subtype){
             return $this->order['group_subtype'];
         }
-        else{
+        elseif ($date){
             return $this->order['group_year'];
         }
         
