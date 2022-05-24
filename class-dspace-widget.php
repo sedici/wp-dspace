@@ -140,12 +140,20 @@ $one_day = one_day();
         <?php
 return;
     }
+
+    public function validKey($key,$instance){
+        if (array_key_exists($key, $instance)){
+            return esc_attr($instance[$key]);
+        }
+            return "";
+    }
     public function show_options($instance)
     {
-        $handle = esc_attr($instance['handle']);
-        $author = esc_attr($instance['author']);
-        $keywords = esc_attr($instance['keywords']);
-        $subject= esc_attr($instance['subject']);
+        $handle = $this->validKey('handle',$instance);
+        $author = $this->validKey('author',$instance);
+        $keywords = $this->validKey('keywords',$instance);
+        $subject = $this->validKey('subject',$instance);
+        
         $this->show_input($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
         $this->show_input($author, 'Autores:', 'author', 'Apellidos, Nombres como en SEDICI');
         $this->show_input($keywords, 'Palabras claves:', 'keywords', 'Palabra1; Palabra2; etc');
@@ -153,27 +161,51 @@ return;
 
         ?>
         <p>
-             <?php $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year');?>
+            <?php
+              if(!array_key_exists('group_year',$instance)){
+                $instance['group_year'] = "";
+              } 
+              $this->show_checkbox($instance['group_year'], 'Agrupar por fecha', 'group_year');?>
         </p>
         <div class="conditional_config"
             <?php echo $this->configuration->get_support_subtype() ? '' : 'style="display: none;"'; ?>>
         <p>
-            <?php $this->show_checkbox($instance['group_subtype'], 'Agrupar por subtipos de documentos', 'group_subtype');?>
+            <?php 
+            if(!array_key_exists('group_subtype',$instance)){
+                $instance['group_subtype'] = "";
+            } 
+            $this->show_checkbox($instance['group_subtype'], 'Agrupar por subtipos de documentos', 'group_subtype');?>
         </p>
         </div>
         <p>
-            <?php $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
+            <?php 
+              if(!array_key_exists('show_author',$instance)){
+                $instance['show_author'] = "";
+              }             
+            $this->show_checkbox($instance['show_author'], 'Mostrar Autores', 'show_author')?>
         </p>
         <p>
-            <?php $this->show_checkbox($instance['share'], 'Compartir', 'share')?>
+            <?php 
+            if(!array_key_exists('share',$instance)){
+               $instance['share'] = "";
+            } 
+            $this->show_checkbox($instance['share'], 'Compartir', 'share')?>
         </p>
         <p>
-            <?php $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date')?>
+            <?php 
+            if(!array_key_exists('date',$instance)){
+                $instance['date'] = "";
+             } 
+            $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date')?>
         </p>
         <div class="conditional_config"
             <?php echo $this->configuration->get_support_subtype() ? '' : 'style="display: none;"'; ?>>
         <p>
-            <?php $this->show_checkbox($instance['show_subtype'], 'Mostrar el tipo de documento', 'show_subtype');?>
+            <?php 
+            if(!array_key_exists('show_subtype',$instance)){
+                $instance['show_subtype'] = "";
+             } 
+            $this->show_checkbox($instance['show_subtype'], 'Mostrar el tipo de documento', 'show_subtype');?>
         </p>
         </div>
         <?php
@@ -181,11 +213,17 @@ return;
     }
     public function show_description($instance)
     {
-        $maxlenght = esc_attr($instance['maxlenght']);
+        if(array_key_exists('maxlenght',$instance)){
+          $maxlenght = esc_attr($instance['maxlenght']);
+        }
         ?>
             <div class="description-ds">
             <p class="description-ds">
-                <?php $this->show_checkbox($instance['description'], 'Mostrar Resumen', 'description')?>
+                <?php 
+                if(!array_key_exists('description',$instance)){
+                    $instance['description'] = "";
+                 }
+                $this->show_checkbox($instance['description'], 'Mostrar Resumen', 'description')?>
             </p>
             </div>
         <div class="conditional_config"
@@ -242,7 +280,11 @@ return;
         <div class="conditional_config"
             <?php  echo $this->configuration->get_support_subtype() ? '' : 'style="display: none;"'; ?>>
         <p class="show-filter">
-                <?php $this->show_checkbox($instance['all'], 'Todas las publicaciones sin filtros', 'all');?>
+                <?php 
+                if(!array_key_exists('all',$instance)){
+                    $instance['all'] = "on";
+                 }
+                $this->show_checkbox($instance['all'], 'Todas las publicaciones sin filtros', 'all');?>
         </p>
             <hr>
             <hr>
@@ -296,6 +338,9 @@ return;
      */
     public function form($instance)
     { 
+        if (!array_key_exists('config',$instance)){
+           $instance['config']="sedici";
+        }
         $this->configuration = $this->validation->create_configuration($instance['config']);
         if (empty($instance)) {
             $instance = array('all' => 'on');
@@ -312,8 +357,9 @@ return;
         $this->show_configs($instance['config']);
         $this->show_options($instance);
         $this->show_description($instance);
-        $this->show_cache(esc_attr($instance['cache']));
-        $this->show_totalResults(esc_attr($instance['max_results']));
+        
+        $this->show_cache($this->validKey('cache',$instance));
+        $this->show_totalResults($this->validKey('max_results',$instance));
         $this->show_subtypes($instance);
         
     }

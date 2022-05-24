@@ -39,22 +39,35 @@ class ShowShortcode {
                 return "thesis=true ";
             }
         }
+
+
+        
     public function show_label($instance){
         $shortcode_aux="";
         $shortcode_aux= $shortcode_aux . $this->get_label('config', $instance['config']);
-        $shortcode_aux= $shortcode_aux . $this->get_label('handle', $instance['handle']);
-        $shortcode_aux= $shortcode_aux . $this->get_label('author', $instance['author']);
-        $shortcode_aux= $shortcode_aux . $this->get_label('keywords', $instance['keywords']);
-        $shortcode_aux= $shortcode_aux . $this->get_label('subject', $instance['subject']);
-        $shortcode_aux= $shortcode_aux . $this->get_label('max_results', $instance['max_results']);
-        if ('on' == $instance ['limit']){
+        if(array_key_exists('handle',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->get_label('handle', $instance['handle']);
+        }
+        if(array_key_exists('author',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->get_label('author', $instance['author']);
+        }
+        if(array_key_exists('keywords',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->get_label('keywords', $instance['keywords']);
+        }
+        if(array_key_exists('subject',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->get_label('subject', $instance['subject']);
+        }
+        if(array_key_exists('max_results',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->get_label('max_results', $instance['max_results']);
+        }
+        if (array_key_exists('limit', $instance) and ('on' == $instance ['limit'])){
             $shortcode_aux= $shortcode_aux . $this->get_label('max_lenght', $instance['maxlenght']);
         }
         return $shortcode_aux;
     }
     public function show_subtypes($instance){
-        if (!('on' == $instance ['all'])){
-            $shortcode_aux="";
+        $shortcode_aux="";
+        if ( array_key_exists('all',$instance) and !('on' == $instance ['all'])){
             $subtypes = $this->filter->vectorSubtypes();
             foreach ($subtypes as $key => $subtype){    
                 $shortcode_aux= $shortcode_aux . $this->is_on($key, $instance[$subtype]);
@@ -65,13 +78,27 @@ class ShowShortcode {
     }
     public function show_checkbox($instance){
         $shortcode_aux="";
-        $shortcode_aux= $shortcode_aux . $this->is_on('share', $instance['share']);
-        $shortcode_aux= $shortcode_aux . $this->is_on('show_subtype', $instance['show_subtype']);
-        $shortcode_aux= $shortcode_aux . $this->is_on('group_subtype', $instance['group_subtype']);
-        $shortcode_aux= $shortcode_aux . $this->is_on('group_date', $instance['group_year']);
-        $shortcode_aux= $shortcode_aux . $this->is_on('description', $instance['description']);
-        $shortcode_aux= $shortcode_aux . $this->is_on('date', $instance['date']);
-        $shortcode_aux= $shortcode_aux . $this->is_on('show_author', $instance['show_author']);
+        if(array_key_exists('share',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->is_on('share', $instance['share']);
+        }
+        if(array_key_exists('show_subtype',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->is_on('show_subtype', $instance['show_subtype']);
+        }
+        if(array_key_exists('group_subtype',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->is_on('group_subtype', $instance['group_subtype']);
+        }
+        if(array_key_exists('group_date',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->is_on('group_date', $instance['group_year']);
+        }
+        if(array_key_exists('description',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->is_on('description', $instance['description']);
+        }
+        if(array_key_exists('date',$instance)){  
+          $shortcode_aux= $shortcode_aux . $this->is_on('date', $instance['date']);
+        }
+        if(array_key_exists('show_author',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->is_on('show_author', $instance['show_author']);
+        }
         return $shortcode_aux;
     }    
     public function search_Widget_Number($form_array){
@@ -108,7 +135,6 @@ class ShowShortcode {
     private function buildSearchString($numeroDeWidget,$name) {
         return "widget-dspace[" .$numeroDeWidget. "][$name]";
     } 
-
     // La funcion usa 2 parametros:
     // $form_array -> Parámetro utilizado en  Jquery, es un arreglo serializado que debe transformarse en una instancia ($instance).
     // $instance es la instancia con la que se construye el shortcode, al invocarse desde PHP se envia pero desde jquery no, por eso se inicializa en null.
