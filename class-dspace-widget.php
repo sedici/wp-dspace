@@ -293,6 +293,9 @@ return;
             <?php
 $subtypes = $this->filter->subtypes();
         foreach ($subtypes as $subtype) {
+            if(!array_key_exists($subtype, $instance)){
+                $instance[$subtype]="";
+            }
             $this->show_checkbox($instance[$subtype], $subtype, $subtype);
             ?>
                     <br />
