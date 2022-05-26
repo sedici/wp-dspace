@@ -301,10 +301,35 @@ class Admin
         apply_filters( 'get_repositorios', $repositorios );
     }
 
+    private function buildInstance($post_data) {
+        $instance = array();
+        $str_to_remove = array("widget-dspace[__i__]","[","]");
+        foreach($post_data as $values) {
+            $clave = "";
+            $valor = "";
+            foreach($values as $key=>$value) { 
+                //echo " K: $key ==> $value";
+                if ($key == 'name')
+                    $clave= str_replace($str_to_remove,"",$value);
+                elseif ($key == 'value')
+                    $valor =$value;
+                
+            }
+            $instance[$clave] = $valor;
+        }
+
+        return $instance;
+    }
+
     public function show_shortcode(){
-        $instance= $_GET['instanceData'];
+        $instance= (isset($_GET['instanceData']) ? 
+                    $_GET['instanceData'] : 
+                    $this->buildInstance($_POST['instanceData']));
+        var_dump($_POST);
+        echo "-----------------";
+         var_dump($instance); die;           
         $shortcode_Gen= new \Wp_dspace\View\ShowShortcode();
-        $shortcode = $shortcode_Gen->show_shortcode($instance);
+        $shortcode = $shortcode_Gen->show_shortcode(null,$instance);
         wp_send_json($shortcode);
     }
 }

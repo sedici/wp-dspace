@@ -95,12 +95,12 @@ class Dspace_Widget extends \WP_Widget
     {
         ?>
         <p>
-        <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text);?>
-        <input class="widefat"
+        <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text);?></label>
+        <input class="widefat wp-dspace-widget-form"
                 placeholder="<?php echo $placeholder; ?>"
 		id="<?php echo $this->get_field_id($id); ?>"
 		name="<?php echo $this->get_field_name($id); ?>" type="text"
-		value="<?php echo $type; ?>" /></label>
+		value="<?php echo $type; ?>" />
         </p>
         <?php
 }
@@ -311,7 +311,8 @@ return;
         if (empty($config)) {$config = default_repository();}
         ?>
         <div class="config">
-        <label id="origen" for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración');?>
+        <label id="origen" for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Configuración');?> </label>
+
         <select autocomplete="off" class='widefat'
 		id="<?php echo $this->get_field_id('config'); ?>"
 		name="<?php echo $this->get_field_name('config'); ?>" type="text">
@@ -329,7 +330,6 @@ return;
        
         ?>
             </select>
-        </label>
         </div>
         <?php
 return;

@@ -31,7 +31,7 @@ class ShowShortcode {
             $show_thesis=false;
             $thesis = $this->filter->vectorTesis();
             foreach ($thesis as $t){    
-                if ('on' == $instance [$t]) {
+                if ( (isset($instance [$t])) && ('on' == $instance [$t])) {
                     $show_thesis = true;
                 }
             }
@@ -70,7 +70,7 @@ class ShowShortcode {
         if ( array_key_exists('all',$instance) and !('on' == $instance ['all'])){
             $subtypes = $this->filter->vectorSubtypes();
             foreach ($subtypes as $key => $subtype){    
-                $shortcode_aux= $shortcode_aux . $this->is_on($key, $instance[$subtype]);
+                $shortcode_aux= $shortcode_aux . $this->is_on($key, isset($instance[$subtype])?$instance[$subtype]:"");
             }
             $shortcode_aux= $shortcode_aux . $this->show_thesis($instance);
         }
@@ -105,11 +105,11 @@ class ShowShortcode {
         $aux_find="";
         $aux_num=0;
         foreach ( $form_array as $element ) {
-            if ( $element['name'] == "widget_number"){
+            if ( (isset($element['name']) ) && ($element['name'] == "widget_number")){
                $aux_num = $element['value'];
                $aux_find="widget-dspace[" . $aux_num . "][config]";
             }
-            if ($aux_find == $element['name']){
+            if ( (isset($element['name'])) && ($aux_find == $element['name'])){
                 return $aux_num;
             }
         }
@@ -118,7 +118,7 @@ class ShowShortcode {
     
     public function get_Elements($name,$form_array){
        foreach ( $form_array as $element ) {
-            if ( $name == $element['name']){
+            if ((  isset($element['name'])) && ($name == $element['name']) ) {
                 return $element['value'];
             }
         }
@@ -140,6 +140,7 @@ class ShowShortcode {
     // $instance es la instancia con la que se construye el shortcode, al invocarse desde PHP se envia pero desde jquery no, por eso se inicializa en null.
     public function show_shortcode($form_array, $instance = null){
         if ($instance == null) { 
+            echo "es NULL";
             $instance = array();
           //Aca convierto el array de objetos en un $instance que acepte la función
           $numeroDeWidget = $this->search_Widget_Number($form_array);
@@ -148,6 +149,7 @@ class ShowShortcode {
               $instance[$keyword] = $this->get_Elements( $this->buildSearchString($numeroDeWidget,$keyword)  ,$form_array);
           }
         }
+        var_dump($instance);
         $this->is_conicet($instance);
         $shortcode= "[".$this->get_shortcode()." ";
                 $shortcode= $shortcode . $this->show_label($instance);

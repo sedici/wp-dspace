@@ -84,30 +84,6 @@ function list_repositorios() {
 	get_data_and_template('GET', data_params, 'list_repo');
 }
 
-// $(document).on('click', '#prueba', function (e) {
-// 	e.preventDefault();
-// 	link = $(this);
-// 	id = 1
-
-// 	$.ajax({
-// 		url: params.ajaxurl,
-// 		type: 'post',
-// 		data: {
-// 			action: 'prueba',
-// 			id_post: id
-// 		},
-// 		beforeSend: function () {
-// 			link.html('Cargando ...');
-// 		},
-// 		success: function (resultado) {
-// 			link.html(resultado);
-// 		}
-
-// 	});
-
-// });
-
-
 (function( $ ) {
 	'use strict';
 
@@ -120,9 +96,11 @@ function list_repositorios() {
         var $WidgetForm = jQuery("input[name^='widget-dspace']").parents("form");
 		
 		$(document.body).on('change',$WidgetForm,function (){
-			var form_data = $('form').serializeArray();
+			var form = jQuery('#view-Shortcode').parents('form')[0];
+			var form_data = jQuery(form).serializeArray();
+			console.log(form_data);
 			var data_params = { action: 'show_shortcode', instanceData: form_data};
-			get_data_and_template('GET', data_params, 'view-Shortcode');
+			get_data_and_template('POST', data_params, 'view-Shortcode');
 		});
 
 		
