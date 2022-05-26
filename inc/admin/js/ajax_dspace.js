@@ -97,7 +97,8 @@ function list_repositorios() {
 		
 		$(document.body).on('change',$WidgetForm,function (){
 			var form = jQuery('#view-Shortcode').parents('form')[0];
-			var form_data = jQuery(form).serializeArray();
+			var form_data = jQuery('.wp-dspace-widget-form').serializeArray();
+			//console.log(jQuery('.wp-dspace-widget-form'));
 			console.log(form_data);
 			var data_params = { action: 'show_shortcode', instanceData: form_data};
 			get_data_and_template('POST', data_params, 'view-Shortcode');

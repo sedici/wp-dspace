@@ -107,7 +107,7 @@ class Dspace_Widget extends \WP_Widget
     public function show_checkbox($instance, $text, $id)
     {
         ?>
-            <input class="checkbox" type="checkbox"
+            <input class="checkbox wp-dspace-widget-form" type="checkbox"
             <?php
 echo checked($instance, 'on');
         ?>
@@ -122,7 +122,7 @@ echo checked($instance, 'on');
         ?>
         <p>
 	<label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Duración de la cache:');?>
-            <select class='widefat'
+            <select class='widefat wp-dspace-widget-form'
 		id="<?php echo $this->get_field_id('cache'); ?>"
 		name="<?php echo $this->get_field_name('cache'); ?>">
 		<?php
@@ -241,7 +241,7 @@ return;
         <p class="conditionally-limit"
         <?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:');?>
-            <input class="widefat" type="number" onKeyPress="return justNumbers(event);"
+            <input class="widefat wp-dspace-widget-form" type="number" onKeyPress="return justNumbers(event);"
                 min="10"
 		id="<?php echo $this->get_field_id('maxlenght'); ?>"
 		name="<?php echo $this->get_field_name('maxlenght'); ?>"
@@ -255,7 +255,7 @@ return;
     {?>
         <p>
         <label for="<?php echo $this->get_field_id('text'); ?>"><?php _e('Cantidad de Resultados a mostrar');?>
-            <select class='widefat'
+            <select class='widefat wp-dspace-widget-form'
 		id="<?php echo $this->get_field_id('max_results'); ?>"
 		name="<?php echo $this->get_field_name('max_results'); ?>" type="text">
 		<?php

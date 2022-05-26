@@ -149,7 +149,6 @@ class ShowShortcode {
               $instance[$keyword] = $this->get_Elements( $this->buildSearchString($numeroDeWidget,$keyword)  ,$form_array);
           }
         }
-        var_dump($instance);
         $this->is_conicet($instance);
         $shortcode= "[".$this->get_shortcode()." ";
                 $shortcode= $shortcode . $this->show_label($instance);

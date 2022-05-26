@@ -303,7 +303,7 @@ class Admin
 
     private function buildInstance($post_data) {
         $instance = array();
-        $str_to_remove = array("widget-dspace[__i__]","[","]");
+        $str_to_remove = array("widget-dspace[__2__]","[","]");
         foreach($post_data as $values) {
             $clave = "";
             $valor = "";
@@ -325,9 +325,7 @@ class Admin
         $instance= (isset($_GET['instanceData']) ? 
                     $_GET['instanceData'] : 
                     $this->buildInstance($_POST['instanceData']));
-        var_dump($_POST);
-        echo "-----------------";
-         var_dump($instance); die;           
+        var_dump($instance);            
         $shortcode_Gen= new \Wp_dspace\View\ShowShortcode();
         $shortcode = $shortcode_Gen->show_shortcode(null,$instance);
         wp_send_json($shortcode);
