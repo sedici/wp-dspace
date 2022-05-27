@@ -95,10 +95,8 @@ function list_repositorios() {
 
 
 	   var $WidgetForm = jQuery("input[name^='widget-dspace']").parents("form");
-		console.log($WidgetForm);
 		$(document.body).on('change',$WidgetForm,function (e){
 			var $target = jQuery(e.target);
-			console.log($target.parents('form').serializeArray());
 			var targetForm = $target.parents('form').serializeArray();
 			var data_params = { action: 'show_shortcode', instanceData: targetForm};
 			get_data_and_template('POST', data_params, 'view-Shortcode');

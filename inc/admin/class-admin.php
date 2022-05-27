@@ -324,10 +324,9 @@ class Admin
     public function show_shortcode(){
         $instance= (isset($_GET['instanceData']) ? 
                     $_GET['instanceData'] : 
-                    $this->buildInstance($_POST['instanceData']));
-        var_dump($instance);            
+                    $_POST['instanceData']);
         $shortcode_Gen= new \Wp_dspace\View\ShowShortcode();
-        $shortcode = $shortcode_Gen->show_shortcode(null,$instance);
+        $shortcode = $shortcode_Gen->show_shortcode($instance);
         wp_send_json($shortcode);
     }
 }
