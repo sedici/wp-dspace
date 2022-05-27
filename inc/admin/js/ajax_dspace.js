@@ -93,14 +93,14 @@ function list_repositorios() {
 			get_data_and_template('GET', data_params, 'form-repo');
 		});
 
-        var $WidgetForm = jQuery("input[name^='widget-dspace']").parents("form");
-		
-		$(document.body).on('change',$WidgetForm,function (){
-			var form = jQuery('#view-Shortcode').parents('form')[0];
-			var form_data = jQuery('.wp-dspace-widget-form').serializeArray();
-			//console.log(jQuery('.wp-dspace-widget-form'));
-			console.log(form_data);
-			var data_params = { action: 'show_shortcode', instanceData: form_data};
+
+	   var $WidgetForm = jQuery("input[name^='widget-dspace']").parents("form");
+		console.log($WidgetForm);
+		$(document.body).on('change',$WidgetForm,function (e){
+			var $target = jQuery(e.target);
+			console.log($target.parents('form').serializeArray());
+			var targetForm = $target.parents('form').serializeArray();
+			var data_params = { action: 'show_shortcode', instanceData: targetForm};
 			get_data_and_template('POST', data_params, 'view-Shortcode');
 		});
 

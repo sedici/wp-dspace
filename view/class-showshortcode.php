@@ -140,7 +140,6 @@ class ShowShortcode {
     // $instance es la instancia con la que se construye el shortcode, al invocarse desde PHP se envia pero desde jquery no, por eso se inicializa en null.
     public function show_shortcode($form_array, $instance = null){
         if ($instance == null) { 
-            echo "es NULL";
             $instance = array();
           //Aca convierto el array de objetos en un $instance que acepte la función
           $numeroDeWidget = $this->search_Widget_Number($form_array);
