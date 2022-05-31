@@ -104,8 +104,8 @@ class ShowShortcode {
     public function search_Widget_Number($form_array){
         $aux_find="";
         $aux_num=0;
-        foreach ( $form_array as $element ) {
-            if ( (isset($element['name']) ) && ($element['name'] == "widget_number")){
+        foreach ($form_array as $element ) {
+            if ((isset($element['name']) ) && ($element['name'] == "widget_number")){
                $aux_num = $element['value'];
                $aux_find="widget-dspace[" . $aux_num . "][config]";
             }
@@ -148,6 +148,7 @@ class ShowShortcode {
               $instance[$keyword] = $this->get_Elements( $this->buildSearchString($numeroDeWidget,$keyword)  ,$form_array);
           }
         }
+
         $this->is_conicet($instance);
         $shortcode= "[".$this->get_shortcode()." ";
                 $shortcode= $shortcode . $this->show_label($instance);

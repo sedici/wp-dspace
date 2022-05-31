@@ -28,10 +28,10 @@ class Dspace_Widget extends \WP_Widget
     public function widget($args, $instance)
     {
         extract($args);
-        $handle = apply_filters('handle', $instance['handle']);
-        $author = apply_filters('author', $instance['author']);
-        $keywords = apply_filters('keywords', $instance['keywords']);
-        $subject = apply_filters('subject', $instance['subject']);
+        $handle = apply_filters('handle', $this->validKey('handle', $instance, null) );
+        $author = apply_filters('author', $this->validKey('author', $instance, null) );
+        $keywords = apply_filters('keywords',$this->validKey('keywords', $instance, null) );
+        $subject = apply_filters('subject', $this->validKey('subject', $instance, null) );
 
         if ($this->validation->labelValidation($author, $handle, $keywords, $subject)) {
 
@@ -39,27 +39,33 @@ class Dspace_Widget extends \WP_Widget
             // FIXME tiene que ser una instancia de configuracion general. 
             $this->configuration = $this->validation->create_configuration($config);
            
+            if(!array_key_exists('description',$instance)){
+                $instance['description'] = "";
+            }
             $description = ('on' == $instance['description']);
             $description = $this->configuration->is_description($description);
-            $description = $this->validation->description($description, $instance['summary']);
-            $maxlenght = $this->validation->limit_text($instance['limit'], $instance['maxlenght']);
-            $share = ('on' == $instance['share']);
-            $show_author = ('on' == $instance['show_author']); // $show_author: if ON, then $show_author = true
-            $date = ('on' == $instance['date']); // $date: if checkbox date is ON, $date=true
+            if(!array_key_exists('summary',$instance)){
+                $instance['summary']="";
+            }
+            $description = $this->validation->description($description, $this->validKey('summary',$instance));
+            $maxlenght = $this->validation->limit_text($this->validKey('limit',$instance), $this->validKey('maxlenght',$instance));
+            $share = ('on' == $this->validKey('share',$instance));
+            $show_author = ('on' == $this->validKey('show_author',$instance)); // $show_author: if ON, then $show_author = true
+            $date = ('on' == $this->validKey('date',$instance)); // $date: if checkbox date is ON, $date=true
             $max_results = apply_filters('max_results', $instance['max_results']); //$max_results: total results of subtype
             $cache = apply_filters('cache', $instance['cache']); //$cache: duration in seconds of cache
-            $show_subtypes = ('on' == $instance['show_subtype']); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
+            $show_subtypes = ('on' == $this->validKey('show_subtype',$instance)); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
             $show_subtypes = $this->configuration->is_label_true($show_subtypes);
-            $all = ('on' == $instance['all']); //$all: all publications without subtype filter
+            $all = ('on' == $this->validKey('all',$instance)); //$all: all publications without subtype filter
             $all = $this->configuration->instance_all($all);
             if ($this->configuration->all_documents()) {
                 $subtypes_selected = $this->filter->selectedSubtypes($instance, $all); //$subtypes: all selected documents subtypes
             }
             $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share);
             $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $max_results, $this->configuration);
-            $group_subtype = ($instance['group_subtype'] === 'on');
+            $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
             $group_subtype = $this->configuration->is_label_true($group_subtype);
-            $cmp = $this->validation->getOrder($group_subtype, $instance['group_year']);
+            $cmp = $this->validation->getOrder($group_subtype, $this->validKey('group_year',$instance));
             $this->util->setCmp($cmp);
             $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
           
@@ -86,6 +92,9 @@ class Dspace_Widget extends \WP_Widget
             $new_instance[$key] = sanitize_text_field($new_instance[$key]);
         }
         foreach ($this->filter->subtypes() as $s) {
+            if (!array_key_exists($s,$new_instance)){
+                $new_instance[$s]="";
+            }
             $new_instance[$s] = sanitize_text_field($new_instance[$s]);
         }
         return $new_instance;
@@ -141,9 +150,14 @@ $one_day = one_day();
 return;
     }
 
-    public function validKey($key,$instance){
+// Valid Key sirve para validar que las llaves de los arreglos contengan algo, y en caso de ser necesario, puede ejecutar una funcion que recibe como parametro.
+
+    public function validKey($key,$instance, $fn='esc_attr'){
         if (array_key_exists($key, $instance)){
-            return esc_attr($instance[$key]);
+            if ($fn != null)
+              return call_user_func($fn, $instance[$key]);
+            else 
+              return $instance[$key];
         }
             return "";
     }
@@ -213,9 +227,8 @@ return;
     }
     public function show_description($instance)
     {
-        if(array_key_exists('maxlenght',$instance)){
-          $maxlenght = esc_attr($instance['maxlenght']);
-        }
+          $maxlenght = $this->validKey('maxlenght',$instance,'esc_attr');
+        
         ?>
             <div class="description-ds">
             <p class="description-ds">
@@ -230,16 +243,16 @@ return;
             <?php echo $this->configuration->get_support_subtype() ? '' : 'style="display: none;"'; ?>>
             <p class="conditionally-description"
             <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
-            <?php $this->show_checkbox($instance['summary'], 'Mostrar Sumario', 'summary')?>
+            <?php $this->show_checkbox( $this->validKey('summary',$instance), 'Mostrar Sumario', 'summary')?>
             </p>
         </div>
         <div class="conditionally-description"
             <?php echo checked($instance['description'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <p class="limit">
-                <?php $this->show_checkbox($instance['limit'], 'Limitar longitud del texto', 'limit')?>
+                <?php $this->show_checkbox($this->validKey('limit',$instance), 'Limitar longitud del texto', 'limit')?>
             </p>
         <p class="conditionally-limit"
-        <?php echo checked($instance['limit'], 'on') === '' ? 'style="display: none;"' : ''; ?>>
+        <?php echo checked($this->validKey('limit',$instance), 'on') === '' ? 'style="display: none;"' : ''; ?>>
             <label for="<?php echo $this->get_field_id('maxlenght'); ?>"><?php _e('Longitud del texto en caracteres:');?>
             <input class="widefat wp-dspace-widget-form" type="number" onKeyPress="return justNumbers(event);"
                 min="10"
