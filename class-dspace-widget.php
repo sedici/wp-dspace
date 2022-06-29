@@ -32,6 +32,7 @@ class Dspace_Widget extends \WP_Widget
         $author = apply_filters('author', $this->validKey('author', $instance, null) );
         $keywords = apply_filters('keywords',$this->validKey('keywords', $instance, null) );
         $subject = apply_filters('subject', $this->validKey('subject', $instance, null) );
+        
 
         if ($this->validation->labelValidation($author, $handle, $keywords, $subject)) {
 
