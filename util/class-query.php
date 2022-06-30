@@ -59,7 +59,7 @@ class Query
     }
 
 
-        public function standarQuery($handle, $author, $keywords, $subject, $max_results,$configuration){
+        public function standarQuery($handle, $author, $keywords, $subject, $degree, $max_results,$configuration){
         $this->subtype_query = $configuration->get_subtype_query();
         $queryEstandar = $configuration->standar_query($max_results);
         $query= Array();
@@ -72,7 +72,9 @@ class Query
                 $subjectWords = $this->splitImputs($subject);
                 array_push($query, $configuration->subject($subjectWords));
             }
-
+            if(!empty($degree)) {
+                array_push($query, $configuration->degree($degree));
+            }
             if (!empty($keywords)) {
                 $words = $this->splitImputs($keywords);
                 array_push($query, $this->concatenarCondiciones($words));

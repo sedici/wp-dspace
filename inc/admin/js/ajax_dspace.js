@@ -49,6 +49,7 @@ function get_form_repo(){
 	subtype: jQuery('input[name=subtype]').val(),
 	author: jQuery('input[name=author]').val(),
 	subject: jQuery('input[name=subject]').val(),
+	degree : jQuery('input[name=degree').val(),
 	default_query: jQuery('input[name=default_query]').val(),
 	id: jQuery('input[name=id_repo]').val(),
 };

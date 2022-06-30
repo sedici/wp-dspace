@@ -8,6 +8,7 @@ class ShortcodeFilter extends \Wp_dspace\Util\Filter {
 		'handle' => null,
 		'author' => null,
         'subject' => null,
+        'degree' => null,
                 'keywords' => null,
                 'config' =>default_repository(),
                 'share' => false,

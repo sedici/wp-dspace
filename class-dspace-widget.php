@@ -31,7 +31,8 @@ class Dspace_Widget extends \WP_Widget
         $handle = apply_filters('handle', $this->validKey('handle', $instance, null) );
         $author = apply_filters('author', $this->validKey('author', $instance, null) );
         $keywords = apply_filters('keywords',$this->validKey('keywords', $instance, null) );
-        $subject = apply_filters('subject', $this->validKey('subject', $instance, null) );
+        $subject = apply_filters('subject', $this->validKey('subject', $instance, null) ); 
+        $degree = apply_filters('degree', $this->validKey('degree', $instance, null) ); 
         
 
         if ($this->validation->labelValidation($author, $handle, $keywords, $subject)) {
@@ -63,7 +64,7 @@ class Dspace_Widget extends \WP_Widget
                 $subtypes_selected = $this->filter->selectedSubtypes($instance, $all); //$subtypes: all selected documents subtypes
             }
             $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share);
-            $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $max_results, $this->configuration);
+            $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
             $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
             $group_subtype = $this->configuration->is_label_true($group_subtype);
             $cmp = $this->validation->getOrder($group_subtype, $this->validKey('group_year',$instance));
@@ -168,11 +169,13 @@ return;
         $author = $this->validKey('author',$instance);
         $keywords = $this->validKey('keywords',$instance);
         $subject = $this->validKey('subject',$instance);
+        $degree = $this->validKey('degree',$instance);
         
         $this->show_input($handle, 'Handle:', 'handle', 'Ejemplo: 10915/25293');
         $this->show_input($author, 'Autores:', 'author', 'Apellidos, Nombres como en SEDICI');
         $this->show_input($keywords, 'Palabras claves:', 'keywords', 'Palabra1; Palabra2; etc');
         $this->show_input($subject, 'Materia:','subject', 'Ejemplo: Administración');
+        $this->show_input($degree, 'Carrera:','degree', 'Ejemplo: Doctor en Ciencias Informáticas');
 
         ?>
         <p>

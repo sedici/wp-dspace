@@ -114,7 +114,9 @@ class Configuration
         }
         return $Authors;
     }
-
+    public function degree($degree){
+        return "(" . $this->config['degree'] . '"' . $degree . '"' . ")";
+    }
     
    // Arma el string de la consulta:
 

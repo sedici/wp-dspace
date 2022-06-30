@@ -57,6 +57,9 @@ class ShowShortcode {
         if(array_key_exists('subject',$instance)){
           $shortcode_aux= $shortcode_aux . $this->get_label('subject', $instance['subject']);
         }
+        if(array_key_exists('degree',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->get_label('degree', $instance['degree']);
+        }
         if(array_key_exists('max_results',$instance)){
           $shortcode_aux= $shortcode_aux . $this->get_label('max_results', $instance['max_results']);
         }
@@ -143,7 +146,7 @@ class ShowShortcode {
             $instance = array();
           //Aca convierto el array de objetos en un $instance que acepte la función
           $numeroDeWidget = $this->search_Widget_Number($form_array);
-          $keywords = ['config','handle','author','keywords','description','share','date','subject','max_results','group_year','show_author','maxlenght','cache','max_results','all'];
+          $keywords = ['config','handle','author','keywords','description','share','date','subject','degree','max_results','group_year','show_author','maxlenght','cache','max_results','all'];
           foreach($keywords as $keyword){
               $instance[$keyword] = $this->get_Elements( $this->buildSearchString($numeroDeWidget,$keyword)  ,$form_array);
           }
