@@ -39,8 +39,6 @@ class ShowShortcode {
                 return "thesis=true ";
             }
         }
-
-
         
     public function show_label($instance){
         $shortcode_aux="";

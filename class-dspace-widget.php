@@ -120,8 +120,7 @@ class Dspace_Widget extends \WP_Widget
         ?>
             <input class="checkbox wp-dspace-widget-form" type="checkbox"
             <?php
-echo checked($instance, 'on');
-        ?>
+echo checked($instance, 'on'); ?>
             id="<?php echo $this->get_field_id($id); ?>"
             name="<?php echo $this->get_field_name($id); ?>" />
             <label for="<?php echo $this->get_field_id($id); ?>"><?php _e($text);?></label>
@@ -294,8 +293,9 @@ return;
     }
     public function show_subtypes($instance)
     {?>
-        <div class="conditional_config"
-            <?php  echo $this->configuration->get_support_subtype() ? '' : 'style="display: none;"'; ?>>
+        <div id="subtypeDiv" class="conditional_config"
+            <?php  
+            echo $this->configuration->get_support_subtype() ? '' : 'style="display: none;"'; ?>>
         <p class="show-filter">
                 <?php 
                 if(!array_key_exists('all',$instance)){
@@ -377,7 +377,7 @@ return;
         $this->show_configs($instance['config']);
         $this->show_options($instance);
         $this->show_description($instance);
-        
+
         $this->show_cache($this->validKey('cache',$instance));
         $this->show_totalResults($this->validKey('max_results',$instance));
         $this->show_subtypes($instance);

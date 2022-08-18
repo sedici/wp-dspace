@@ -198,6 +198,7 @@ class Admin
         $response['template'] = $this->get_template($_GET['template']);
         wp_send_json($response);
     }
+    
 
     public function add_repo()
     {
@@ -329,4 +330,15 @@ class Admin
         $shortcode = $shortcode_Gen->show_shortcode($instance);
         wp_send_json($shortcode);
     }
+
+    // Function to get a repository by Name
+    public function get_repo_support(){
+        $name = $_GET['name'];
+        $array[0]= array_filter($this->get_option_repositorios(), function ($array) use ($name) {
+      return ($array['name'] == $name);
+    });
+    $response['result'] = $array;
+    wp_send_json($response);
+}
+
 }

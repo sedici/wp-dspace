@@ -85,6 +85,31 @@ function list_repositorios() {
 	get_data_and_template('GET', data_params, 'list_repo');
 }
 
+function updateSubtype(repo_name){
+	jQuery.ajax({
+		url: params.ajaxurl,
+		type: 'GET',
+		data: {action: 'get_repo_support',name: repo_name},
+		success: function (response) {
+					  var respuesta = response['result'];
+					  var div =document.getElementById("subtypeDiv");
+					  respuesta = respuesta[0];
+					  respuesta = respuesta[Object.keys(respuesta)[0]];
+					  if(!respuesta['support']){
+						if (!div.classList.contains("noDisplayDspace")){
+                            div.classList.add("noDisplayDspace");
+						}						
+					  }
+					  else{
+						if(div.classList.contains("noDisplayDspace")){
+                          div.classList.remove("noDisplayDspace");
+						}
+					  }
+				}
+	});
+}
+
+
 (function( $ ) {
 	'use strict';
 
@@ -94,12 +119,19 @@ function list_repositorios() {
 			get_data_and_template('GET', data_params, 'form-repo');
 		});
 
-
 	   var $WidgetForm = jQuery("input[name^='widget-dspace']").parents("form");
 		$(document.body).on('change',$WidgetForm,function (e){
 			var $target = jQuery(e.target);
 			var targetForm = $target.parents('form').serializeArray();
 			var data_params = { action: 'show_shortcode', instanceData: targetForm};
+			
+			//Get widget number
+			let obj = targetForm.find(o => o.name === 'widget_number');
+
+			let search = "widget-dspace["+obj.value+"][config]";
+			let obj2 = targetForm.find(o => o.name === search);
+
+			updateSubtype(obj2.value);
 			get_data_and_template('POST', data_params, 'view-Shortcode');
 		});
 
@@ -108,7 +140,6 @@ function list_repositorios() {
 			var repo_id = jQuery(this).attr('id_repo');
 			var data_params = { action: 'edit_repo', template: 'form-repo', id: repo_id };
 			get_data_and_template('GET', data_params, 'form-repo');
-		
 		});
 		$(document.body).on('click','.emilinar-repo', function () {
 			if (confirm("¿Estas seguro?") ) {

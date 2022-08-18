@@ -22,6 +22,10 @@
 	float: left;
 }
 
+.noDisplayDspace{
+	display: none;
+}
+
 
 .wpDspace .page_navigation ,.wpDspace .alt_page_navigation{
 	padding-bottom: 10px;

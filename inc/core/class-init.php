@@ -92,6 +92,7 @@ class Init {
 		// request ajax para admin. 
 		$this->loader->add_action( 'wp_ajax_get_repositorios', $plugin_admin, 'get_repositorios');
 		$this->loader->add_action( 'wp_ajax_edit_repo', $plugin_admin, 'edit_repo');
+		$this->loader->add_action( 'wp_ajax_get_repo_support', $plugin_admin, 'get_repo_support');
 		$this->loader->add_action( 'wp_ajax_new_repo', $plugin_admin, 'new_repo');
 		$this->loader->add_action( 'wp_ajax_add_repo', $plugin_admin, 'add_repo');
 		$this->loader->add_action( 'wp_ajax_notice_result', $plugin_admin, 'notice_result');
