@@ -65,6 +65,11 @@ class Dspace_Widget extends \WP_Widget
             }
             $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share);
             $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
+
+            // Solo para probar
+
+            var_dump($queryStandar);
+
             $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
             $group_subtype = $this->configuration->is_label_true($group_subtype);
             $cmp = $this->validation->getOrder($group_subtype, $this->validKey('group_year',$instance));

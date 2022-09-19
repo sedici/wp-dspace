@@ -37,6 +37,11 @@ jQuery(document).ready(function ($) {
 function do_onchange() {
 	support_subtype(this);
 }
+
+function check_v(){
+	checkVersion(this);
+}
+
 function get_form_repo(){
  return {
 	name: jQuery('input[name=name]').val(),
@@ -68,6 +73,22 @@ function support_subtype(item) {
 		elem.prop('value','');
 	}
 }
+
+function checkVersion(item) {
+	var $item = jQuery(item);
+	var elem = jQuery(`input[name=dspaceUrl]`);
+	if ($item.is(':checked')) {
+		elem.prop('disabled', false);
+		elem.prop('required', true);
+	}
+	else {
+		elem.prop('disabled', true);
+		elem.prop('required', false);
+		elem.prop('value','');
+	}
+}
+
+
 function tasks_after_all(){
 	list_repositorios();
 	jQuery("#notice").fadeOut(5000);
@@ -168,6 +189,7 @@ function updateSubtype(repo_name){
 		});
 		
 		$(document.body).on('change', ".checkSupport",do_onchange);
+		$(document.body).on('change', ".checkVersion",check_v);
 		
 	});
 })( jQuery );
