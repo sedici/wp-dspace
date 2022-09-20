@@ -77,14 +77,20 @@ function support_subtype(item) {
 function checkVersion(item) {
 	var $item = jQuery(item);
 	var elem = jQuery(`input[name=dspaceUrl]`);
+	var openSearch = jQuery(`input[name=base_path]`);
 	if ($item.is(':checked')) {
 		elem.prop('disabled', false);
 		elem.prop('required', true);
+		openSearch.prop('disabled', true);
+		openSearch.prop('required', false);
+		openSearch.prop('value','');
 	}
 	else {
 		elem.prop('disabled', true);
 		elem.prop('required', false);
 		elem.prop('value','');
+		openSearch.prop('disabled', false);
+		openSearch.prop('required', true);
 	}
 }
 

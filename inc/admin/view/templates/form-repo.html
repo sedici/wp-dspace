@@ -28,6 +28,21 @@
                 </td>
             </tr>
             <tr>
+                <th> Utiliza Dspace 7</th>
+                <td scope="row">
+                    <input type="checkbox" name="dspaceVersion" class="checkVersion" {{result.config_dspaceUrl.checked}}>
+                    <p class='description'>Utiliza Dspace 7</p>
+                </td>
+            </tr>
+            <tr>
+                <th> URL de la API</th>
+                <td scope="row">
+                    <input type="text" value="{{result.repo.dspaceUrl}}" name="dspaceUrl"
+                        {{result.config_dspaceUrl.disabled}} {{result.config_dspaceUrl.required}} placeholder="URL de la api:"> *
+                    <p class='description'>https://host170.sedici.unlp.edu.ar/server/api/</p>
+                </td>
+            </tr>
+            <tr>
                 <th scope="row">Ruta de OpenSearch</th>
                 <td scope="row">
                     <input type="text" value="{{result.repo.base_path}}" name="base_path" required placeholder="/open-search/discover"> *
@@ -94,21 +109,6 @@
                 <td scope="row">
                     <input type="checkbox" name="support" class="checkSupport" {{result.config_subtype.checked}}>
                     <p class='description'>Soporta subtipo de documentos</p>
-                </td>
-            </tr>
-            <tr>
-                <th> Utiliza Dspace 7</th>
-                <td scope="row">
-                    <input type="checkbox" name="dspaceVersion" class="checkVersion" {{result.config_dspaceUrl.checked}}>
-                    <p class='description'>Utiliza Dspace 7</p>
-                </td>
-            </tr>
-            <tr>
-                <th> URL de la API</th>
-                <td scope="row">
-                    <input type="text" value="{{result.repo.dspaceUrl}}" name="dspaceUrl"
-                        {{result.config_dspaceUrl.disabled}} {{result.config_dspaceUrl.required}} placeholder="URL de la api:"> *
-                    <p class='description'>https://host170.sedici.unlp.edu.ar/server/api/</p>
                 </td>
             </tr>
             <tr>
