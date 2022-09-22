@@ -76,21 +76,20 @@ function support_subtype(item) {
 
 function checkVersion(item) {
 	var $item = jQuery(item);
-	var elem = jQuery(`input[name=dspaceUrl]`);
-	var openSearch = jQuery(`input[name=base_path]`);
+	var openSearchG = jQuery(`fieldset[name=opensearchGroup]`);
+	var apiRestG = jQuery(`fieldset[name=apiRestG]`);
 	if ($item.is(':checked')) {
-		elem.prop('disabled', false);
-		elem.prop('required', true);
-		openSearch.prop('disabled', true);
-		openSearch.prop('required', false);
-		openSearch.prop('value','');
+		document.getElementById("openSearchG").disabled = true;
+		document.getElementById("apiRestG").disabled = false;
+		document.getElementById("openSearchG").hidden= true;
+		document.getElementById("apiRestG").hidden = false;
+
 	}
 	else {
-		elem.prop('disabled', true);
-		elem.prop('required', false);
-		elem.prop('value','');
-		openSearch.prop('disabled', false);
-		openSearch.prop('required', true);
+		document.getElementById("openSearchG").disabled = false;
+		document.getElementById("apiRestG").disabled = true;
+		document.getElementById("openSearchG").hidden= false;
+		document.getElementById("apiRestG").hidden = true;
 	}
 }
 

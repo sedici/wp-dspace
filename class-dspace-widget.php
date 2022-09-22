@@ -6,6 +6,9 @@ class Dspace_Widget extends \WP_Widget
 {
     protected $filter;
     protected $util;
+
+//    protected $api; 
+    
     protected $validation;
     protected $showShortcode;
     protected $configuration;
@@ -13,6 +16,7 @@ class Dspace_Widget extends \WP_Widget
     {
         $this->filter = new Util\WidgetFilter();
         $this->util = new Util\Query();
+//        $this->api = new Util\apiQuery();
         $this->validation = new Util\WidgetValidation();
         $this->showShortcode = new View\ShowShortcode();
         $option = array('description' => 'Allows to displace contents from DSpace repositories in Wordpress sites by using OpenSearch protocol');
@@ -65,10 +69,6 @@ class Dspace_Widget extends \WP_Widget
             }
             $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share);
             $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
-
-            // Solo para probar
-
-            var_dump($queryStandar);
 
             $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
             $group_subtype = $this->configuration->is_label_true($group_subtype);

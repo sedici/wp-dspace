@@ -1,116 +1,100 @@
 <div id="template-repo">
 <h2> {{result.titulo}} repositorio</h2>
-<form id="{{result.action}}">
+<form id="{{result.action}}" class="wpDspace">
     {{#if result.repo}}
     <input type="hidden" value="{{result.repo.id}}" name="id_repo">
     {{/if}}
-    <table class=" form-table">
-        <tbody>
-            <tr>
-                <th scope="row">Nombre del Repositorio</th>
-                <td scope="row">
-                    <input type="text" value="{{result.repo.name}}" id="name" name="name" required placeholder="sedici"> *
-                    <p class='description'>Ejemplo: "sedici"</p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Protocolo(http/https)</th>
-                <td scope="row">
+            <p class="formTit">Nombre del Repositorio</p>
+            <input type="text" value="{{result.repo.name}}" id="name" name="name" required placeholder="sedici"> *
+            <p class='description'>Ejemplo: "sedici"</p>
+            
+            <p class="formTit"> Método de consulta</p>
+            <div>
+                OpenSearch
+                <label class="switch">
+                  <input type="checkbox" name="dspaceVersion" class="checkVersion" {{result.config_dspaceUrl.checked}}>
+                  <span class="slider round"></span>
+                </label>
+                API Rest (Dspace 7)
+            </div>
+            <br></br>
+
+            <fieldset id="apiRestG" hidden>
+
+                <h3> Configuración para API Rest</h3>
+                    <p class="formTit"> URL de la API</p>
+                        <input type="text" value="{{result.repo.dspaceUrl}}" name="dspaceUrl"
+                            {{result.config_dspaceUrl.disabled}} {{result.config_dspaceUrl.required}} placeholder="URL de la api:"> *
+                        <p class='description'>https://host170.sedici.unlp.edu.ar/server/api/</p>
+            </fieldset>
+    
+            <fieldset name="opensearchGroup" class="openSearchG" id="openSearchG">
+            <h3> Configuración para OpenSearch</h2>
+
+                <p class="formTit">Protocolo(http/https)</p>
+
                     <input type="text" value="{{result.repo.protocol}}" name="protocol" required placeholder="http/https"> *
                     <p class='description'><strong>http</strong>://sedici.unlp.edu.ar/open-search/discover?format=atom&query=("interoperabilidad")</p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Dominio</th>
-                <td scope="row">
+    
+                    <p class="formTit">Dominio</p>
+
                     <input type="text" value="{{result.repo.domain}}" name="domain" required placeholder="sedici.unlp.edu.ar"> *
                     <p class='description'>http://<strong>sedici.unlp.edu.ar</strong>/open-search/discover?format=atom&query=("interoperabilidad")</p>
-                </td>
-            </tr>
-            <tr>
-                <th> Utiliza Dspace 7</th>
-                <td scope="row">
-                    <input type="checkbox" name="dspaceVersion" class="checkVersion" {{result.config_dspaceUrl.checked}}>
-                    <p class='description'>Utiliza Dspace 7</p>
-                </td>
-            </tr>
-            <tr>
-                <th> URL de la API</th>
-                <td scope="row">
-                    <input type="text" value="{{result.repo.dspaceUrl}}" name="dspaceUrl"
-                        {{result.config_dspaceUrl.disabled}} {{result.config_dspaceUrl.required}} placeholder="URL de la api:"> *
-                    <p class='description'>https://host170.sedici.unlp.edu.ar/server/api/</p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Ruta de OpenSearch</th>
-                <td scope="row">
+
+                    <p class="formTit">Ruta de OpenSearch</p>
+              
                     <input type="text" value="{{result.repo.base_path}}" name="base_path" required placeholder="/open-search/discover"> *
                     <p class='description'>http://sedici.unlp.edu.ar<strong>/open-search/discover</strong>?format=atom&query=("interoperabilidad")</p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Nombre del parámetro GET para el formato de consulta</th>
-                <td scope="row">
+
+
+                    <p class="formTit">Nombre del parámetro GET para el formato de consulta</p>
+               
                     <input type="text" value="{{result.repo.format}}" name="format" required placeholder="atom"> *
                     <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?format=<strong>atom</strong>&query=("interoperabilidad")</p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Nombre del parámetro GET para realizar la consulta</th>
-                <td scope="row">
+
+                    <p class="formTit">Nombre del parámetro GET para realizar la consulta</p>
+                
                     <input type="text" value="{{result.repo.query}}" name="query" required placeholder="query"> *
                     <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?format=stom&<strong>query</strong>=("interoperabilidad")</p>
-                </td>
-            </tr>
 
-            <tr>
-                <th scope="row">Nombre del parámetro GET para consular por scope</th>
-                <td scope="row">
-                    <input type="text" value="{{result.repo.handle}}" name="handle" required placeholder="scope"> *
+                    <p class="formTit">Nombre del parámetro GET para consular por scope</p>
+                   <input type="text" value="{{result.repo.handle}}" name="handle" required placeholder="scope"> *
                     <p class='description'>http://ri.conicet.gov.ar/open-search/discover?<strong>scope</strong>=11336/3&query=*</p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">Consulta por defecto</th>
-                <td scope="row">
+
+                    <p class="formTit">Consulta por defecto</p>
+
                     <input type="text" value="{{result.repo.default_query}}" name="default_query" placeholder="*">
                     <p class='description'>http://ri.conicet.gov.ar/open-search/discover?scope=11336/3&query=<strong>*</strong></p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"> Nombre de la propiedad para consultar por autor</th>
-                <td scope="row">
-                    <input type="text" value="{{result.repo.author}}" name="author" required placeholder="autor:"> *
+
+                    <p class="formTit"> Nombre de la propiedad para consultar por autor</p>
+                   <input type="text" value="{{result.repo.author}}" name="author" required placeholder="autor:"> *
                     <p class='description'>https://digital.cic.gba.gob.ar/open-search/discover?rpp=10&format=atom&query=(<strong>author:</strong>"De Giusti, Marisa Raquel")</p>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row"> Nombre de la propiedad para consultar por materia</th>
-                <td scope="row">
+           
+                    <p class="formTit">Nombre de la propiedad para consultar por materia</p>
+           
                 <input type="text" value="{{result.repo.subject}}" name="subject" placeholder="materia:"> *
                 <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?rpp=10&sort_by=3&order=desc&start=0&query=(<strong>subject:</strong>"ciencias")</p>
-             </td>         
-             </tr>
-             <tr>
-                <th scope="row"> Nombre de la propiedad para consultar por carrera</th>
-                <td scope="row">
+                    
+           
+                <p class="formTit"> Nombre de la propiedad para consultar por carrera</p>
                 <input type="text" value="{{result.repo.degree}}" name="degree" placeholder="carrera:"> *
                 <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?rpp=10&sort_by=3&order=desc&start=0&query=(<strong>thesis.degree.name:</strong>"Doctor en Ciencias Informáticas")</p>
-             </td>         
-             </tr>
-             <tr>
-                <th scope="row"> Nombre de la propiedad para consultar por subtipo de documento</th>
-                <td scope="row">
+              
+     
+
+                <p class="formTit">Nombre de la propiedad para consultar por subtipo de documento</p>
                     <input type="text" value="{{result.repo.subtype}}" name="subtype"
                         {{result.config_subtype.disabled}} {{result.config_subtype.required}} placeholder="dc.type:"> *
                     <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?format=atom&query=(<strong>sedici.subtype:</strong>"Articulo")"</p>
                 </td>
                 <td scope="row">
+                    <p class="formTit">Soporta subtipo de documentos</p>
                     <input type="checkbox" name="support" class="checkSupport" {{result.config_subtype.checked}}>
-                    <p class='description'>Soporta subtipo de documentos</p>
                 </td>
-            </tr>
+            <br></br>
+        </fieldset>
+
+
             <tr>
                 <td>
                     <button id_repo="{{result.repo.id}}" class="button button-primary {{result.action}}">{{result.titulo}}</button>

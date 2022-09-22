@@ -1,7 +1,8 @@
 <?php
 
 namespace Wp_dspace\Util;
-define('DEFAULT_URL' ,"https://host170.sedici.unlp.edu.ar/server/api/")
+define('DEFAULT_URL' ,"https://host170.sedici.unlp.edu.ar/server/api/");
+include_once dirname(__DIR__) . "/view/class-view.php";
 class apiQuery {
 
     protected $view;
@@ -26,16 +27,16 @@ class apiQuery {
     }
 
     // Query
-    $xml = file_get_contents("https://host170.sedici.unlp.edu.ar/server/api/discover/search/objects?f.title=visibilidad,contains");
+    $Get = file_get_contents("https://host170.sedici.unlp.edu.ar/server/api/discover/search/objects?f.title=visibilidad,contains");
             
-    echo $xml;
+    echo $Get;
 
     public function splitImputs($imput)
     {
         return explode(';', $imput);
     }
 
-    // Hay que hacer lo siguiente:
+ 
 
     
     function executeQuery($query){
@@ -43,24 +44,37 @@ class apiQuery {
     }
 
     function standarQuery($handle, $author, $keywords , $subject , $degree , $max_results, $configuration){
-    $query = Array();
+      $query =" ";
       if(!empty($handle)){
         
       }
       if(!empty($author)){
-        $auth = authorsQuery($author);
-        array_push($query, $configuration->author($words));
+        $str= $str . buildFilter('author',$author);
       }
+      if(!empty($keywords)){
+        $str= $str . buildFilter('subject',$keywords);
+      }
+      if(!empty($max_results)){
+        $str= $str . "size=" . $max_results . "&";
+      }
+      
     }
-    // Funciones auxiliares para procesar
 
-    function authorsQuery($authors){
+    
+
+    // Funciones auxiliares para armar el query
+    
+    // Para filtros como: Autor, Keywords
+    function buildFilter($field,$values){
         $str= "";
-        $words = $this->splitImputs($author);
-        for each $words as $word{
-             $str = $str+ 'f.author="' + $word + '"'+",contains&"
+        $values = $this->splitImputs($values);
+        foreach $values as $value{
+             $str = $str . 'f.'. $field .'=' . $author .",contains&";
         }
       return $str;
     }
-
+    
+    function lugarDesarrolloFilter($institution){
+        return "f.lugarDesarrollo=" . $institution . ",contains&";
+    }
 }
