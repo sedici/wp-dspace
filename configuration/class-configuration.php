@@ -193,4 +193,20 @@ class Configuration
     {
         return ($this->config['support']) ? $instance : true;
     }
+
+/** ------------------- API Configuration --------------------- */
+
+public function get_api_url(){
+    return $this->config["apiUrl"];
+}
+
+public function get_query_method(){
+    if( $this->config["queryMethod"] == "true"){
+        return "api";
+    }
+    else{
+        return "opensearch";
+    }
+}
+
 }

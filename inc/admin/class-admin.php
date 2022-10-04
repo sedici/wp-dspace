@@ -156,8 +156,12 @@ class Admin
         $checked = ($repo['support']) ? 'checked' : '';
         $disabled = ($repo['support']) ? '' : 'disabled';
         $config_subtype = ($repo['support']) ? array('checked' => 'checked', 'disabled' => '', 'required' => 'required') : array('checked' => '', 'disabled' => 'disabled', 'required' => '');
+        //var_dump($repo['queryMethod']);
+        $config_queryMethod = ($repo['queryMethod'] == "true") ? array('checked' => 'checked', 'disabled' => '', 'required' => 'required', 'hiddenOpen' => 'hidden', 'hiddenApi' => '') : array('checked' => '', 'disabled' => 'disabled', 'hiddenOpen' => '', 'hiddenApi' => 'hidden');
+        //var_dump($config_queryMethod);
         $response['template'] = $this->get_template($_GET['template']);
-        $response['result'] = array('titulo' => 'Editar', 'repo' => $repo, 'action' => 'form-update-repo', 'config_subtype' => $config_subtype);
+        $response['result'] = array('titulo' => 'Editar', 'repo' => $repo, 'action' => 'form-update-repo', 'config_subtype' => $config_subtype, 'config_queryMethod' => $config_queryMethod);
+        
         wp_send_json($response);
     }
     public function delete_repo()
@@ -226,8 +230,9 @@ class Admin
         }
 
         return $repo;
-
     }
+
+
     private function validate_name_in_repo($name_repo,$repositorios){
         $repos_name=array_column($repositorios, 'name');
         return in_array($name_repo,$repos_name);

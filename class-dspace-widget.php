@@ -6,9 +6,7 @@ class Dspace_Widget extends \WP_Widget
 {
     protected $filter;
     protected $util;
-
-//    protected $api; 
-    
+    protected $api; 
     protected $validation;
     protected $showShortcode;
     protected $configuration;
@@ -16,7 +14,7 @@ class Dspace_Widget extends \WP_Widget
     {
         $this->filter = new Util\WidgetFilter();
         $this->util = new Util\Query();
-//        $this->api = new Util\apiQuery();
+        $this->api = new Util\apiQuery();
         $this->validation = new Util\WidgetValidation();
         $this->showShortcode = new View\ShowShortcode();
         $option = array('description' => 'Allows to displace contents from DSpace repositories in Wordpress sites by using OpenSearch protocol');
@@ -48,6 +46,7 @@ class Dspace_Widget extends \WP_Widget
             if(!array_key_exists('description',$instance)){
                 $instance['description'] = "";
             }
+            $queryMethod = $this->configuration->get_query_method();
             $description = ('on' == $instance['description']);
             $description = $this->configuration->is_description($description);
             if(!array_key_exists('summary',$instance)){
@@ -66,23 +65,32 @@ class Dspace_Widget extends \WP_Widget
             $all = $this->configuration->instance_all($all);
             if ($this->configuration->all_documents()) {
                 $subtypes_selected = $this->filter->selectedSubtypes($instance, $all); //$subtypes: all selected documents subtypes
-            }
-            $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share);
-            $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
-
+            } 
+            $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share); 
+            switch ($queryMethod){
+                case "api":
+                    $baseURL = $this->configuration->get_api_url();
+                    $queryApi = $this->api->standarQuery($baseURL,$handle, $author, $keywords , $subject , $degree , $max_results, $configuration, $all, $subtypes_selected);
+                    echo $queryApi;
+                    break;
+                case "opensearch":
+                    $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
+                    break
+                }
             $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
             $group_subtype = $this->configuration->is_label_true($group_subtype);
             $cmp = $this->validation->getOrder($group_subtype, $this->validKey('group_year',$instance));
             $this->util->setCmp($cmp);
             $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
           
-            
             if (!empty($results))
                 echo $this->util->render($results, $attributes, $cmp, $this->configuration);
             else
                 echo "<p> <strong>No se encontraron resultados.</strong></p>";
         }
     }
+
+
 
     public function sanitizar($key, $instance)
     {
@@ -348,8 +356,7 @@ return;
                 <?php echo $value['name']; ?>
                 </option>
                 <?php
-        }
-       
+        }       
         ?>
             </select>
         </div>

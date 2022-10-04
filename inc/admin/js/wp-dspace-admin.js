@@ -37,7 +37,6 @@ function justNumbers(e) {
         var divDescription = 'div.description-ds';
         var conditionalDescription = 'p.conditionally-description';
         var description = 'p.description-ds input:checkbox';
-    
         var conditionalFilter = 'p.conditionally-filter';
         var checkFilter = 'p.show-filter';
     
@@ -57,6 +56,7 @@ function justNumbers(e) {
                 $(value.conditional).toggle();
             });
         });
+        
     
         $(document.body).on('change', "#origen select",function () {
             var selection = $(this).val();

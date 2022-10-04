@@ -43,7 +43,15 @@ function check_v(){
 }
 
 function get_form_repo(){
- return {
+	var queryMethodVal = jQuery('input[name=queryMethod]');
+	if( queryMethodVal.is(':checked')){
+       var apiMethod = true;
+
+	}
+	else{
+		var apiMethod = false;
+	}
+	return {
 	name: jQuery('input[name=name]').val(),
 	protocol: jQuery('input[name=protocol]').val(),
 	domain: jQuery('input[name=domain]').val(),
@@ -54,10 +62,39 @@ function get_form_repo(){
 	subtype: jQuery('input[name=subtype]').val(),
 	author: jQuery('input[name=author]').val(),
 	subject: jQuery('input[name=subject]').val(),
-	degree : jQuery('input[name=degree').val(),
+	degree : jQuery('input[name=degree]').val(),
+	queryMethod : apiMethod,
+    //FIXME : Lo tengo que cambiar por las funciones get api repo y get opensearch repo
+	apiUrl: jQuery('input[name=apiUrl]').val(),
 	default_query: jQuery('input[name=default_query]').val(),
 	id: jQuery('input[name=id_repo]').val(),
 };
+}
+
+function get_api_repo(){
+	return{
+		name: jQuery('input[name=name]').val(),
+	    apiUrl: jQuery('input[name=dspaceUrl]').val()
+	}
+}
+
+function get_opensearch_repo(){
+	return {
+		name: jQuery('input[name=name]').val(),
+		protocol: jQuery('input[name=protocol]').val(),
+		domain: jQuery('input[name=domain]').val(),
+		base_path: jQuery('input[name=base_path]').val(),
+		format: jQuery('input[name=format]').val(),
+		query: jQuery('input[name=query]').val(),
+		handle: jQuery('input[name=handle]').val(),
+		subtype: jQuery('input[name=subtype]').val(),
+		author: jQuery('input[name=author]').val(),
+		subject: jQuery('input[name=subject]').val(),
+		degree : jQuery('input[name=degree]').val(),
+		queryMethod : false,
+		default_query: jQuery('input[name=default_query]').val(),
+		id: jQuery('input[name=id_repo]').val(),
+	}
 }
 
 function support_subtype(item) {
@@ -75,10 +112,9 @@ function support_subtype(item) {
 }
 
 function checkVersion(item) {
-	var $item = jQuery(item);
-	var openSearchG = jQuery(`fieldset[name=opensearchGroup]`);
-	var apiRestG = jQuery(`fieldset[name=apiRestG]`);
-	if ($item.is(':checked')) {
+	var $item = jQuery(`input[name=queryMethod]`);
+	console.log($item.is(':checked'));
+	if ($item.is(':checked') | ($item.checked == true)) {
 		document.getElementById("openSearchG").disabled = true;
 		document.getElementById("apiRestG").disabled = false;
 		document.getElementById("openSearchG").hidden= true;
@@ -186,15 +222,16 @@ function updateSubtype(repo_name){
 		});
 		$(document.body).on('submit','#form-update-repo', function (e) {
 			var repo =  get_form_repo();
+			console.log(repo);
 			var data_params = { action: 'update_repo', template: 'notice', repo: repo };
 			var params_fuction ={id_element: '#template-repo'}
-		
 			get_data_and_template('POST', data_params, 'notice_result',after_add_and_update_repo,params_fuction);
 			e.preventDefault();
 		});
 		
 		$(document.body).on('change', ".checkSupport",do_onchange);
 		$(document.body).on('change', ".checkVersion",check_v);
+		$(".editar-repo button button-primary").on('click', ".checkVersion",check_v);
 		
 	});
 })( jQuery );

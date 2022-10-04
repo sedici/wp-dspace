@@ -34,6 +34,7 @@ class SimpleXMLModel
 		return ($xml);
 	}
 
+     	 
 	/**
 	 * Se procesa el summary para obtener el tipo de docuemnto. 
 	 *

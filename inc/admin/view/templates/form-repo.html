@@ -12,23 +12,23 @@
             <div>
                 OpenSearch
                 <label class="switch">
-                  <input type="checkbox" name="dspaceVersion" class="checkVersion" {{result.config_dspaceUrl.checked}}>
+                  <input type="checkbox" name="queryMethod" class="checkVersion" {{result.config_queryMethod.checked}}>
                   <span class="slider round"></span>
                 </label>
                 API Rest (Dspace 7)
             </div>
             <br></br>
 
-            <fieldset id="apiRestG" hidden>
+            <fieldset id="apiRestG" {{result.config_queryMethod.disabled}} {{result.config_queryMethod.required}} {{result.config_queryMethod.hiddenApi}}>
 
-                <h3> Configuración para API Rest</h3>
+            <h3> Configuración para API Rest</h3>
                     <p class="formTit"> URL de la API</p>
-                        <input type="text" value="{{result.repo.dspaceUrl}}" name="dspaceUrl"
-                            {{result.config_dspaceUrl.disabled}} {{result.config_dspaceUrl.required}} placeholder="URL de la api:"> *
+                        <input type="text" value="{{result.repo.apiUrl}}" name="apiUrl"
+                            {{result.config_dspaceUrl.disabled}} placeholder="URL de la api:"> *
                         <p class='description'>https://host170.sedici.unlp.edu.ar/server/api/</p>
             </fieldset>
     
-            <fieldset name="opensearchGroup" class="openSearchG" id="openSearchG">
+            <fieldset name="opensearchGroup" class="openSearchG" id="openSearchG" {{result.config_queryMethod.hiddenOpen}}>
             <h3> Configuración para OpenSearch</h2>
 
                 <p class="formTit">Protocolo(http/https)</p>

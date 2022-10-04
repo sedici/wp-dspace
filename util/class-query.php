@@ -55,6 +55,8 @@ class Query
             foreach ($xpath->entry as $key => $value) {
                 $entrys[]= $value;
             }
+
+            //ACA HAY QUE RETORNAR UN VECTOR DE ITEMS
         return $entrys;
     }
 
