@@ -155,10 +155,7 @@ class Admin
         $repo = $this->get_repo($_GET['id']);
         $checked = ($repo['support']) ? 'checked' : '';
         $disabled = ($repo['support']) ? '' : 'disabled';
-        $config_subtype = ($repo['support']) ? array('checked' => 'checked', 'disabled' => '', 'required' => 'required') : array('checked' => '', 'disabled' => 'disabled', 'required' => '');
-        //var_dump($repo['queryMethod']);
-        $config_queryMethod = ($repo['queryMethod'] == "true") ? array('checked' => 'checked', 'disabled' => '', 'required' => 'required', 'hiddenOpen' => 'hidden', 'hiddenApi' => '') : array('checked' => '', 'disabled' => 'disabled', 'hiddenOpen' => '', 'hiddenApi' => 'hidden');
-        //var_dump($config_queryMethod);
+        $config_subtype = ($repo['support']) ? array('checked' => 'checked', 'disabled' => '', 'required' => 'required') : array('checked' => '', 'disabled' => 'disabled', 'required' => '');        $config_queryMethod = ($repo['queryMethod'] == "true") ? array('checked' => 'checked', 'disabled' => '', 'required' => 'required', 'hiddenOpen' => 'hidden', 'hiddenApi' => '') : array('checked' => '', 'disabled' => 'disabled', 'hiddenOpen' => '', 'hiddenApi' => 'hidden');
         $response['template'] = $this->get_template($_GET['template']);
         $response['result'] = array('titulo' => 'Editar', 'repo' => $repo, 'action' => 'form-update-repo', 'config_subtype' => $config_subtype, 'config_queryMethod' => $config_queryMethod);
         

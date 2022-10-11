@@ -1,6 +1,8 @@
 <?php
 
 namespace Wp_dspace\Util;
+
+
 define('DEFAULT_URL' ,"https://host170.sedici.unlp.edu.ar");
 define('ENDPOINT', "/server/api/discover/search/objects?");
 include_once dirname(__DIR__) . "/view/class-view.php";
@@ -17,7 +19,9 @@ class apiQuery {
         $this->model = new \Wp_dspace\Model\SimpleXMLModel(); // Remplazar por el JSON
         $this->order = new XmlOrder();   // Remplazar por JSON Order ¿?
         $this->view = new \Wp_dspace\View\View(); 
-    }
+    
+    
+      }
     public function get_model()
     {
         return $this->model;
@@ -29,28 +33,15 @@ class apiQuery {
         $this->order->setCmp($value);
     }
 
-    public function splitImputs($imput)
+    public function splitImputs($input)
     {
-        return explode(';', $imput);
+        return explode(';', $input);
     }
 
-    
-    function executeQuery($query, $cache){
-       $model = $this->get_model();
-       $json = $model->jsonLoadPath($str,$cache);
-       $entrys = array();
-       if(!empty($xpath))
-       foreach ($xpath->entry as $key => $value) {
-           $entrys[]= $value;
-       }
-
-       //ACA HAY QUE RETORNAR UN VECTOR DE ITEMS
-   return $entrys;
-}
 
     function standarQuery($baseURL, $handle, $author, $keywords , $subject , $degree , $max_results, $configuration, $all, $subtypes_selected){
       //Falta agregar $all y $subtypes_selected a la lista de parametros reales
-      $query = $baseURL . " ";
+      $query = $baseURL;
       if(!empty($handle)){
         $query = $query . "scope=" . $handle . "&"; //Funciona solo con el UUID del centro
         //$str= $str . lugarDesarrolloFilter($handle);
@@ -76,22 +67,50 @@ class apiQuery {
         $query= $query . $this->buildFilter('itemtype',$subtypes_selected);
       }
 
-      #FIXME: No es la mejor forma, pero asi elimino el ultimo simbolo & 
       $query = substr($query, 0, -1); 
-  
+     
       return $query;
     }
     
+    // Session init for API Request
+    function executeQuery($query,$cache){
+
+      $model = $this->get_model();
+      $json = $model->loadJsonPath($query,$cache);
+      return $json;
+    }
+
+    function buildArticles($result){
+      $articles = $result['_embedded']['searchResult']['_embedded']['objects']; #All the objects mapped into an array 
+      foreach ($articles as $art){
+        $wrapper = new jsonWrapper($art);   
+        echo "TITULO: " . $wrapper->get_title();
+        echo "/---------------/";
+        echo "Fecha: " . $wrapper->get_date();
+        $authors = $wrapper->get_authors();
+        foreach ($authors as $auth){
+          echo "AUTOR: " . $auth["value"];
+        }
+        
+      
+      
+      }
+      return $articles;
+    }
+    
+
     // Funciones auxiliares para armar el query
     
     // Para filtros como: Autor, Keywords
     function buildFilter($field,$values){
         $str= "";
         $values = $this->splitImputs($values);
+   
         foreach ($values as $value) {
+             $value= strtr($value,[' '=>'%20.']);
              $str = $str . 'f.'. $field .'=' . "'" . $value . "'" .",contains&";
         }
-      return $str;
+        return $str;
     }
     
     function lugarDesarrolloFilter($institution){

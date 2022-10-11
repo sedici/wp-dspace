@@ -3,7 +3,7 @@
  * Plugin Name: Dspace-Plugin
  * Plugin URI: http://sedici.unlp.edu.ar/
  * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
- * Version: 1.0
+ * Version: 2.0-0
  * Author: SEDICI - Ezequiel Manzur
  * Author URI: http://sedici.unlp.edu.ar/
  * Text Domain:   wp-dspace
@@ -14,7 +14,7 @@
 namespace Wp_dspace;
 define( __NAMESPACE__ . '\DS', __NAMESPACE__ . '\\' );
 define( DS . 'PLUGIN_NAME', 'wp-dspace' );
-define( DS . 'PLUGIN_VERSION', '1.0.0' );
+define( DS . 'PLUGIN_VERSION', '2.0-0' );
 define( DS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 define( DS . 'PLUGIN_NAME_URL', plugin_dir_url( __FILE__ ) );
 define( DS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );

@@ -10,8 +10,8 @@ class SimpleXMLModel
 	/**
 	 *   @return SimpleXMLElement of result  OpenSearch. 
 	 */
-	public function loadPath($str, $duration = 1)
-	{
+
+	public function saveData($str, $duration = 1){
 		// Genero el id para guardar la consulta en la caché de wordpress. Aplico un hash a la url de consulta. 
 		$transient_data_id = self::PREFIJO_TRANSIENT . hash('md5', $str);
 		$transient_data_permanent_id = $transient_data_id . '_permanent';
@@ -29,11 +29,22 @@ class SimpleXMLModel
 				set_transient($transient_data_permanent_id, $transient_data);
 			}
 		}
+		return $transient_data;
+	}
 
+	public function loadPath($str, $duration = 1)
+	{
+        $transient_data = $this->saveData($str, $duration);
 		$xml = simplexml_load_string($transient_data, 'SimpleXMLElement');
 		return ($xml);
 	}
 
+    public function loadJsonPath($str, $duration = 1)
+	{
+        $transient_data = $this->saveData($str, $duration);
+		$json = json_decode($transient_data,true);
+		return ($json);
+	}
      	 
 	/**
 	 * Se procesa el summary para obtener el tipo de docuemnto. 
@@ -70,4 +81,7 @@ class SimpleXMLModel
 		$date = date_create($dc_values->date);
 		return date_format($date, "Y");
 	}
+
+
+
 }

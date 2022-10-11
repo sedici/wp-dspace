@@ -63,6 +63,13 @@ class Dspace_Widget extends \WP_Widget
             $show_subtypes = $this->configuration->is_label_true($show_subtypes);
             $all = ('on' == $this->validKey('all',$instance)); //$all: all publications without subtype filter
             $all = $this->configuration->instance_all($all);
+
+            #Select sort order
+            $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
+            $group_subtype = $this->configuration->is_label_true($group_subtype);
+            $cmp = $this->validation->getOrder($group_subtype, $this->validKey('group_year',$instance));
+            $this->util->setCmp($cmp);
+            
             if ($this->configuration->all_documents()) {
                 $subtypes_selected = $this->filter->selectedSubtypes($instance, $all); //$subtypes: all selected documents subtypes
             } 
@@ -70,21 +77,19 @@ class Dspace_Widget extends \WP_Widget
             switch ($queryMethod){
                 case "api":
                     $baseURL = $this->configuration->get_api_url();
-                    $queryApi = $this->api->standarQuery($baseURL,$handle, $author, $keywords , $subject , $degree , $max_results, $configuration, $all, $subtypes_selected);
-                    echo $queryApi;
+                    $queryStandar = $this->api->standarQuery($baseURL,$handle, $author, $keywords , $subject , $degree , $max_results, $this->configuration, $all, $subtypes_selected);
+                    $results = $this->api->executeQuery($queryStandar, $cache);
+                    $articles = $this->api->buildArticles($results);
                     break;
                 case "opensearch":
                     $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
-                    break
+                    $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
+                    break;
                 }
-            $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
-            $group_subtype = $this->configuration->is_label_true($group_subtype);
-            $cmp = $this->validation->getOrder($group_subtype, $this->validKey('group_year',$instance));
-            $this->util->setCmp($cmp);
-            $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
-          
-            if (!empty($results))
-                echo $this->util->render($results, $attributes, $cmp, $this->configuration);
+
+            if (!empty($results) and ($queryMethod != "api")){
+               echo $this->util->render($results, $attributes, $cmp, $this->configuration);
+            }
             else
                 echo "<p> <strong>No se encontraron resultados.</strong></p>";
         }

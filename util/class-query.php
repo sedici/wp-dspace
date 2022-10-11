@@ -144,7 +144,7 @@ class Query
 
     function render($results, $attributes, $cmp, $configuration)
     {
-        
+        var_dump($results);
         $this->view->set_configuration($configuration);
         if (strcmp($cmp, CMP_DATE_SUBTYPE) == 0) {
             return ($this->view->publicationsByDateSubtype($results, $attributes, ACTIVE_DATE, ACTIVE_SUBTYPE));
