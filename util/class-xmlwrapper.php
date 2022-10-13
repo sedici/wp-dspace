@@ -2,47 +2,36 @@
 
 namespace Wp_dspace\Util;
 
-class xmlWrapper extends abstractWrapper {
-    private $document;
+class xmlWrapper extends genericDocumentWrapper {
+    public $document;
     public $type = "xml";
     
-    public function __construct($xml)
-    {
-      $this->document = $xml;
-    }
     
-    public function get_link(){
-        return $this->document->link->attributes()->href;
+    public function set_link(){
+        $this->link = $this->document->link->attributes()->href;
     }
 
-    
-    #GET Date of creation
-
-    public function get_date(){
+    public function set_date(){
         $dc = $this->document->children('dc', TRUE);
-        return date_create($dc->date);
+        $this->date = date_create($dc->date);
     }
 
-    public function get_authors(){
-        return $this->document->author;
+    public function set_authors(){
+        $this->authors = $this->document->author;
     }
 
-    #------------------------------------------
-
-    public function get_abstract(){
-        return $this->get_metadata("dcterms.abstract");
+    public function set_abstract(){
+        $this->abstract = $this->document->sumary;
     }
 
-    public function get_title(){
-        return $this->document->title;
+    public function set_title(){
+        $this->title = $this->document->title;
     }
 
     
-
-    public function get_metadata($metaField){
-        return $this->document["_embedded"]["indexableObject"]['metadata'][$metaField];
+    public function get_author_name($author){
+        return $author->name;
     }
-
 
 }
 

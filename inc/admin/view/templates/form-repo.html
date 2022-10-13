@@ -8,6 +8,16 @@
             <input type="text" value="{{result.repo.name}}" id="name" name="name" required placeholder="sedici"> *
             <p class='description'>Ejemplo: "sedici"</p>
             
+            <p class="formTit">Protocolo(http/https)</p>
+            <input type="text" value="{{result.repo.protocol}}" name="protocol" required placeholder="http/https"> *
+            <p class='description'><strong>http</strong>://sedici.unlp.edu.ar/open-search/discover?format=atom&query=("interoperabilidad")</p>
+
+            <p class="formTit">Dominio</p>
+
+            <input type="text" value="{{result.repo.domain}}" name="domain" required placeholder="sedici.unlp.edu.ar"> *
+            <p class='description'>http://<strong>sedici.unlp.edu.ar</strong>/open-search/discover?format=atom&query=("interoperabilidad")</p>
+
+
             <p class="formTit"> Método de consulta</p>
             <div>
                 OpenSearch
@@ -30,16 +40,6 @@
     
             <fieldset name="opensearchGroup" class="openSearchG" id="openSearchG" {{result.config_queryMethod.hiddenOpen}}>
             <h3> Configuración para OpenSearch</h2>
-
-                <p class="formTit">Protocolo(http/https)</p>
-
-                    <input type="text" value="{{result.repo.protocol}}" name="protocol" required placeholder="http/https"> *
-                    <p class='description'><strong>http</strong>://sedici.unlp.edu.ar/open-search/discover?format=atom&query=("interoperabilidad")</p>
-    
-                    <p class="formTit">Dominio</p>
-
-                    <input type="text" value="{{result.repo.domain}}" name="domain" required placeholder="sedici.unlp.edu.ar"> *
-                    <p class='description'>http://<strong>sedici.unlp.edu.ar</strong>/open-search/discover?format=atom&query=("interoperabilidad")</p>
 
                     <p class="formTit">Ruta de OpenSearch</p>
               

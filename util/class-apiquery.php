@@ -72,24 +72,23 @@ class apiQuery {
       return $query;
     }
     
-    // Session init for API Request
     function executeQuery($query,$cache){
 
       $model = $this->get_model();
       $json = $model->loadJsonPath($query,$cache);
-      return $json;
+      $articles = $json['_embedded']['searchResult']['_embedded']['objects'];
+      return $articles;
     }
-
-    function buildArticles($result){
-      $articles = $result['_embedded']['searchResult']['_embedded']['objects']; #All the objects mapped into an array 
+   
+    function buildArticles($articles,$configuration){
+      $wrapper = new jsonWrapper();
       foreach ($articles as $art){
-        $wrapper = new jsonWrapper($art);   
+        $wrapper->document =$art;
         echo "TITULO: " . $wrapper->get_title();
         echo "/---------------/";
-        echo "Fecha: " . $wrapper->get_date();
         $authors = $wrapper->get_authors();
         foreach ($authors as $auth){
-          echo "AUTOR: " . $auth["value"];
+          echo $configuration->print_author($auth["value"]);
         }
         
       

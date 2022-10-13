@@ -10,6 +10,9 @@ class Dspace_Widget extends \WP_Widget
     protected $validation;
     protected $showShortcode;
     protected $configuration;
+
+    protected $view;
+
     public function __construct()
     {
         $this->filter = new Util\WidgetFilter();
@@ -17,6 +20,9 @@ class Dspace_Widget extends \WP_Widget
         $this->api = new Util\apiQuery();
         $this->validation = new Util\WidgetValidation();
         $this->showShortcode = new View\ShowShortcode();
+
+        $this->view = new \Wp_dspace\View\View();
+
         $option = array('description' => 'Allows to displace contents from DSpace repositories in Wordpress sites by using OpenSearch protocol');
         parent::__construct('Dspace', 'Dspace Plugin', $option);
     }
@@ -43,26 +49,15 @@ class Dspace_Widget extends \WP_Widget
             // FIXME tiene que ser una instancia de configuracion general. 
             $this->configuration = $this->validation->create_configuration($config);
            
+  
+            $queryMethod = $this->configuration->get_query_method();
+            
             if(!array_key_exists('description',$instance)){
                 $instance['description'] = "";
             }
-            $queryMethod = $this->configuration->get_query_method();
-            $description = ('on' == $instance['description']);
-            $description = $this->configuration->is_description($description);
-            if(!array_key_exists('summary',$instance)){
-                $instance['summary']="";
-            }
-            $description = $this->validation->description($description, $this->validKey('summary',$instance));
-            $maxlenght = $this->validation->limit_text($this->validKey('limit',$instance), $this->validKey('maxlenght',$instance));
-            $share = ('on' == $this->validKey('share',$instance));
-            $show_author = ('on' == $this->validKey('show_author',$instance)); // $show_author: if ON, then $show_author = true
-            $date = ('on' == $this->validKey('date',$instance)); // $date: if checkbox date is ON, $date=true
-            $max_results = apply_filters('max_results', $instance['max_results']); //$max_results: total results of subtype
-            $cache = apply_filters('cache', $instance['cache']); //$cache: duration in seconds of cache
-            $show_subtypes = ('on' == $this->validKey('show_subtype',$instance)); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
-            $show_subtypes = $this->configuration->is_label_true($show_subtypes);
-            $all = ('on' == $this->validKey('all',$instance)); //$all: all publications without subtype filter
-            $all = $this->configuration->instance_all($all);
+            
+            $this->getWidgetValues($instance,$description,$maxlenght,$share,$show_author,$date,$max_results,$cache,$show_subtypes,$all);
+            
 
             #Select sort order
             $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
@@ -79,7 +74,7 @@ class Dspace_Widget extends \WP_Widget
                     $baseURL = $this->configuration->get_api_url();
                     $queryStandar = $this->api->standarQuery($baseURL,$handle, $author, $keywords , $subject , $degree , $max_results, $this->configuration, $all, $subtypes_selected);
                     $results = $this->api->executeQuery($queryStandar, $cache);
-                    $articles = $this->api->buildArticles($results);
+                    $articles = $this->api->buildArticles($results,$this->configuration);
                     break;
                 case "opensearch":
                     $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
@@ -88,14 +83,48 @@ class Dspace_Widget extends \WP_Widget
                 }
 
             if (!empty($results) and ($queryMethod != "api")){
-               echo $this->util->render($results, $attributes, $cmp, $this->configuration);
+               echo $this->render($results, $attributes, $cmp, $this->configuration);
             }
             else
                 echo "<p> <strong>No se encontraron resultados.</strong></p>";
         }
     }
 
+    
+    function render($results, $attributes, $cmp, $configuration)
+    {
+        $this->view->set_configuration($configuration);
+        if (strcmp($cmp, CMP_DATE_SUBTYPE) == 0) {
+            return ($this->view->publicationsByDateSubtype($results, $attributes, ACTIVE_DATE, ACTIVE_SUBTYPE));
+        }
+        if (strcmp($cmp, CMP_DATE) == 0) {
+            return ($this->view->publicationsByGroup($results, $attributes, ACTIVE_DATE));
+        }
+        if (strcmp($cmp, CMP_SUBTYPE) == 0) {
+            return ($this->view->publicationsByGroup($results, $attributes, ACTIVE_SUBTYPE));
+        }
+        return $this->view->allPublications($results, $attributes);
+    }
 
+    public function getWidgetValues(&$instance,&$description,&$maxlenght,&$share,&$show_author,&$date,&$max_results,&$cache,&$show_subtypes,&$all)
+    {
+        $description = ('on' == $instance['description']);
+        $description = $this->configuration->is_description($description);
+        if(!array_key_exists('summary',$instance)){
+            $instance['summary']="";
+        }
+        $description = $this->validation->description($description, $this->validKey('summary',$instance));
+        $maxlenght = $this->validation->limit_text($this->validKey('limit',$instance), $this->validKey('maxlenght',$instance));
+        $share = ('on' == $this->validKey('share',$instance));
+        $show_author = ('on' == $this->validKey('show_author',$instance)); // $show_author: if ON, then $show_author = true
+        $date = ('on' == $this->validKey('date',$instance)); // $date: if checkbox date is ON, $date=true
+        $max_results = apply_filters('max_results', $instance['max_results']); //$max_results: total results of subtype
+        $cache = apply_filters('cache', $instance['cache']); //$cache: duration in seconds of cache
+        $show_subtypes = ('on' == $this->validKey('show_subtype',$instance)); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
+        $show_subtypes = $this->configuration->is_label_true($show_subtypes);
+        $all = ('on' == $this->validKey('all',$instance)); //$all: all publications without subtype filter
+        $all = $this->configuration->instance_all($all);
+    }
 
     public function sanitizar($key, $instance)
     {

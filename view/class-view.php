@@ -113,8 +113,10 @@ class View {
         </div>';    
         return $stringHtml;   
         }
+
+        
 	public function document($item,$attributes){
-        $link = $item->link->attributes()->href;
+        $link = $item->link->attributes()->href;  #Listo
         $dc_values= $item->children('dc', TRUE);
         $date=date_create($dc_values->date);
          	
@@ -152,7 +154,7 @@ class View {
                 $dc_values= $item->children('dc', TRUE);
                 $date=date_create($dc_values->date);
                 return (int) date_format($date,"Y") ;
-            } elseif ( $group == "subtype") {
+            } elseif ( $group == "subtype" ) {
                 return $this->dctype($item);
             }
             return true;
@@ -254,7 +256,7 @@ class View {
 			}
             $stringHtml=$stringHtml . $stringItem . '</ul>
             <div class="page_navigation " ></div>
-            </div>';          
+            </div>';
             return $stringHtml;
 	}
         

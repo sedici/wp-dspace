@@ -12,6 +12,9 @@ define('S_CONECTOR5', '%20');
 define('S_SEPARATOR', '\|\|\|');
 define('S_FILTER2', '/discover?fq=author_filter%3A');
 define('S_FILTER', '/discover?filtertype=author&filter_relational_operator=equals&filter=');
+
+#CONSTANTS for dspace API
+define('AUTHOR_API_ENDPOINT', '/browse/author?value=');
 class Configuration
 {
 
@@ -163,7 +166,12 @@ class Configuration
     public function print_author($author)
     {
         $link = $this->get_protocol_domain();
-        $link = $link . S_FILTER;
+        if($this->get_query_method() == "api"){
+            $link = $link . AUTHOR_API_ENDPOINT;
+        }
+        else{
+            $link = $link . S_FILTER;
+        }
         $name = str_replace(",", S_CONECTOR4, $author);
         $name = $this->remplace($name);
         $link .= $name;
