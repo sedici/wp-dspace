@@ -5,19 +5,13 @@ namespace Wp_dspace\Util;
 define('ACTIVE_SUBTYPE', "subtype");
 define('ACTIVE_DATE', "date");
 define('DEFAULT_QUERY', "&query=*:*");
-include_once dirname(__DIR__) . "/view/class-view.php";
-class Query
+
+class Query extends queryMaker
 {
-    protected $view;
     protected $model;
     protected $order;
     protected $subtype_query;
-    public function __construct()
-    {
-        $this->model = new \Wp_dspace\Model\SimpleXMLModel();
-        $this->order = new XmlOrder();
-        $this->view = new \Wp_dspace\View\View();
-    }
+
     public function get_model()
     {
         return $this->model;
@@ -117,9 +111,10 @@ class Query
         return $results;
     }
 
+
+
     function getPublications($all, $queryStandar, $cache, $subtypes_selected)
     {   
-        
       
         if ($all) {
             $results = $this->executeQuery($queryStandar, $cache);
@@ -142,18 +137,5 @@ class Query
         ));
     }
 
-    function render($results, $attributes, $cmp, $configuration)
-    {
-        $this->view->set_configuration($configuration);
-        if (strcmp($cmp, CMP_DATE_SUBTYPE) == 0) {
-            return ($this->view->publicationsByDateSubtype($results, $attributes, ACTIVE_DATE, ACTIVE_SUBTYPE));
-        }
-        if (strcmp($cmp, CMP_DATE) == 0) {
-            return ($this->view->publicationsByGroup($results, $attributes, ACTIVE_DATE));
-        }
-        if (strcmp($cmp, CMP_SUBTYPE) == 0) {
-            return ($this->view->publicationsByGroup($results, $attributes, ACTIVE_SUBTYPE));
-        }
-        return $this->view->allPublications($results, $attributes);
-    }
+
 }

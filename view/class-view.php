@@ -259,5 +259,20 @@ class View {
             </div>';
             return $stringHtml;
 	}
+
+    function render($results, $attributes, $cmp, $configuration)
+    {
+        $this->set_configuration($configuration);
+        if (strcmp($cmp, CMP_DATE_SUBTYPE) == 0) {
+            return ($this->publicationsByDateSubtype($results, $attributes, ACTIVE_DATE, ACTIVE_SUBTYPE));
+        }
+        if (strcmp($cmp, CMP_DATE) == 0) {
+            return ($this->publicationsByGroup($results, $attributes, ACTIVE_DATE));
+        }
+        if (strcmp($cmp, CMP_SUBTYPE) == 0) {
+            return ($this->publicationsByGroup($results, $attributes, ACTIVE_SUBTYPE));
+        }
+        return $this->allPublications($results, $attributes);
+    }
         
 } // end class

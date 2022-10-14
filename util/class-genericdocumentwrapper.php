@@ -8,11 +8,11 @@ abstract class genericDocumentWrapper{
     public $document;
     public $type;
     
-    private $link;
-    private $authors;
-    private $date;
-    private $abstract;
-    private $title;
+    public $link;
+    public $authors;
+    public $date;
+    public $abstract;
+    public $title;
 
     public function __construct($doc)
     {

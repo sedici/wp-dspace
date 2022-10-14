@@ -83,7 +83,7 @@ class Dspace_Widget extends \WP_Widget
                 }
 
             if (!empty($results) and ($queryMethod != "api")){
-               echo $this->render($results, $attributes, $cmp, $this->configuration);
+               echo $this->view->render($results, $attributes, $cmp, $this->configuration);
             }
             else
                 echo "<p> <strong>No se encontraron resultados.</strong></p>";
@@ -91,20 +91,6 @@ class Dspace_Widget extends \WP_Widget
     }
 
     
-    function render($results, $attributes, $cmp, $configuration)
-    {
-        $this->view->set_configuration($configuration);
-        if (strcmp($cmp, CMP_DATE_SUBTYPE) == 0) {
-            return ($this->view->publicationsByDateSubtype($results, $attributes, ACTIVE_DATE, ACTIVE_SUBTYPE));
-        }
-        if (strcmp($cmp, CMP_DATE) == 0) {
-            return ($this->view->publicationsByGroup($results, $attributes, ACTIVE_DATE));
-        }
-        if (strcmp($cmp, CMP_SUBTYPE) == 0) {
-            return ($this->view->publicationsByGroup($results, $attributes, ACTIVE_SUBTYPE));
-        }
-        return $this->view->allPublications($results, $attributes);
-    }
 
     public function getWidgetValues(&$instance,&$description,&$maxlenght,&$share,&$show_author,&$date,&$max_results,&$cache,&$show_subtypes,&$all)
     {

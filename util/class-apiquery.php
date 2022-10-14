@@ -9,19 +9,12 @@ include_once dirname(__DIR__) . "/view/class-view.php";
 
 class apiQuery {
 
-    protected $view;
+  
     protected $model;
     protected $order;
     protected $subtype_query;
 
-    public function __construct()
-    {
-        $this->model = new \Wp_dspace\Model\SimpleXMLModel(); // Remplazar por el JSON
-        $this->order = new XmlOrder();   // Remplazar por JSON Order ¿?
-        $this->view = new \Wp_dspace\View\View(); 
-    
-    
-      }
+
     public function get_model()
     {
         return $this->model;
@@ -81,9 +74,8 @@ class apiQuery {
     }
    
     function buildArticles($articles,$configuration){
-      $wrapper = new jsonWrapper();
       foreach ($articles as $art){
-        $wrapper->document =$art;
+        $wrapper = new jsonWrapper($art);
         echo "TITULO: " . $wrapper->get_title();
         echo "/---------------/";
         $authors = $wrapper->get_authors();
