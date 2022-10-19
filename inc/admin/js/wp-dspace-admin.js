@@ -66,6 +66,10 @@ function justNumbers(e) {
                 $("div.conditional_config").hide();
             }
         });
+
+        $(".btn-dspace-show").on('click', function () {
+            console.log("Button clicked");
+        });
     
 		
 	});

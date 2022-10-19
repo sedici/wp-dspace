@@ -6,14 +6,19 @@ class View {
 
 	function __construct() {
 		// Register style sheet.
+
+  
+        
 	    wp_register_style ( 'Vista', plugin_dir_url (__FILE__).'../media/css/styles.css' );
 		wp_enqueue_style ( 'Vista' );
+        wp_register_script('embedVideo', plugin_dir_url (__FILE__).'../media/js/embedVideo.js',array('jquery'));
+        wp_enqueue_script('embedVideo');
+        $params = array('ajaxurl' => admin_url('admin-ajax.php'));
+        wp_localize_script('embedVideo', 'params', $params);
 //        wp_register_script( 'jquery.Pagination',plugin_dir_url (__FILE__ ).'../media/js/jquery.pajinate.js', array ("jquery"), null, true );
-//        wp_register_script( 'scripspagination',plugin_dir_url (__FILE__ ).'../media/js/scripspagination.js' , array (), null, true);
 //        wp_enqueue_script ('jquery.Pagination');
 //        wp_enqueue_script ('scripspagination');
 	}
-
 
     public function set_configuration($config){
             $this->configuration = $config;
@@ -118,21 +123,28 @@ class View {
         $dc_values= $item->children('dc', TRUE);
         $date=date_create($dc_values->date);
          	
-		$stringHtml = '<li><article>
+		$stringHtml = '<li><article style="padding:10px;border: 2px solid black;">
 			<title>' . $item->title . '</title>
-                        <div id="sedici-title">
-                            <a href="' . $link . '" target="_blank">' . 
+                        <div id="sedici-title"> 
+                            <a class="link" href="' . $link . '" target="_blank">' . 
                             ($this->html_especial_chars($item->title)) .  
                             '</a>
+                         
                         </div>';  
+                        
 				if ($attributes['show_author']){  $stringHtml=$stringHtml . $this->author($item->author); }
 				if ($attributes['date']) 
                                 { 
-                                   $stringHtml= $stringHtml.'<published>
-                                        <div id="sedici-title">'.__('Fecha: ') .  
+                                   $stringHtml= $stringHtml.'
+                                   <a class="btn-dspace-show"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
+                                   <a class="btn-dspace-hide" hidden><i style="font-size: 3em;" class="displayDesc fas fa-angle-up" aria-hidden="true"></i></a>
+                                   <div class="avancedDescription" hidden>
+                                   <p id="'. $link . '"> </p>
+                                   <published>
+                                        <div id="sedici-title" >'.__('Fecha: ') .  
                                         '<span class="sedici-content">' .date_format($date,"d/m/Y")  . '</span></div>
                                     </published>';
-				} //end if fecha  
+				} //end if fecha
                                 if ($attributes['show_subtypes'] ) 
                                 { 
                                     $stringHtml=$stringHtml . '<dc:type>
@@ -143,7 +155,7 @@ class View {
 				$stringHtml=$stringHtml . $this->description($attributes['description'], $item,$attributes['max_lenght']);
                                 if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->title ); }
 				
-		return $stringHtml . '</article></li>';;
+		return $stringHtml . '</div></article></li><br>';;
 
 	}
 	
@@ -196,6 +208,24 @@ class View {
             }//end if
             return $stringHtml ;
         }
+
+        /**
+         *  @param String $link web page URL to extract youtube video from
+         */
+        public function get_videos($link){
+            $html = file_get_contents($link);
+            preg_match_all("#(?<=v=|v\/|vi=|vi\/|youtu.be\/)[a-zA-Z0-9_-]{11}#", $html, $matches);
+            $matches = array_unique($matches[0]);
+            /*foreach ($matches as &$match){
+                $match = "https://www.youtube.com/embed/" . $match ."?feature=oembed";
+            }*/
+            $youtubeLinks = array_map(function($match){
+                return "https://www.youtube.com/embed/{$match}?feature=oembed";
+            },$matches );
+            return $youtubeLinks;
+        }
+
+
         
         public function closeDiv($actualTitle,$entrys,$position,$group){
             if ($position < count($entrys)) {

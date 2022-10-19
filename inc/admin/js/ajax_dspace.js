@@ -4,6 +4,7 @@ function get_data_and_template(method, data_params, selector, refreshCallback, f
 		type: method,
 		data: data_params,
 		success: function (response) {
+			console.log(params.ajaxurl);
 			if (typeof response['template'] !== 'undefined'){
 			  var source = response['template'];
 		      var template = Handlebars.compile(source);
@@ -168,6 +169,11 @@ function updateSubtype(repo_name){
 		});
 		
 		$(document.body).on('change', ".checkSupport",do_onchange);
+
+		$(".btn-dspace-show").on('click', function () {
+            console.log("Button clicked");
+        });
+    
 		
 	});
 })( jQuery );

@@ -79,6 +79,8 @@ class Init {
 	private function define_admin_hooks() {
 
 		$plugin_admin = new Admin\Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_text_domain() );
+
+		
 		//Registro de estilos y scripts
 		$this->loader->add_action('init',$plugin_admin,'register_styles');
 		$this->loader->add_action('init',$plugin_admin,'register_scripts');
@@ -99,6 +101,10 @@ class Init {
 		$this->loader->add_action( 'wp_ajax_delete_repo', $plugin_admin, 'delete_repo');
 		$this->loader->add_action( 'wp_ajax_update_repo', $plugin_admin, 'update_repo');
 		$this->loader->add_action( 'wp_ajax_show_shortcode', $plugin_admin, 'show_shortcode');
+
+		// View function
+		$this->loader->add_action('wp_ajax_get_videos', $plugin_admin ,'get_videos');
+
 		// Register admin notices
 		// $this->loader->add_action( 'admin_notices', $plugin_admin, 'print_plugin_admin_notices');
 		// Inicio widget

@@ -61,6 +61,8 @@ class Shortcode {
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                         $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject,$degree,$max_results,$this->configuration);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
+                        
+                        wp_enqueue_script('jquery');
                         if (!empty($results))
                                 echo $this->util->render ($results,$attributes,$cmp,$this->configuration); 
                         else
