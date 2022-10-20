@@ -136,7 +136,7 @@ class View {
 				if ($attributes['date']) 
                                 { 
                                    $stringHtml= $stringHtml.'
-                                   <a class="btn-dspace-show"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
+                                   <a class="btn-dspace-show" style="visibility: visible;"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
                                    <a class="btn-dspace-hide" hidden><i style="font-size: 3em;" class="displayDesc fas fa-angle-up" aria-hidden="true"></i></a>
                                    <div class="avancedDescription" hidden>
                                    <p id="'. $link . '"> </p>
@@ -144,7 +144,10 @@ class View {
                                         <div id="sedici-title" >'.__('Fecha: ') .  
                                         '<span class="sedici-content">' .date_format($date,"d/m/Y")  . '</span></div>
                                     </published>';
-				} //end if fecha
+				}
+                else{
+                    $stringHtml = $stringHtml.'<div>';
+                } //end if fecha
                                 if ($attributes['show_subtypes'] ) 
                                 { 
                                     $stringHtml=$stringHtml . '<dc:type>

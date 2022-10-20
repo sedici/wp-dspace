@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Dspace-Plugin
+ * Plugin Name: Dspace-Plugin Video Edition
  * Plugin URI: http://sedici.unlp.edu.ar/
  * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
  * Version: 1.0

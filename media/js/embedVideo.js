@@ -3,14 +3,14 @@
 
 html=""
 function get_data_and_template(method, data_params, divVideo) {
-     divVideo.append('<div class="loader"></div>');
+     divVideo.append('<div class="searching"><div class="loader"></div><p>Buscando videos...</p></div>');
     jQuery.ajax({
         url: params.ajaxurl,
         type: method,
         data: data_params,
         success: function (response) {
                 var videos = response;
-                $('.loader').hide();
+                $('.searching').hide();
                 if ((videos.length >0) && (divVideo.children('iframe').length == 0)) {
                     for (var i = 0; i < videos.length; ++i){
                         divVideo.append('<iframe  width="350" height="370" src="'+ videos[i]+ '"></iframe>');                    }
