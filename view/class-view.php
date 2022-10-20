@@ -216,9 +216,6 @@ class View {
             $html = file_get_contents($link);
             preg_match_all("#(?<=v=|v\/|vi=|vi\/|youtu.be\/)[a-zA-Z0-9_-]{11}#", $html, $matches);
             $matches = array_unique($matches[0]);
-            /*foreach ($matches as &$match){
-                $match = "https://www.youtube.com/embed/" . $match ."?feature=oembed";
-            }*/
             $youtubeLinks = array_map(function($match){
                 return "https://www.youtube.com/embed/{$match}?feature=oembed";
             },$matches );
