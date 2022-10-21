@@ -75,6 +75,8 @@ Opciones y sus valores por defecto:
 
 'show_subtype' => false, // Poner en true para mostrar el subtipo de documento de la publicación.
 
+'show_videos' => false, // Poner en true para recuperar los videos de youtube.
+
 'group_subtype' => false, // Poner en true para agrupar las publicaciones por subtipo de documento (ordenados por año de publicación.).
 
 'group_date' => false, // Poner en true para agrupar las publicaciones por año.

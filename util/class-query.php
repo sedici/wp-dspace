@@ -128,7 +128,7 @@ class Query
         return ($results) ? $this->order->cmpXml($results) : $results;
     }
 
-    function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share)
+    function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share, $show_videos = false)
     {
         return (array(
             'description' => $description,
@@ -136,7 +136,8 @@ class Query
             'max_lenght' => $maxlenght,
             'show_subtypes' => $show_subtypes,
             'share' => $share,
-            'date' => $date
+            'date' => $date,
+            'show_videos' => $show_videos
         ));
     }
 

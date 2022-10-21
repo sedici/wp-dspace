@@ -129,16 +129,17 @@ class View {
                             <a class="link" href="' . $link . '" target="_blank">' . 
                             ($this->html_especial_chars($item->title)) .  
                             '</a>
-                         
-                        </div>';  
-                        
+                        </div>';   
 				if ($attributes['show_author']){  $stringHtml=$stringHtml . $this->author($item->author); }
+
+                if ($attributes['show_videos']){
+                    $stringHtml = $stringHtml . '<a class="btn-dspace-show" style="visibility: visible;"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
+                    <a class="btn-dspace-hide" hidden><i style="font-size: 3em;" class="displayDesc fas fa-angle-up" aria-hidden="true"></i></a>
+                    <div class="avancedDescription" hidden>';
+                }   
 				if ($attributes['date']) 
                                 { 
                                    $stringHtml= $stringHtml.'
-                                   <a class="btn-dspace-show" style="visibility: visible;"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
-                                   <a class="btn-dspace-hide" hidden><i style="font-size: 3em;" class="displayDesc fas fa-angle-up" aria-hidden="true"></i></a>
-                                   <div class="avancedDescription" hidden>
                                    <p id="'. $link . '"> </p>
                                    <published>
                                         <div id="sedici-title" >'.__('Fecha: ') .  
@@ -157,8 +158,10 @@ class View {
 				} //end if fecha
 				$stringHtml=$stringHtml . $this->description($attributes['description'], $item,$attributes['max_lenght']);
                                 if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->title ); }
-				
-		return $stringHtml . '</div></article></li><br>';;
+        if ($attributes['show_videos']){
+            $stringHtml = $stringHtml .'</div>';
+        }
+		return $stringHtml . '</article></li><br>';;
 
 	}
 	

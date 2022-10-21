@@ -3,18 +3,23 @@
 
 html=""
 function get_data_and_template(method, data_params, divVideo) {
-     divVideo.append('<div class="searching"><div class="loader"></div><p>Buscando videos...</p></div>');
+    if (divVideo.children('p .notFound').length == 0){
+        divVideo.append('<div class="searching"><div class="loader"></div><p>Buscando videos...</p></div>');
+    }
     jQuery.ajax({
         url: params.ajaxurl,
         type: method,
         data: data_params,
         success: function (response) {
                 var videos = response;
-                $('.searching').hide();
+                divVideo.children('.searching').hide();
                 if ((videos.length >0) && (divVideo.children('iframe').length == 0)) {
                     for (var i = 0; i < videos.length; ++i){
                         divVideo.append('<iframe  width="350" height="370" src="'+ videos[i]+ '"></iframe>');                    }
                     ;
+                }
+                else if ((videos.length == 0) && (divVideo.children('p .notFound').length == 0)) {
+                    divVideo.append('&nbsp<p class="notFound" style="color:red;font-weight:bold;">No se encontraron videos.</p>');
                 }
             }
             })
