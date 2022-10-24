@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Dspace-Plugin Video Edition
+ * Plugin Name: Dspace-Plugin
  * Plugin URI: http://sedici.unlp.edu.ar/
- * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
- * Version: 1.0
+ * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions.[1.2.0] Now you can recover and show videos from your item.
+ * Version: 1.2.0
  * Author: SEDICI - Ezequiel Manzur
  * Author URI: http://sedici.unlp.edu.ar/
  * Text Domain:   wp-dspace
