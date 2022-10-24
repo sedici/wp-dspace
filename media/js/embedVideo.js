@@ -30,17 +30,16 @@ $(document).ready(function (){
 $(".btn-dspace-show").on('click', function (e) {
 
     btnUp = $(this).next().show(); // Mostrar boton para colapsar
-
+    console.log(btnUp);
     btnDown = $(this).first().hide(); // Ocultar boton para mostrar descripción
+    console.log(btnDown);
     link = $(this).parent().children()[1].lastElementChild.href; // Link al elemento en sedici
     var data_params = { action: 'get_videos', instanceData: link};
     description = $(this).next().next(); // Obtener la descripción que esta oculta
+    description = description.show(); // Mostrar descripción
+    console.log(description);
     $addVideo = description.children(":first");
     get_data_and_template('GET', data_params, $addVideo);
-    description = description.show(); // Mostrar descripción
-
-
-
 });
 
 $(".btn-dspace-hide").on('click', function (e) {

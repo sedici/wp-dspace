@@ -133,9 +133,9 @@ class View {
 				if ($attributes['show_author']){  $stringHtml=$stringHtml . $this->author($item->author); }
 
                 if ($attributes['show_videos']){
-                    $stringHtml = $stringHtml . '<a class="btn-dspace-show" style="visibility: visible;"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
-                    <a class="btn-dspace-hide" hidden><i style="font-size: 3em;" class="displayDesc fas fa-angle-up" aria-hidden="true"></i></a>
-                    <div class="avancedDescription" hidden>';
+                    $stringHtml = $stringHtml . '<a class="btn-dspace-show"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
+                    <a class="btn-dspace-hide" style="display:none;"><i style="font-size: 3em;" class="displayDesc fas fa-angle-up" aria-hidden="true"></i></a>
+                    <div class="avancedDescription" style="display:none;">';
                 }   
 				if ($attributes['date']) 
                                 { 
