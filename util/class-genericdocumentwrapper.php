@@ -64,6 +64,10 @@ abstract class genericDocumentWrapper{
     
     public abstract function set_date();
 
+    public function toString(){
+        $str = "Titulo: " . $this->get_title() . " | Link: " . $this->get_link() . " | Resumen: " . $this->get_abstract();
+        return $str;
+    }
 
         
 }

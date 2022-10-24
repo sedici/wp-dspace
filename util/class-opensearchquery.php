@@ -37,7 +37,8 @@ class opensearchQuery extends queryMaker
         $entrys = array();
         if(!empty($xpath))
             foreach ($xpath->entry as $key => $value) {
-                $entrys[]= $value;
+                $entrys[]= new xmlWrapper($value);
+                echo $entrys[]->toString();
             }
 
             //ACA HAY QUE RETORNAR UN VECTOR DE ITEMS
