@@ -13,11 +13,13 @@ abstract class queryMaker
     }
 
     
-    #Builds the Query String
-    #public abstract function buildQueryString();
+    #Builds the Query String. Returns the query (String)
+
+    public abstract function buildQuery($handle, $author, $keywords, $subject, $degree, $max_results,$configuration,$all = "", $subtypes_selected= "");
     
     #Executes the Query. Returns an array of Wrappers (jsonWrapper or xmlWrapper)
-    public abstract function executeQuery($query,$cache);
+
+    public abstract function getPublications($all, $queryStandar, $cache, $subtypes_selected);
     
     public function get_model()
     {
@@ -45,23 +47,6 @@ abstract class queryMaker
             'date' => $date
         ));
     }
-
-
-    function render($results, $attributes, $cmp, $configuration)
-    {
-        $this->set_configuration($configuration);
-        if (strcmp($cmp, CMP_DATE_SUBTYPE) == 0) {
-            return ($this->publicationsByDateSubtype($results, $attributes, ACTIVE_DATE, ACTIVE_SUBTYPE));
-        }
-        if (strcmp($cmp, CMP_DATE) == 0) {
-            return ($this->publicationsByGroup($results, $attributes, ACTIVE_DATE));
-        }
-        if (strcmp($cmp, CMP_SUBTYPE) == 0) {
-            return ($this->publicationsByGroup($results, $attributes, ACTIVE_SUBTYPE));
-        }
-        return $this->allPublications($results, $attributes);
-    }
-
     
     
 }

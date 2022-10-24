@@ -20,11 +20,13 @@ class Shortcode {
         protected $filter;
         protected $validation;
         protected $util;
+        protected $view;
         protected $configuration;
         public function __construct(){
+            $this->view = new \Wp_dspace\View\View();
             $this->filter = new Util\ShortcodeFilter();
             $this->validation = new Util\ShortcodeValidation();
-            $this->util = new Util\Query();
+            $this->util = new Util\opensearchQuery();
         }   
         
 	function plugin_sedici($atts) {
@@ -59,10 +61,10 @@ class Shortcode {
                         $cmp=$this->validation->getOrder($group_subtype,$instance ['group_date']);
                         $this->util->setCmp($cmp);
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
-                        $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject,$degree,$max_results,$this->configuration);
+                        $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject,$degree,$max_results,$this->configuration);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
                         if (!empty($results))
-                                echo $this->util->render ($results,$attributes,$cmp,$this->configuration); 
+                                echo $this->view->render ($results,$attributes,$cmp,$this->configuration); 
                         else
                                 echo "<p> <strong>No se encontraron resultados.</strong></p>";
                     }

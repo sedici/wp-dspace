@@ -6,17 +6,14 @@ class Dspace_Widget extends \WP_Widget
 {
     protected $filter;
     protected $util;
-    protected $api; 
     protected $validation;
     protected $showShortcode;
     protected $configuration;
-
     protected $view;
 
     public function __construct()
     {
         $this->filter = new Util\WidgetFilter();
-        $this->util = new Util\Query();
         $this->api = new Util\apiQuery();
         $this->validation = new Util\WidgetValidation();
         $this->showShortcode = new View\ShowShortcode();
@@ -31,7 +28,6 @@ class Dspace_Widget extends \WP_Widget
      * @overrides
      * Executes when the widget is displayed
      *
-     * FIXME : OMG such a long method
      */
     public function widget($args, $instance)
     {
@@ -48,10 +44,16 @@ class Dspace_Widget extends \WP_Widget
             $config = $instance['config'];
             // FIXME tiene que ser una instancia de configuracion general. 
             $this->configuration = $this->validation->create_configuration($config);
-           
-  
             $queryMethod = $this->configuration->get_query_method();
             
+            if ($queryMethod == "api"){
+                $this->util = new Util\apiQuery();
+            }
+            else{
+                $this->util = new Util\opensearchQuery();
+            }
+
+
             if(!array_key_exists('description',$instance)){
                 $instance['description'] = "";
             }
@@ -63,24 +65,16 @@ class Dspace_Widget extends \WP_Widget
             $group_subtype = ($this->validKey('group_subtype',$instance) === 'on');
             $group_subtype = $this->configuration->is_label_true($group_subtype);
             $cmp = $this->validation->getOrder($group_subtype, $this->validKey('group_year',$instance));
+            
             $this->util->setCmp($cmp);
             
             if ($this->configuration->all_documents()) {
                 $subtypes_selected = $this->filter->selectedSubtypes($instance, $all); //$subtypes: all selected documents subtypes
             } 
             $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share); 
-            switch ($queryMethod){
-                case "api":
-                    $baseURL = $this->configuration->get_api_url();
-                    $queryStandar = $this->api->standarQuery($baseURL,$handle, $author, $keywords , $subject , $degree , $max_results, $this->configuration, $all, $subtypes_selected);
-                    $results = $this->api->executeQuery($queryStandar, $cache);
-                    $articles = $this->api->buildArticles($results,$this->configuration);
-                    break;
-                case "opensearch":
-                    $queryStandar = $this->util->standarQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
-                    $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
-                    break;
-                }
+            
+            $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
+            $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
 
             if (!empty($results) and ($queryMethod != "api")){
                echo $this->view->render($results, $attributes, $cmp, $this->configuration);

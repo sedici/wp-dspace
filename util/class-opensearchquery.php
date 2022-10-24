@@ -6,21 +6,11 @@ define('ACTIVE_SUBTYPE', "subtype");
 define('ACTIVE_DATE', "date");
 define('DEFAULT_QUERY', "&query=*:*");
 
-class Query extends queryMaker
+class opensearchQuery extends queryMaker
 {
     protected $model;
     protected $order;
     protected $subtype_query;
-
-    public function get_model()
-    {
-        return $this->model;
-    }
-
-    public function setCmp($value)
-    {
-        $this->order->setCmp($value);
-    }
 
     public function concatenarCondiciones($words)
     {
@@ -55,7 +45,7 @@ class Query extends queryMaker
     }
 
 
-        public function standarQuery($handle, $author, $keywords, $subject, $degree, $max_results,$configuration){
+    public function buildQuery($handle, $author, $keywords, $subject, $degree, $max_results,$configuration,$all = "", $subtypes_selected= ""){
         $this->subtype_query = $configuration->get_subtype_query();
         $queryEstandar = $configuration->standar_query($max_results);
         $query= Array();
@@ -125,17 +115,6 @@ class Query extends queryMaker
         return ($results) ? $this->order->cmpXml($results) : $results;
     }
 
-    function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share)
-    {
-        return (array(
-            'description' => $description,
-            'show_author' => $show_author,
-            'max_lenght' => $maxlenght,
-            'show_subtypes' => $show_subtypes,
-            'share' => $share,
-            'date' => $date
-        ));
-    }
 
 
 }
