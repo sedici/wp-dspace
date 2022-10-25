@@ -15,7 +15,7 @@ function get_data_and_template(method, data_params, divVideo) {
                 divVideo.children('.searching').hide();
                 if ((videos.length >0) && (divVideo.children('iframe').length == 0)) {
                     for (var i = 0; i < videos.length; ++i){
-                        divVideo.append('<iframe  width="350" height="370" src="'+ videos[i]+ '"></iframe>');                    }
+                        divVideo.append('<div class="containerDspaceVideo"><iframe class="responsive-iframe" src="'+ videos[i]+ '"></iframe></div><br>');                    }
                     ;
                 }
                 else if ((videos.length == 0) && (divVideo.children('p .notFound').length == 0)) {
