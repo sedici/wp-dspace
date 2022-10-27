@@ -30,8 +30,7 @@ class View {
             $names = array ();
             foreach ( $authors as $author ) {
             if( isset($author ) && ($author != FALSE)){
-            //    if(!empty($author->get_name ())){
-                    array_push ($names, "<author><name>".$this->link_author($author->name)."</name></author>");
+                    array_push ($names, "<author><name>".$this->link_author($author)."</name></author>");
                 }
             }//end foreach autores
             if (!empty($names)){
@@ -44,6 +43,7 @@ class View {
             }
             return $stringHtml;
 	}
+
 	public function is_description($des){
 		return  ( ($des == "description" || $des == "summary"  ));
 	}
@@ -60,7 +60,7 @@ class View {
 	
 	public function show_description ($description,$item,$maxlenght){
        
-		if ($description == "description") { 
+	/*	if ($description == "description") { 
                      $stringHtml=' <div id="sedici-title">'.__("Resumen:");  
                         $show_text = explode("\n", $item->summary );
                         $show_text = $show_text[2];
@@ -68,22 +68,17 @@ class View {
                 } else {  
                      $stringHtml='<div id="sedici-title">'.__('Sumario:'); 
                         $show_text = $item->summary;
-                } 
-
+                }*/ 
+                $stringHtml=' <div id="sedici-title">'.__("Resumen:");  
+                $show_text = $item->get_abstract();
+                
                 $stringHtml=$stringHtml.'<span class="sedici-content">'. 
-                    $this->show_text($show_text,$maxlenght).
-                    
+                    $this->show_text($show_text,$maxlenght).   
                 '</span></div>';
                 
 		return $stringHtml;
 	}
 	
-        public function dctype($entry){
-		//return subtype document
-		$description = $entry->summary;
-		$dctype = explode ( "\n", $description );
-		return ($dctype[0]);
-	}
         
 	public function description($description,$item,$maxlenght){
 		$stringHtml="";
@@ -116,34 +111,34 @@ class View {
 
         
 	public function document($item,$attributes){
-        $link = $item->link->attributes()->href;  #Listo
-        $dc_values= $item->children('dc', TRUE);
-        $date=date_create($dc_values->date);
+        $link = $item->get_link();  #Listo
+        //$dc_values= $item->children('dc', TRUE); 
+        $date= $item->get_date();
          	
 		$stringHtml = '<li><article>
-			<title>' . $item->title . '</title>
+			<title>' . $item->get_title() . '</title>
                         <div id="sedici-title">
                             <a href="' . $link . '" target="_blank">' . 
-                            ($this->html_especial_chars($item->title)) .  
+                            ($this->html_especial_chars($item->get_title())) .  
                             '</a>
                         </div>';  
-				if ($attributes['show_author']){  $stringHtml=$stringHtml . $this->author($item->author); }
+				if ($attributes['show_author']){  $stringHtml=$stringHtml . $this->author($item->get_authors()); }
 				if ($attributes['date']) 
                                 { 
                                    $stringHtml= $stringHtml.'<published>
                                         <div id="sedici-title">'.__('Fecha: ') .  
-                                        '<span class="sedici-content">' .date_format($date,"d/m/Y")  . '</span></div>
+                                        '<span class="sedici-content">' . $date . '</span></div>
                                     </published>';
 				} //end if fecha  
                                 if ($attributes['show_subtypes'] ) 
                                 { 
                                     $stringHtml=$stringHtml . '<dc:type>
                                         <div id="sedici-title">' . __('Tipo de documento: '). 
-                                            '<span class="sedici-content">' . $this->dctype($item) . '</span></div>
-                                    </dc:type>';
+                                            '<span class="sedici-content">' . $item->get_subtype() . '</span></div> 
+                                    </dc:type>';  
 				} //end if fecha
 				$stringHtml=$stringHtml . $this->description($attributes['description'], $item,$attributes['max_lenght']);
-                                if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->title ); }
+                                if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->get_title() ); }
 				
 		return $stringHtml . '</article></li>';;
 
@@ -159,7 +154,7 @@ class View {
             }
             return true;
         }
-      
+    
 
        
 

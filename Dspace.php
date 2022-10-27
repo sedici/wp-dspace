@@ -2,9 +2,9 @@
 /**
  * Plugin Name: Dspace-Plugin
  * Plugin URI: http://sedici.unlp.edu.ar/
- * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions
+ * Description: This plugin connects the repository SEDICI in wordpress, with the purpose of showing the publications of authors or institutions. [2.0.0] Added support to Dspace 7 API.
  * Version: 2.0-0
- * Author: SEDICI - Ezequiel Manzur
+ * Author: SEDICI - Pablo Terrone - Ezequiel Manzur 
  * Author URI: http://sedici.unlp.edu.ar/
  * Text Domain:   wp-dspace
  * Copyright (c) 2015 SEDICI UNLP, http://sedici.unlp.edu.ar

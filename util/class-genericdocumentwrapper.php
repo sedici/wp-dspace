@@ -14,11 +14,15 @@ abstract class genericDocumentWrapper{
     public $abstract;
     public $title;
 
+    public $subtype;
+
     public function __construct($doc)
     {
         $this->document = $doc;
         $this->set_link();
         $this->set_authors();
+        $this->format_authors();
+        $this->set_subtype();
         $this->set_abstract();
         $this->set_title();
         $this->set_date();
@@ -49,8 +53,19 @@ abstract class genericDocumentWrapper{
     public function getDocumentType(){
         return $this->type;
     }
+
+    public function get_subtype(){
+        return $this->subtype;
+    }
     
     public abstract function get_author_name($author);
+
+    public abstract function format_authors();
+
+    public function toString(){
+        $str = "Titulo: " . $this->get_title() . "SUBTIPOS -> ". $this->get_subtype() ./* " | Link: " . $this->get_link() . " | Resumen: " . $this->get_abstract() .*/ "|" . "FECHA:" .  $this->get_date() /*var_dump($this->get_authors())*/;
+        return $str;
+    }
 
     #       <---SETTERS--->
 
@@ -58,16 +73,15 @@ abstract class genericDocumentWrapper{
 
     public abstract function set_authors();
 
+    public abstract function set_subtype();
+
     public abstract function set_abstract();
 
     public abstract function set_title();
     
     public abstract function set_date();
 
-    public function toString(){
-        $str = "Titulo: " . $this->get_title() . " | Link: " . $this->get_link() . " | Resumen: " . $this->get_abstract();
-        return $str;
-    }
+
 
         
 }

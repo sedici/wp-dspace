@@ -15,7 +15,8 @@ class jsonWrapper extends genericDocumentWrapper {
     }
 
     public function set_abstract(){
-        $this->abstract = $this->get_metadata("dcterms.abstract");
+        $abstract = $this->get_metadata("dcterms.abstract");
+        $this->abstract = $abstract[0]["value"];
     }
 
     public function set_title(){
@@ -23,7 +24,8 @@ class jsonWrapper extends genericDocumentWrapper {
     }
 
     public function set_date(){
-        $this->date =  date_create($this->get_metadata("dc.date.available"));
+        $date =  date_create($this->get_metadata("dc.date.available")[0]["value"]);
+        $this->date = date_format($date,"d/m/Y");
     }
     
     public function get_metadata($metaField){
@@ -33,6 +35,21 @@ class jsonWrapper extends genericDocumentWrapper {
     public function get_author_name($author){
        return $author["value"];
     }
+
+    public function set_subtype(){
+        $this->subtype =$this->get_metadata("dc.type")[0]["value"];
+    }
+
+    public function format_authors(){
+        $authors = $this->get_authors();
+        $new_array = [];
+        foreach ($authors as $auth){
+            array_push($new_array,$auth["value"]);
+    }
+    $this->authors = $new_array;
+    return $new_array;
+
+}
 
 }
 

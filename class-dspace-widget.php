@@ -76,7 +76,7 @@ class Dspace_Widget extends \WP_Widget
             $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
             $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
 
-            if (!empty($results) and ($queryMethod != "api")){
+            if (!empty($results)){
                echo $this->view->render($results, $attributes, $cmp, $this->configuration);
             }
             else

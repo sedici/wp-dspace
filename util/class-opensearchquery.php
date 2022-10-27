@@ -37,10 +37,9 @@ class opensearchQuery extends queryMaker
         $entrys = array();
         if(!empty($xpath))
             foreach ($xpath->entry as $key => $value) {
-                $entrys[]= new xmlWrapper($value);
-                echo $entrys[]->toString();
+                $wrapper = new xmlWrapper($value);
+                array_push($entrys,$wrapper);
             }
-
             //ACA HAY QUE RETORNAR UN VECTOR DE ITEMS
         return $entrys;
     }
@@ -107,7 +106,7 @@ class opensearchQuery extends queryMaker
     function getPublications($all, $queryStandar, $cache, $subtypes_selected)
     {   
       
-        if ($all) {
+        if (true) {
             $results = $this->executeQuery($queryStandar, $cache);
            
         } else {

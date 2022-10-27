@@ -209,7 +209,7 @@ public function get_api_url(){
 }
 
 public function get_query_method(){
-    if( $this->config["queryMethod"] == "true"){
+    if ((isset($this->config["queryMethod"])) && ( $this->config["queryMethod"] == "true")){
         return "api";
     }
     else{

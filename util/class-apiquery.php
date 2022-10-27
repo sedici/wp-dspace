@@ -41,10 +41,10 @@ class apiQuery extends queryMaker{
       if(!empty($max_results)){
         $query= $query . "size=" . $max_results . "&";
       }
-      if($all != true){
+     /* if($all != true){
         $query= $query . $this->buildFilter('itemtype',$subtypes_selected);
       }
-
+   */
       $query = substr($query, 0, -1); 
      
       return $query;

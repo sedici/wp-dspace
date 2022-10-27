@@ -26,7 +26,6 @@ class Shortcode {
             $this->view = new \Wp_dspace\View\View();
             $this->filter = new Util\ShortcodeFilter();
             $this->validation = new Util\ShortcodeValidation();
-            $this->util = new Util\opensearchQuery();
         }   
         
 	function plugin_sedici($atts) {
@@ -40,6 +39,15 @@ class Shortcode {
                     $subtypes="";
                     $config  = $instance ['config'];
                     $this->configuration = $this->validation->create_configuration($config);
+                    $queryMethod = $this->configuration->get_query_method();
+                    
+                    if ($queryMethod == "api"){
+                        $this->util = new Util\apiQuery();
+                    }
+                    else{
+                        $this->util = new Util\opensearchQuery();
+                    }
+        
                     if (!is_null($this->configuration)){ 
                         $description = ($instance ['description'] === 'true');
                         $description = $this->configuration->is_description($description);
@@ -63,11 +71,14 @@ class Shortcode {
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
                         $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject,$degree,$max_results,$this->configuration);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
-                        if (!empty($results))
-                                echo $this->view->render ($results,$attributes,$cmp,$this->configuration); 
-                        else
+                        if (!empty($results)){
+                             echo $this->view->render ($results,$attributes,$cmp,$this->configuration); 
+                        }
+
+                        else{
                                 echo "<p> <strong>No se encontraron resultados.</strong></p>";
-                    }
+                        }
+                        }
             }
         }    
 }
