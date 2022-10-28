@@ -28,9 +28,10 @@ class xmlWrapper extends genericDocumentWrapper {
 		$this->subtype= $dctype[0];
     }
 
-    // Recibe $attributes['description']
     public function set_abstract(){
-        $this->abstract = $this->document->summary;
+        $abstract = $this->document->summary;
+        $abstract = explode ( "\n", $abstract );
+        $this->abstract = $abstract[2];
     }
 
     public function set_title(){
