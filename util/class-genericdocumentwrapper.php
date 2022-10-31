@@ -62,8 +62,10 @@ abstract class genericDocumentWrapper{
 
     public abstract function format_authors();
 
+
+    ## Funcion para hacer Debugg de los Wrappers
     public function toString(){
-        $str = "Titulo: " . $this->get_title() . "SUBTIPOS -> ". $this->get_subtype() ./* " | Link: " . $this->get_link() . " | Resumen: " . $this->get_abstract() .*/ "|" . "FECHA:" .  $this->get_date() /*var_dump($this->get_authors())*/;
+        $str = " | Titulo: " . $this->get_title() . ". Subtipos: ". $this->get_subtype() . " . Link: " . $this->get_link() . ". Resumen: " . $this->get_abstract() . ". Fecha:" .  $this->get_date() . " | ";
         return $str;
     }
 
