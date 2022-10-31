@@ -3,7 +3,8 @@
 
 html=""
 function get_data_and_template(method, data_params, divVideo) {
-    if (divVideo.children('p .notFound').length == 0){
+    console.log(divVideo.children('.containerDspaceVideo'));
+    if ((divVideo.children('.notFound').length == 0) && (divVideo.children('.containerDspaceVideo').length == 0)) {
         divVideo.append('<div class="searching"><div class="loader"></div><p>Buscando videos...</p></div>');
     }
     jQuery.ajax({
@@ -13,12 +14,12 @@ function get_data_and_template(method, data_params, divVideo) {
         success: function (response) {
                 var videos = response;
                 divVideo.children('.searching').hide();
-                if ((videos.length >0) && (divVideo.children('iframe').length == 0)) {
+                if ((videos.length >0) && (divVideo.children('.containerDspaceVideo').length == 0)) {
                     for (var i = 0; i < videos.length; ++i){
                         divVideo.append('<div class="containerDspaceVideo"><iframe class="responsive-iframe" src="'+ videos[i]+ '"></iframe></div><br>');                    }
                     ;
                 }
-                else if ((videos.length == 0) && (divVideo.children('p .notFound').length == 0)) {
+                else if ((videos.length == 0) && (divVideo.children('.notFound').length == 0)) {
                     divVideo.append('&nbsp<p class="notFound" style="color:red;font-weight:bold;">No se encontraron videos.</p>');
                 }
             }
@@ -30,14 +31,12 @@ $(document).ready(function (){
 $(".btn-dspace-show").on('click', function (e) {
 
     btnUp = $(this).next().show(); // Mostrar boton para colapsar
-    console.log(btnUp);
     btnDown = $(this).first().hide(); // Ocultar boton para mostrar descripción
-    console.log(btnDown);
     link = $(this).parent().children()[1].lastElementChild.href; // Link al elemento en sedici
     var data_params = { action: 'get_videos', instanceData: link};
     description = $(this).next().next(); // Obtener la descripción que esta oculta
     description = description.show(); // Mostrar descripción
-    console.log(description);
+    //console.log(description);
     $addVideo = description.children(":first");
     get_data_and_template('GET', data_params, $addVideo);
 });
