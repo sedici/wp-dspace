@@ -3,7 +3,6 @@
 
 html=""
 function get_data_and_template(method, data_params, divVideo) {
-    console.log(divVideo.children('.containerDspaceVideo'));
     if ((divVideo.children('.notFound').length == 0) && (divVideo.children('.containerDspaceVideo').length == 0)) {
         divVideo.append('<div class="searching"><div class="loader"></div><p>Buscando videos...</p></div>');
     }
@@ -36,7 +35,6 @@ $(".btn-dspace-show").on('click', function (e) {
     var data_params = { action: 'get_videos', instanceData: link};
     description = $(this).next().next(); // Obtener la descripción que esta oculta
     description = description.show(); // Mostrar descripción
-    //console.log(description);
     $addVideo = description.children(":first");
     get_data_and_template('GET', data_params, $addVideo);
 });
