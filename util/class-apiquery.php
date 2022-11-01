@@ -26,8 +26,16 @@ class apiQuery extends queryMaker{
       $baseURL = $configuration->get_api_url();
       $query = $baseURL . "/discover/search/objects?";
       if(!empty($handle)){
-        $query = $query . "scope=" . $handle . "&"; //Funciona solo con el UUID del centro
-        //$str= $str . lugarDesarrolloFilter($handle);
+
+      // Si el usuario ingresa el handle y no el ID, hacemos esta consulta para obtener el UUID :
+       if (strpos($handle, '/') !== false){
+         $str = $query . 'query=handle:"'. $handle . '"';
+         $request = wp_remote_get($str);
+         $result = wp_remote_retrieve_body($request);
+         $result = json_decode($result,true);
+         $handle = $result['_embedded']['searchResult']['_embedded']['objects'][0]['_embedded']['indexableObject']['uuid'];
+      }
+        $query = $query . "scope=" . $handle . "&"; 
       }
       if(!empty($author)){
         $query= $query . $this->buildFilter('author',$author);
