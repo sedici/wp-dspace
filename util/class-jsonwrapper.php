@@ -7,7 +7,6 @@ class jsonWrapper extends genericDocumentWrapper {
     public $type = "json";
     
     public function set_link(){
-      //  $this->link = $this->document['_links']['indexableObject']['href'];
         $this->link = $this->get_metadata("dc.identifier.uri")[0]["value"];
     }
 

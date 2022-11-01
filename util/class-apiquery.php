@@ -65,8 +65,12 @@ class apiQuery extends queryMaker{
       $wrappedItems = [];
       $items = $json['_embedded']['searchResult']['_embedded']['objects'];
       foreach ($items as $item){
-        $wrapped = new jsonWrapper($item);
-        array_push($wrappedItems,$wrapped);
+
+        // Este endpoint devuelve colecciones, items y comunidades. Hay que filtrar todo lo que no sea un item
+        if($item["_embedded"]['indexableObject']["type"] == "item"){
+          $wrapped = new jsonWrapper($item);
+          array_push($wrappedItems,$wrapped);
+        }    
       }
       return $wrappedItems;
     }

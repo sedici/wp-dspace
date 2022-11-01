@@ -26,6 +26,12 @@ abstract class genericDocumentWrapper{
         $this->set_abstract();
         $this->set_title();
         $this->set_date();
+        if ($this->type == "json"){
+           /* echo "---------------";
+            var_dump($this->document["_embedded"]["indexableObject"]['metadata']);
+            echo "---------------";
+            echo '\n'; */
+        }
     }
 
     
