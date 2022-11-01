@@ -11,7 +11,11 @@ class jsonWrapper extends genericDocumentWrapper {
     }
 
     public function set_authors(){
-        $this->authors = $this->get_metadata("dcterms.creator.author");
+        $authors = $this->get_metadata("dcterms.creator.author");
+        if ($authors == ""){
+            $authors = $this->get_metadata("dcterms.creator.compilator"); // En el caso especial de que sean Anales
+        }
+        $this->authors= $authors;
     }
 
     public function set_abstract(){
@@ -29,7 +33,12 @@ class jsonWrapper extends genericDocumentWrapper {
     }
     
     public function get_metadata($metaField){
-        return $this->document["_embedded"]["indexableObject"]['metadata'][$metaField];
+        if (isset($this->document["_embedded"]["indexableObject"]['metadata'][$metaField])){
+            return $this->document["_embedded"]["indexableObject"]['metadata'][$metaField];
+        }
+        else {
+            return "";
+        }
     }
  
     public function get_author_name($author){
