@@ -72,7 +72,7 @@ class apiQuery extends queryMaker{
           array_push($wrappedItems,$wrapped);
         }    
       }
-      return $wrappedItems;
+      return ($wrappedItems) ? $this->order->cmpXml($wrappedItems) : $wrappedItems;
     }
     
     // Funciones auxiliares para armar el query

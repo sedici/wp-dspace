@@ -31,6 +31,10 @@ class jsonWrapper extends genericDocumentWrapper {
         $date =  date_create($this->get_metadata("dc.date.available")[0]["value"]);
         $this->date = date_format($date,"d/m/Y");
     }
+
+    public function get_raw_date(){
+        return  date_create($this->get_metadata("dc.date.available")[0]["value"]);
+    }
     
     public function get_metadata($metaField){
         if (isset($this->document["_embedded"]["indexableObject"]['metadata'][$metaField])){

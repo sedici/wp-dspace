@@ -56,6 +56,8 @@ abstract class genericDocumentWrapper{
         return $this->date;
     }
 
+    public abstract function get_raw_date();
+
     public function getDocumentType(){
         return $this->type;
     }

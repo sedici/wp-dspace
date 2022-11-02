@@ -1,8 +1,10 @@
 <?php
 namespace Wp_dspace\View;
-
+define('ACTIVE_SUBTYPE', "subtype");
+define('ACTIVE_DATE', "date");
 class View {
         protected $configuration;
+    
 
 	function __construct() {
 		// Register style sheet.
@@ -112,7 +114,6 @@ class View {
         
 	public function document($item,$attributes){
         $link = $item->get_link();  #Listo
-        //$dc_values= $item->children('dc', TRUE); 
         $date= $item->get_date();
          	
 		$stringHtml = '<li><article>
@@ -146,11 +147,10 @@ class View {
 	
         public function group($item,$group){
            if ($group == "date") {
-                $dc_values= $item->children('dc', TRUE);
-                $date=date_create($dc_values->date);
+                $date = $item->get_raw_date();
                 return (int) date_format($date,"Y") ;
             } elseif ( $group == "subtype" ) {
-                return $this->dctype($item);
+                return $item->get_subtype();
             }
             return true;
         }

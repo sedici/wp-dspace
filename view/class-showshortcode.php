@@ -89,7 +89,7 @@ class ShowShortcode {
           $shortcode_aux= $shortcode_aux . $this->is_on('group_subtype', $instance['group_subtype']);
         }
         if(array_key_exists('group_year',$instance)){
-          $shortcode_aux= $shortcode_aux . $this->is_on('group_year', $instance['group_year']);
+          $shortcode_aux= $shortcode_aux . $this->is_on('group_date', $instance['group_year']);
         }
         if(array_key_exists('description',$instance)){
           $shortcode_aux= $shortcode_aux . $this->is_on('description', $instance['description']);

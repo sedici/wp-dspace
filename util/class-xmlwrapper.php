@@ -17,6 +17,11 @@ class xmlWrapper extends genericDocumentWrapper {
         $this->date = date_format($date,"d/m/Y"); 
     }
 
+    public function get_raw_date(){
+        $dc_values= $this->document->children('dc', TRUE);
+        return date_create($dc_values->date);
+    }
+
     public function set_authors(){
         $this->authors = $this->document->author;
     }

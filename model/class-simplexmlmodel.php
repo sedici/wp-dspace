@@ -55,30 +55,24 @@ class SimpleXMLModel
 	public function type($entry)
 	{
 		//return subtype document
-		$description = $entry->summary;
-		$filter = explode("\n", $description);
-		return ($filter[0]);
+		$description = $entry->get_abstract();
+		return $description;
 	}
 
 
 	public function date_utf_fotmat($entry)
 	{
-
-		$dc_values = $entry->children('dc', TRUE);
-		$date = date_create($dc_values->date);
+		$date = $entry->get_raw_date();
 		return  date_format($date, "Y-m-d");
 	}
 	public function date($entry)
 	{
-
-		$dc_values = $entry->children('dc', TRUE);
-		$date = date_create($dc_values->date);
+		$date = $entry->get_raw_date();
 		return date_format($date, "d/m/Y");
 	}
 	public function year($entry)
 	{
-		$dc_values = $entry->children('dc', TRUE);
-		$date = date_create($dc_values->date);
+		$date = $entry->get_raw_date();
 		return date_format($date, "Y");
 	}
 
