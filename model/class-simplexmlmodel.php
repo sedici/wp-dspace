@@ -35,7 +35,12 @@ class SimpleXMLModel
 	public function loadPath($str, $duration = 1)
 	{
         $transient_data = $this->saveData($str, $duration);
-		$xml = simplexml_load_string($transient_data, 'SimpleXMLElement');
+		try{
+			$xml = simplexml_load_string($transient_data, 'SimpleXMLElement');
+		}
+		catch(Exception $e){
+			echo "Lo sentimos, esta solicitud posee caracteres inválidos.";
+		}
 		return ($xml);
 	}
 

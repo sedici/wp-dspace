@@ -2,8 +2,6 @@
 
 namespace Wp_dspace\Util;
 
-define('ACTIVE_SUBTYPE', "subtype");
-define('ACTIVE_DATE', "date");
 define('DEFAULT_QUERY', "&query=*:*");
 
 class opensearchQuery extends queryMaker

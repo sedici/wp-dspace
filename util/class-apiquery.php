@@ -1,8 +1,6 @@
 <?php
 
 namespace Wp_dspace\Util;
-
-
 define('DEFAULT_URL' ,"https://host170.sedici.unlp.edu.ar");
 define('ENDPOINT', "/server/api/discover/search/objects?");
 include_once dirname(__DIR__) . "/view/class-view.php";
@@ -49,10 +47,10 @@ class apiQuery extends queryMaker{
       if(!empty($max_results)){
         $query= $query . "size=" . $max_results . "&";
       }
-     /* if($all != true){
+      if($all != true){
         $query= $query . $this->buildFilter('itemtype',$subtypes_selected);
       }
-   */
+   
       $query = substr($query, 0, -1); 
      
       return $query;
