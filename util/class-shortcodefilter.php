@@ -26,6 +26,7 @@ class ShortcodeFilter extends \Wp_dspace\Util\Filter {
 		'preprint' => false,
 		'book' => false,
 		'working_paper' => false,
+        'show_videos'=>false,
 		'technical_report' => false,
 		'conference_object' => false,
 		'revision' => false,

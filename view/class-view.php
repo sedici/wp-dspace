@@ -8,14 +8,19 @@ class View {
 
 	function __construct() {
 		// Register style sheet.
+
+  
+        
 	    wp_register_style ( 'Vista', plugin_dir_url (__FILE__).'../media/css/styles.css' );
 		wp_enqueue_style ( 'Vista' );
+        wp_register_script('embedVideo', plugin_dir_url (__FILE__).'../media/js/embedVideo.js',array('jquery'));
+        wp_enqueue_script('embedVideo');
+        $params = array('ajaxurl' => admin_url('admin-ajax.php'));
+        wp_localize_script('embedVideo', 'params', $params);
 //        wp_register_script( 'jquery.Pagination',plugin_dir_url (__FILE__ ).'../media/js/jquery.pajinate.js', array ("jquery"), null, true );
-//        wp_register_script( 'scripspagination',plugin_dir_url (__FILE__ ).'../media/js/scripspagination.js' , array (), null, true);
 //        wp_enqueue_script ('jquery.Pagination');
 //        wp_enqueue_script ('scripspagination');
 	}
-
 
     public function set_configuration($config){
             $this->configuration = $config;
@@ -116,21 +121,32 @@ class View {
         $link = $item->get_link();  #Listo
         $date= $item->get_date();
          	
-		$stringHtml = '<li><article>
+		$stringHtml = '<li><article style="padding:10px;border: 2px solid black;">
 			<title>' . $item->get_title() . '</title>
-                        <div id="sedici-title">
-                            <a href="' . $link . '" target="_blank">' . 
+                        <div id="sedici-title"> 
+                            <a class="link" href="' . $link . '" target="_blank">' . 
                             ($this->html_especial_chars($item->get_title())) .  
                             '</a>
-                        </div>';  
+                        </div>';   
 				if ($attributes['show_author']){  $stringHtml=$stringHtml . $this->author($item->get_authors()); }
+
+                if ($attributes['show_videos']){
+                    $stringHtml = $stringHtml . '<a class="btn-dspace-show"><i style="font-size: 3em;" class="displayDesc fas fa-angle-down" aria-hidden="true"></i></a>
+                    <a class="btn-dspace-hide" style="display:none;"><i style="font-size: 3em;" class="displayDesc fas fa-angle-up" aria-hidden="true"></i></a>
+                    <div class="avancedDescription" style="display:none;">';
+                }   
 				if ($attributes['date']) 
                                 { 
-                                   $stringHtml= $stringHtml.'<published>
-                                        <div id="sedici-title">'.__('Fecha: ') .  
+                                   $stringHtml= $stringHtml.'
+                                   <p id="'. $link . '"> </p>
+                                   <published>
+                                        <div id="sedici-title" >'.__('Fecha: ') .  
                                         '<span class="sedici-content">' . $date . '</span></div>
                                     </published>';
-				} //end if fecha  
+				}
+                else{
+                    $stringHtml = $stringHtml.'<div>';
+                } //end if fecha
                                 if ($attributes['show_subtypes'] ) 
                                 { 
                                     $stringHtml=$stringHtml . '<dc:type>
@@ -139,9 +155,11 @@ class View {
                                     </dc:type>';  
 				} //end if fecha
 				$stringHtml=$stringHtml . $this->description($attributes['description'], $item,$attributes['max_lenght']);
-                                if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->get_title() ); }
-				
-		return $stringHtml . '</article></li>';;
+                                if ($attributes['share']){ $stringHtml=$stringHtml . $this->share($link,$item->title ); }
+        if ($attributes['show_videos']){
+            $stringHtml = $stringHtml .'</div>';
+        }
+		return $stringHtml . '</article></li><br>';;
 
 	}
 	
@@ -193,6 +211,21 @@ class View {
             }//end if
             return $stringHtml ;
         }
+
+        /**
+         *  @param String $link web page URL to extract youtube video from
+         */
+        public function get_videos($link){
+            $html = file_get_contents($link);
+            preg_match_all("#(?<=v=|v\/|vi=|vi\/|youtu.be\/)[a-zA-Z0-9_-]{11}#", $html, $matches);
+            $matches = array_unique($matches[0]);
+            $youtubeLinks = array_map(function($match){
+                return "https://www.youtube.com/embed/{$match}?feature=oembed";
+            },$matches );
+            return $youtubeLinks;
+        }
+
+
         
         public function closeDiv($actualTitle,$entrys,$position,$group){
             if ($position < count($entrys)) {

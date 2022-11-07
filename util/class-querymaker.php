@@ -36,7 +36,7 @@ abstract class queryMaker
         return explode(';', $imput);
     }
 
-    function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share)
+    function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share, $show_videos = false)
     {
         return (array(
             'description' => $description,
@@ -44,7 +44,8 @@ abstract class queryMaker
             'max_lenght' => $maxlenght,
             'show_subtypes' => $show_subtypes,
             'share' => $share,
-            'date' => $date
+            'date' => $date,
+            'show_videos' => $show_videos
         ));
     }
     

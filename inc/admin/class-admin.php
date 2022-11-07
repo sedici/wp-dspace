@@ -333,6 +333,14 @@ class Admin
         wp_send_json($shortcode);
     }
 
+    public function get_videos(){
+        $view = new \Wp_dspace\View\View();
+        $data = $_GET['instanceData'];
+        $html = $view->get_videos($data);
+        wp_send_json($html);
+    }
+
+
     // Function to get a repository by Name
     public function get_repo_support(){
         $name = $_GET['name'];

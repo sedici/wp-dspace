@@ -61,6 +61,7 @@ class Shortcode {
                         if ($this->configuration->all_documents()){
                             $all = $this->filter->selectedSubtypes($instance, $subtypes);
                         }
+                        $show_videos= ($instance ['show_videos'] === 'true');
                         $show_subtypes = ($instance ['show_subtype'] === 'true');
                         $show_subtypes= $this->configuration->is_label_true($show_subtypes);
                         $share=($instance ['share'] === 'true');
@@ -68,7 +69,7 @@ class Shortcode {
                         $group_subtype = $this->configuration->is_label_true( $group_subtype);
                         $cmp=$this->validation->getOrder($group_subtype,$instance ['group_date']);
                         $this->util->setCmp($cmp);
-                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share);
+                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share, $show_videos);
                         $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject,$degree,$max_results,$this->configuration);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
                         if (!empty($results)){
