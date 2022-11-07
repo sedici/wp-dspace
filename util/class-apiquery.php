@@ -19,7 +19,7 @@ class apiQuery extends queryMaker{
     }
 
 
-    function buildQuery($handle, $author, $keywords , $subject , $degree , $max_results, $configuration, $all = "", $subtypes_selected= ""){
+    function buildQuery($handle, $author, $keywords , $subject , $degree , $max_results, $configuration, $all = true, $subtypes_selected= ""){
       //Falta agregar $all y $subtypes_selected a la lista de parametros reales
       $baseURL = $configuration->get_api_url();
       $query = $baseURL . "/discover/search/objects?";
@@ -52,7 +52,6 @@ class apiQuery extends queryMaker{
       }
    
       $query = substr($query, 0, -1); 
-     
       return $query;
     }
     

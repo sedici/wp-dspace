@@ -35,12 +35,10 @@ class SimpleXMLModel
 	public function loadPath($str, $duration = 1)
 	{
         $transient_data = $this->saveData($str, $duration);
-		try{
+		// FIXME: Sería mejor incorporar una libreria, esta solución no considera muchos caracteres especiales
+			$some_special_chars = array("√","&");
+			$transient_data   = str_replace($some_special_chars, "", $transient_data);
 			$xml = simplexml_load_string($transient_data, 'SimpleXMLElement');
-		}
-		catch(Exception $e){
-			echo "Lo sentimos, esta solicitud posee caracteres inválidos.";
-		}
 		return ($xml);
 	}
 
