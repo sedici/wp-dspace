@@ -242,9 +242,7 @@ return;
              } 
             $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date')?>
         </p>
-        
 
-        <!-- Primer parte para agregar checkbox para mostrar videos -->
         <p>
             <?php 
             if(!array_key_exists('show_videos',$instance)){

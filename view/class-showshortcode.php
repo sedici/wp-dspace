@@ -147,7 +147,7 @@ class ShowShortcode {
             $instance = array();
           //Aca convierto el array de objetos en un $instance que acepte la función
           $numeroDeWidget = $this->search_Widget_Number($form_array);
-          $keywords = ['config','handle','author','keywords','description','share','date','subject','degree','max_results','group_subtype','group_year','show_author','show_videos','maxlenght','cache','max_results','all'];
+          $keywords = ['config','handle','author','keywords','description','share','date','subject','degree','max_results','group_subtype','group_year','show_author','show_videos','maxlenght','cache','max_results','show_subtype','all'];
           foreach($keywords as $keyword){
               $instance[$keyword] = $this->get_Elements( $this->buildSearchString($numeroDeWidget,$keyword)  ,$form_array);
           }
