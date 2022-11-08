@@ -244,23 +244,15 @@ return;
         </p>
         
 
-        <!-- Primer parte para agregar checkbox para mostrar videos 
+        <!-- Primer parte para agregar checkbox para mostrar videos -->
         <p>
-            /*<?php 
+            <?php 
             if(!array_key_exists('show_videos',$instance)){
                 $instance['show_videos'] = "";
              } 
             $this->show_checkbox($instance['show_videos'], 'Mostrar videos', 'show_videos')?>
-            */    
+             
     </p>
-            -->
-        <p>
-            <?php 
-            if(!array_key_exists('date',$instance)){
-                $instance['date'] = "";
-             } 
-            $this->show_checkbox($instance['date'], 'Mostrar Fecha', 'date')?>
-        </p>
         <div class="conditional_config"
             <?php echo $this->configuration->get_support_subtype() ? '' : 'style="display: none;"'; ?>>
         <p>
@@ -408,6 +400,7 @@ return;
         }
         $this->configuration = $this->validation->create_configuration($instance['config']);
         if (empty($instance)) {
+            var_dump($instance);
             $instance = array('all' => 'on');
         }
         ?>

@@ -100,6 +100,9 @@ class ShowShortcode {
         if(array_key_exists('show_author',$instance)){
           $shortcode_aux= $shortcode_aux . $this->is_on('show_author', $instance['show_author']);
         }
+        if(array_key_exists('show_videos',$instance)){
+          $shortcode_aux= $shortcode_aux . $this->is_on('show_videos', $instance['show_videos']);
+        }
         return $shortcode_aux;
     }    
     public function search_Widget_Number($form_array){
@@ -144,7 +147,7 @@ class ShowShortcode {
             $instance = array();
           //Aca convierto el array de objetos en un $instance que acepte la función
           $numeroDeWidget = $this->search_Widget_Number($form_array);
-          $keywords = ['config','handle','author','keywords','description','share','date','subject','degree','max_results','group_subtype','group_year','show_author','maxlenght','cache','max_results','all'];
+          $keywords = ['config','handle','author','keywords','description','share','date','subject','degree','max_results','group_subtype','group_year','show_author','show_videos','maxlenght','cache','max_results','all'];
           foreach($keywords as $keyword){
               $instance[$keyword] = $this->get_Elements( $this->buildSearchString($numeroDeWidget,$keyword)  ,$form_array);
           }
