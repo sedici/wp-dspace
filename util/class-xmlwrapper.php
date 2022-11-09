@@ -51,11 +51,13 @@ class xmlWrapper extends genericDocumentWrapper {
     public function format_authors(){
         $authors = $this->get_authors();
         $new_array = [];
-        foreach ($authors as $auth){
-            array_push($new_array,$auth->name);
-    }
-    $this->authors = $new_array;
-    return $new_array;
+        if(!empty($authors)){
+            foreach ($authors as $auth){
+                array_push($new_array,$auth->name);
+            }
+        }
+        $this->authors = $new_array;
+        return $new_array;
 
 }
 

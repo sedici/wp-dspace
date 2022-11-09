@@ -56,9 +56,11 @@ class jsonWrapper extends genericDocumentWrapper {
     public function format_authors(){
         $authors = $this->get_authors();
         $new_array = [];
-        foreach ($authors as $auth){
-            array_push($new_array,$auth["value"]);
-    }
+        if(!empty($authors)){
+            foreach ($authors as $auth){
+                array_push($new_array,$auth["value"]);
+            }
+         } 
     $this->authors = $new_array;
     return $new_array;
 
