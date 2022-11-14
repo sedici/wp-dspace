@@ -217,12 +217,25 @@ class View {
          */
         public function get_videos($link){
             $html = file_get_contents($link);
+
+            // Get Youtube videos. (Regex gets the YT video id)
             preg_match_all("#(?<=v=|v\/|vi=|vi\/|youtu.be\/)[a-zA-Z0-9_-]{11}#", $html, $matches);
             $matches = array_unique($matches[0]);
             $youtubeLinks = array_map(function($match){
                 return "https://www.youtube.com/embed/{$match}?feature=oembed";
             },$matches );
-            return $youtubeLinks;
+
+            // Get MP4 videos.
+            // Si quiero recuperar otros formatos edito el regex asi : (?:.mp3|mp4)
+            preg_match('/(?:((?:https|http):\/\/)|(?:\/)).+(?:.mp4)/', $html, $mp4Videos);
+
+            // FIXME: Eliminar la URL del repositorio hardcodeada
+            foreach ($mp4Videos as &$mp4){
+                $mp4 = "http://sedici.unlp.edu.ar". $mp4 . "?sequence=2&isAllowed=y";
+            }
+            
+            $allVideos = array_merge($mp4Videos, $youtubeLinks);
+            return $allVideos;
         }
 
 

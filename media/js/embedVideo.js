@@ -15,8 +15,13 @@ function get_data_and_template(method, data_params, divVideo) {
                 divVideo.children('.searching').hide();
                 if ((videos.length >0) && (divVideo.children('.containerDspaceVideo').length == 0)) {
                     for (var i = 0; i < videos.length; ++i){
-                        divVideo.append('<div class="containerDspaceVideo"><iframe class="responsive-iframe" src="'+ videos[i]+ '"></iframe></div><br>');                    }
-                    ;
+                        if(videos[i].includes("youtube")){
+                            divVideo.append('<div class="containerDspaceVideo"><iframe class="responsive-iframe" src="'+ videos[i]+ '"></iframe></div><br>');     
+                        }
+                        else{
+                            divVideo.append('<div class="containerDspaceVideo"><video class="responsive-iframe" controls="" type="video/mp4" src="' + videos[i] + ' "></video></div>');    
+                        }
+                    }
                 }
                 else if ((videos.length == 0) && (divVideo.children('.notFound').length == 0)) {
                     divVideo.append('&nbsp<p class="notFound" style="color:red;font-weight:bold;">No se encontraron videos.</p>');
@@ -28,7 +33,6 @@ function get_data_and_template(method, data_params, divVideo) {
 
 $(document).ready(function (){
 $(".btn-dspace-show").on('click', function (e) {
-
     btnUp = $(this).next().show(); // Mostrar boton para colapsar
     btnDown = $(this).first().hide(); // Ocultar boton para mostrar descripción
     link = $(this).parent().children()[1].lastElementChild.href; // Link al elemento en sedici
