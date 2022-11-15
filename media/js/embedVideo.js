@@ -24,7 +24,7 @@ function get_data_and_template(method, data_params, divVideo) {
                     }
                 }
                 else if ((videos.length == 0) && (divVideo.children('.notFound').length == 0)) {
-                    divVideo.append('&nbsp<p class="notFound" style="color:red;font-weight:bold;">No se encontraron videos.</p>');
+                    divVideo.append('&nbsp<p class="notFound" style="color:red;font-weight:bold;">No hay videos.</p>');
                 }
             }
             })
