@@ -227,11 +227,11 @@ class View {
 
             // Get MP4 videos.
             // Si quiero recuperar otros formatos edito el regex asi : (?:.mp3|mp4)
-            preg_match('/(?:((?:https|http):\/\/)|(?:\/)).+(?:.mp4)/', $html, $mp4Videos);
+            preg_match('/(?:((?:https|http):\/\/)|(?:\/)).+(?:.mp4|m4v)/', $html, $mp4Videos);
 
             // FIXME: Eliminar la URL del repositorio hardcodeada
             foreach ($mp4Videos as &$mp4){
-                $mp4 = "http://sedici.unlp.edu.ar". $mp4 . "?sequence=2&isAllowed=y";
+                $mp4 = "https://videos.congresos.unlp.edu.ar". $mp4 . "?sequence=2&isAllowed=y";
             }
             
             $allVideos = array_merge($mp4Videos, $youtubeLinks);
