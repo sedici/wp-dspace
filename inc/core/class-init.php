@@ -104,6 +104,8 @@ class Init {
 
 		// View function
 		$this->loader->add_action('wp_ajax_get_videos', $plugin_admin ,'get_videos');
+		$this->loader->add_action('wp_ajax_nopriv_get_videos', $plugin_admin ,'get_videos');
+
 
 		// Register admin notices
 		// $this->loader->add_action( 'admin_notices', $plugin_admin, 'print_plugin_admin_notices');
