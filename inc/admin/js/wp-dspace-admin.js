@@ -68,7 +68,6 @@ function justNumbers(e) {
         });
 
         $(".btn-dspace-show").on('click', function () {
-            console.log("Button clicked");
         });
     
 		

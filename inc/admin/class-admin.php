@@ -191,7 +191,13 @@ class Admin
     }
     public function get_option_repositorios()
     {
-        return get_option('config_repositorios')['repositorios'];
+        $repo = get_option('config_repositorios');
+        if ($repo){
+            return $repo['repositorios'];
+        }
+        else{
+            return $repo;
+        }
     }
     public function get_repositorios()
     {

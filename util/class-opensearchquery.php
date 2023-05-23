@@ -68,6 +68,8 @@ class opensearchQuery extends queryMaker
                 $default_query=$configuration->get_default_query();
                 $queryEstandar = (empty($default_query)) ? $queryEstandar : $queryEstandar.'&query='.$configuration->get_default_query() ;
             }
+            var_dump($queryEstandar);
+
             return $queryEstandar;//.DEFAULT_QUERY;
     }
 

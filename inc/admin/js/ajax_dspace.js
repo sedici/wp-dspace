@@ -4,7 +4,6 @@ function get_data_and_template(method, data_params, selector, refreshCallback, f
 		type: method,
 		data: data_params,
 		success: function (response) {
-			console.log(params.ajaxurl);
 			if (typeof response['template'] !== 'undefined'){
 			  var source = response['template'];
 		      var template = Handlebars.compile(source);
@@ -114,7 +113,6 @@ function support_subtype(item) {
 
 function checkVersion(item) {
 	var $item = jQuery(`input[name=queryMethod]`);
-	console.log($item.is(':checked'));
 	if ($item.is(':checked') | ($item.checked == true)) {
 		document.getElementById("openSearchG").disabled = true;
 		document.getElementById("apiRestG").disabled = false;
@@ -223,7 +221,6 @@ function updateSubtype(repo_name){
 		});
 		$(document.body).on('submit','#form-update-repo', function (e) {
 			var repo =  get_form_repo();
-			console.log(repo);
 			var data_params = { action: 'update_repo', template: 'notice', repo: repo };
 			var params_fuction ={id_element: '#template-repo'}
 			get_data_and_template('POST', data_params, 'notice_result',after_add_and_update_repo,params_fuction);

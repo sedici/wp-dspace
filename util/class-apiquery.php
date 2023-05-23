@@ -52,6 +52,8 @@ class apiQuery extends queryMaker{
       }
    
       $query = substr($query, 0, -1); 
+      var_dump($query);
+
       return $query;
     }
     
