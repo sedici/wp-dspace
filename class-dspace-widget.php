@@ -14,7 +14,7 @@ class Dspace_Widget extends \WP_Widget
     public function __construct()
     {
         $this->filter = new Util\WidgetFilter();
-        $this->api = new Util\apiQuery();
+        $this->api = new Util\Query\apiQuery();
         $this->validation = new Util\WidgetValidation();
         $this->showShortcode = new View\ShowShortcode();
 
@@ -47,10 +47,10 @@ class Dspace_Widget extends \WP_Widget
             $queryMethod = $this->configuration->get_query_method();
             
             if ($queryMethod == "api"){
-                $this->util = new Util\apiQuery();
+                $this->util = new Util\Query\apiQuery();
             }
             else{
-                $this->util = new Util\opensearchQuery();
+                $this->util = new Util\Query\opensearchQuery();
             }
 
 

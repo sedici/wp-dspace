@@ -1,6 +1,6 @@
 <?php
 
-namespace Wp_dspace\Util;
+namespace Wp_dspace\Util\Wrappers;
 
 class xmlWrapper extends genericDocumentWrapper {
     public $document;

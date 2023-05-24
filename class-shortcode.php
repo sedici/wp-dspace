@@ -42,10 +42,10 @@ class Shortcode {
                     $queryMethod = $this->configuration->get_query_method();
                     
                     if ($queryMethod == "api"){
-                        $this->util = new Util\apiQuery();
+                        $this->util = new Util\Query\apiQuery();
                     }
                     else{
-                        $this->util = new Util\opensearchQuery();
+                        $this->util = new Util\Query\opensearchQuery();
                     }
         
                     if (!is_null($this->configuration)){ 

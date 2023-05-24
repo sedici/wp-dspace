@@ -68,13 +68,16 @@ class ShowShortcode {
     }
     public function show_subtypes($instance){
         $shortcode_aux="";
+        var_dump($instance);
         if ( array_key_exists('all',$instance) and !('on' == $instance ['all'])){
             $subtypes = $this->filter->vectorSubtypes();
             foreach ($subtypes as $key => $subtype){    
+              var_dump($subtype);
                 $shortcode_aux= $shortcode_aux . $this->is_on($key, isset($instance[$subtype])?$instance[$subtype]:"");
             }
             $shortcode_aux= $shortcode_aux . $this->show_thesis($instance);
         }
+        var_dump($shortcode_aux);
         return $shortcode_aux;        
     }
     public function show_checkbox($instance){

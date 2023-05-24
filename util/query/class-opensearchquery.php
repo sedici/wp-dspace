@@ -1,6 +1,6 @@
 <?php
 
-namespace Wp_dspace\Util;
+namespace Wp_dspace\Util\Query;
 
 define('DEFAULT_QUERY', "&query=*:*");
 
@@ -35,7 +35,7 @@ class opensearchQuery extends queryMaker
         $entrys = array();
         if(!empty($xpath))
             foreach ($xpath->entry as $key => $value) {
-                $wrapper = new xmlWrapper($value);
+                $wrapper = new \Wp_dspace\Util\Wrappers\xmlWrapper($value);
                 array_push($entrys,$wrapper);
             }
             //ACA HAY QUE RETORNAR UN VECTOR DE ITEMS

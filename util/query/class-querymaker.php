@@ -1,5 +1,5 @@
 <?php
-namespace Wp_dspace\Util;
+namespace Wp_dspace\Util\Query;
 
 abstract class queryMaker
 {
@@ -9,7 +9,7 @@ abstract class queryMaker
     public function __construct()
     {
         $this->model = new \Wp_dspace\Model\SimpleXMLModel();
-        $this->order = new XmlOrder();
+        $this->order = new \Wp_dspace\Util\XmlOrder();
     }
 
     

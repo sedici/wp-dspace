@@ -1,9 +1,9 @@
 <?php
 
-namespace Wp_dspace\Util;
+namespace Wp_dspace\Util\Query;
 define('DEFAULT_URL' ,"https://host170.sedici.unlp.edu.ar");
 define('ENDPOINT', "/server/api/discover/search/objects?");
-include_once dirname(__DIR__) . "/view/class-view.php";
+
 
 class apiQuery extends queryMaker{
 
@@ -52,7 +52,6 @@ class apiQuery extends queryMaker{
       }
    
       $query = substr($query, 0, -1); 
-      var_dump($query);
 
       return $query;
     }
@@ -67,7 +66,7 @@ class apiQuery extends queryMaker{
 
         // Este endpoint devuelve colecciones, items y comunidades. Hay que filtrar todo lo que no sea un item
         if($item["_embedded"]['indexableObject']["type"] == "item"){
-          $wrapped = new jsonWrapper($item);
+          $wrapped = new \Wp_dspace\Util\Wrappers\jsonWrapper($item);
           array_push($wrappedItems,$wrapped);
         }    
       }
