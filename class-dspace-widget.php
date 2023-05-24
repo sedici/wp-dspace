@@ -14,7 +14,6 @@ class Dspace_Widget extends \WP_Widget
     public function __construct()
     {
         $this->filter = new Util\WidgetFilter();
-        $this->api = new Util\Query\apiQuery();
         $this->validation = new Util\WidgetValidation();
         $this->showShortcode = new View\ShowShortcode();
 
@@ -398,7 +397,6 @@ return;
         }
         $this->configuration = $this->validation->create_configuration($instance['config']);
         if (empty($instance)) {
-            var_dump($instance);
             $instance = array('all' => 'on');
         }
         ?>

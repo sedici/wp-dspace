@@ -68,7 +68,6 @@ class opensearchQuery extends queryMaker
                 $default_query=$configuration->get_default_query();
                 $queryEstandar = (empty($default_query)) ? $queryEstandar : $queryEstandar.'&query='.$configuration->get_default_query() ;
             }
-            var_dump($queryEstandar);
 
             return $queryEstandar;//.DEFAULT_QUERY;
     }
@@ -105,7 +104,7 @@ class opensearchQuery extends queryMaker
 
     function getPublications($all, $queryStandar, $cache, $subtypes_selected)
     {   
-        if (true) {
+        if ($all) {
             $results = $this->executeQuery($queryStandar, $cache);
            
         } else {
