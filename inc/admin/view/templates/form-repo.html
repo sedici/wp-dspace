@@ -17,6 +17,10 @@
             <input type="text" value="{{result.repo.domain}}" name="domain" required placeholder="sedici.unlp.edu.ar"> *
             <p class='description'>http://<strong>sedici.unlp.edu.ar</strong>/open-search/discover?format=atom&query=("interoperabilidad")</p>
 
+            <td scope="row">
+                <p class="formTit">Soporta subtipo de documentos</p>
+                <input type="checkbox" name="support" class="checkSupport" {{result.config_subtype.checked}}>
+            </td>
 
             <p class="formTit"> Método de consulta</p>
             <div>
@@ -87,10 +91,7 @@
                         {{result.config_subtype.disabled}} {{result.config_subtype.required}} placeholder="dc.type:"> *
                     <p class='description'>http://sedici.unlp.edu.ar/open-search/discover?format=atom&query=(<strong>sedici.subtype:</strong>"Articulo")"</p>
                 </td>
-                <td scope="row">
-                    <p class="formTit">Soporta subtipo de documentos</p>
-                    <input type="checkbox" name="support" class="checkSupport" {{result.config_subtype.checked}}>
-                </td>
+
             <br></br>
         </fieldset>
 

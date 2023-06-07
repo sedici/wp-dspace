@@ -18,7 +18,7 @@ class apiQuery extends queryMaker{
         return explode(';', $input);
     }
 
-
+    // TODO : Falta parametrizar los campos author, subject, keyword para que se puedan configurar desde el formulario externo
     function buildQuery($handle, $author, $keywords , $subject , $degree , $max_results, $configuration, $all = true, $subtypes_selected= ""){
       //Falta agregar $all y $subtypes_selected a la lista de parametros reales
       $baseURL = $configuration->get_api_url();
@@ -35,6 +35,7 @@ class apiQuery extends queryMaker{
       }
         $query = $query . "scope=" . $handle . "&"; 
       }
+
       if(!empty($author)){
         $query= $query . $this->buildFilter('author',$author);
       }
@@ -48,7 +49,11 @@ class apiQuery extends queryMaker{
         $query= $query . "size=" . $max_results . "&";
       }
       if($all != true){
+        /* TODO : Tomar decisión sobre los Subtipos 
+        $query = $query . "query="
+
         $query= $query . $this->buildFilter('itemtype',$subtypes_selected);
+      */
       }
    
       $query = substr($query, 0, -1); 
