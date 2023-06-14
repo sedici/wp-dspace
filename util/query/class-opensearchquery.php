@@ -102,7 +102,7 @@ class opensearchQuery extends queryMaker
 
 
 
-    function getPublications($all, $queryStandar, $cache, $subtypes_selected)
+    function getPublications($all, $queryStandar, $cache, $subtypes_selected, $max_results)
     {   
         if ($all) {
             $results = $this->executeQuery($queryStandar, $cache);

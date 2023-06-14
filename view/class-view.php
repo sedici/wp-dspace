@@ -179,12 +179,10 @@ class View {
         public function publicationsByGroup($entrys, $attributes, $group) {
                     $position=0;
                     $stringItem=""; 
-                    
-                  
                     $stringHtml='<div class="wpDspace itemsPagination '.$this->classPagination($entrys).'" id="'. uniqid('page_container_') .'"> <ul class="content">';
-
                     $array_for_groups = array();
                     foreach ($entrys as $entry) {
+
                         $title = $this->group($entry, $group);
                         if (empty($array_for_groups[$title]))
                             $array_for_groups[$title]= array($entry);
@@ -253,8 +251,6 @@ class View {
                     $array_for_groups[$title][$subtitle]= array($entry);
                 else   
                     array_push( $array_for_groups[$title][$subtitle],$entry);
-                
-                
             }
             krsort($array_for_groups);
             foreach ($array_for_groups as $year => $values_for_date) {

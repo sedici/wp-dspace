@@ -19,7 +19,7 @@ abstract class queryMaker
     
     #Executes the Query. Returns an array of Wrappers (jsonWrapper or xmlWrapper)
 
-    public abstract function getPublications($all, $queryStandar, $cache, $subtypes_selected);
+    public abstract function getPublications($all, $queryStandar, $cache, $subtypes_selected, $max_results);
     
     public function get_model()
     {

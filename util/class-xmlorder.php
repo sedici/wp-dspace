@@ -20,12 +20,15 @@ class XmlOrder {
     
             
      function cmpDate($a, $b)
-        {
-            $model = $this->get_model();
+        {   
 
-            
-           if ($model->date_utf_fotmat($b) == $model->date_utf_fotmat($a)){
-                return strcmp($model->type($a), $model->type($b));}
+            $model = $this->get_model();
+            if($this->isEmptyDate($a) or $this->isEmptyDate($b)){ 
+              // return $this->compareEmptyDate($a,$b);
+            }
+            if ($model->date_utf_fotmat($b) == $model->date_utf_fotmat($a)){
+               return strcmp($model->type($a), $model->type($b));
+            }
             else 
             return strtotime($model->date_utf_fotmat($b)) - strtotime($model->date_utf_fotmat($a)) ;  
         
@@ -34,7 +37,7 @@ class XmlOrder {
         function cmpSubtype($a, $b)
         {
             $model = $this->get_model();
-    
+          
             if ($model->type($b) == $model->type($a)){
                 return strtotime($model->date_utf_fotmat($b)) - strtotime($model->date_utf_fotmat($a)) ;}
             else {
@@ -60,5 +63,18 @@ class XmlOrder {
             }    
             return $results;
         }
+        
+        function compareEmptyDate($a,$b){
+            if(empty($a) and !empty($b)){
+                return 1;
+            }
+            else if(!empty($a) and empty($b)){
+                return -1;
+            }
+            else return 0;
+        }
 
+        function isEmptyDate($date){
+           return (empty($date->document->published) and !empty($date->document->updated));
+        }
 }

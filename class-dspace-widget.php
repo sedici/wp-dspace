@@ -73,7 +73,7 @@ class Dspace_Widget extends \WP_Widget
             $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share); 
             
             $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
-            $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected);
+            $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected, $max_results);
 
             if (!empty($results)){
                echo $this->view->render($results, $attributes, $cmp, $this->configuration);

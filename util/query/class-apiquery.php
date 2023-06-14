@@ -49,11 +49,10 @@ class apiQuery extends queryMaker{
         $query= $query . "size=" . $max_results . "&";
       }
       if($all != true){
-        /* TODO : Tomar decisión sobre los Subtipos 
+        /*
         $query = $query . "query="
-
         $query= $query . $this->buildFilter('itemtype',$subtypes_selected);
-      */
+        */
       }
    
       $query = substr($query, 0, -1); 
@@ -61,12 +60,16 @@ class apiQuery extends queryMaker{
       return $query;
     }
     
-    function getPublications($all, $query, $cache, $subtypes_selected)
+    function getPublications($all, $query, $cache, $subtypes_selected, $max_results)
     { 
       $model = $this->get_model();
       $json = $model->loadJsonPath($query,$cache);
       $wrappedItems = [];
       $items = $json['_embedded']['searchResult']['_embedded']['objects'];
+      $pages = $json['_embedded']['searchResult']['page'];
+      if ($this->needsPagination($pages,$max_results)){
+        $items = $this->addPages($pages,$items,$model,$query,$cache);
+      }
       foreach ($items as $item){
 
         // Este endpoint devuelve colecciones, items y comunidades. Hay que filtrar todo lo que no sea un item
@@ -74,6 +77,7 @@ class apiQuery extends queryMaker{
           $wrapped = new \Wp_dspace\Util\Wrappers\jsonWrapper($item);
           array_push($wrappedItems,$wrapped);
         }    
+
       }
       return ($wrappedItems) ? $this->order->cmpXml($wrappedItems) : $wrappedItems;
     }
@@ -96,6 +100,42 @@ class apiQuery extends queryMaker{
         return "f.lugarDesarrollo=" . $institution . ",contains&";
     }
     
+     /**
+     * Calcula si es necesario o no volver a realizar la consulta para obtener mas páginas
+     *      
+     * @param JsonObject $pages Contiene información sobre las páginas disponibles para la consulta
+     * @param Integer $max_results La cantidad maxima de resultados a mostrar, seteado en el Shortcode
+     * 
+     * @return Boolean Devuelve verdadero si es necesario volver a realizar la consulta para traer mas páginas, falso de lo contrario
+    */
+    function needsPagination($pages, $max_results){
+      // TODO : Hay que parametrizar la cantidad máxima de resultados que puede devolver la API (Actual: 100)
+      if ($max_results > 100){
+        if ($pages["totalPages"] > 1){
+          return true;
+        }
+      }
+      return false;
+    }
 
+     /**
+     * Ejecuta consultas para obtener las páginas faltantes, y agrega los resultados a la lista de items
+     * @param JsonObject $pages Contiene información sobre las páginas disponibles para la consulta
+     * @param Integer $max_results La cantidad maxima de resultados a mostrar, seteado en el Shortcode
+     * 
+     * @return Array Devuelve el listado de items modificado.
+    */
+    function addPages($pages,$items,$model,$query, $cache){
+      // Obtengo la cantidad de páginas que tengo que procesar
+      $totalPages = $pages["totalPages"];
+      for ($i = 1; $i < $totalPages ; $i++){
+        $queryAux = $query . "&page=" . strval($i);
+        //Ejecuto la consulta para la página actual
+        $new_items = $model->loadJsonPath($queryAux,$cache);
+        $new_items = $new_items['_embedded']['searchResult']['_embedded']['objects'];
+        $items = array_merge($items, $new_items);
+      }
 
+      return $items; 
+    }
 }

@@ -12,9 +12,12 @@ class xmlWrapper extends genericDocumentWrapper {
     }
 
     public function set_date(){
+        
         $dc_values= $this->document->children('dc', TRUE);
-        $date = date_create($dc_values->date);
-        $this->date = date_format($date,"d/m/Y"); 
+        if(!empty($dc_values->date)){
+            $date = date_create($dc_values->date);
+            $this->date = date_format($date,"d/m/Y"); 
+        }
     }
 
     public function get_raw_date(){

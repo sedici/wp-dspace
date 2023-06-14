@@ -55,6 +55,7 @@ class Shortcode {
                         $show_author = ($instance ['show_author'] === 'true');
                         $cache = $instance ['cache'];//default value from filter.php
                         $max_results = $this->validation->maxResults($instance ['max_results']);
+                        $mr = $instance["max_results"];
                         $maxlenght = $this->validation->maxLenght($instance ['max_lenght']);
                         $all = $instance ['all'];
                         $all = $this->configuration->instance_all($all);
@@ -71,7 +72,7 @@ class Shortcode {
                         $this->util->setCmp($cmp);
                         $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share, $show_videos);
                         $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject,$degree,$max_results,$this->configuration);
-                        $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes );
+                        $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes, $mr );
                         if (!empty($results)){
                              echo $this->view->render ($results,$attributes,$cmp,$this->configuration); 
                         }
