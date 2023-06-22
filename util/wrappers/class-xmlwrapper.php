@@ -22,7 +22,9 @@ class xmlWrapper extends genericDocumentWrapper {
 
     public function get_raw_date(){
         $dc_values= $this->document->children('dc', TRUE);
-        return date_create($dc_values->date);
+        if(!empty($dc_values->date)){
+            return date_create($dc_values->date);
+        }
     }
 
     public function set_authors(){

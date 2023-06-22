@@ -66,7 +66,10 @@ class SimpleXMLModel
 	public function date_utf_fotmat($entry)
 	{
 		$date = $entry->get_raw_date();
-		return  date_format($date, "Y-m-d");
+		if(!empty($date)){
+			return  date_format($date, "Y-m-d");
+
+		}
 	}
 	public function date($entry)
 	{

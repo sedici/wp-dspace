@@ -166,7 +166,10 @@ class View {
         public function group($item,$group){
            if ($group == "date") {
                 $date = $item->get_raw_date();
-                return (int) date_format($date,"Y") ;
+                if(!empty($date)){
+                    return (int) date_format($date,"Y") ;
+
+                }
             } elseif ( $group == "subtype" ) {
                 return $item->get_subtype();
             }
