@@ -12,7 +12,7 @@ class xmlWrapper extends genericDocumentWrapper {
     }
 
     public function set_date(){
-        
+
         $dc_values= $this->document->children('dc', TRUE);
         if(!empty($dc_values->date)){
             $date = date_create($dc_values->date);
@@ -39,9 +39,16 @@ class xmlWrapper extends genericDocumentWrapper {
     }
 
     public function set_abstract(){
-        $abstract = $this->document->summary;
-        $abstract = explode ( "\n", $abstract );
-        $this->abstract = $abstract[2];
+        $dc_values= $this->document->children('dc', TRUE);
+        if(!empty($dc_values->description)){
+            $abstract = $dc_values->description;
+            if(strlen($abstract) > 1000){
+                $abstract = substr($abstract, 0, strpos($abstract,' ', 1000));
+                $abstract = $abstract . "...";
+            }
+            $this->abstract = $abstract;
+        }
+
     }
 
     public function set_title(){

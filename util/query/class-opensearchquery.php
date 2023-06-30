@@ -68,11 +68,11 @@ class opensearchQuery extends queryMaker
                 $default_query=$configuration->get_default_query();
                 $queryEstandar = (empty($default_query)) ? $queryEstandar : $queryEstandar.'&query='.$configuration->get_default_query() ;
             }
-
             return $queryEstandar;//.DEFAULT_QUERY;
     }
 
-    public function querySubtype ($query , $type) {
+    public function querySubtype ($query , $type) 
+    {
         if (strpos($query, Q_QUERY) === false) {
             $query .= "&". Q_QUERY."=";
         }
@@ -100,8 +100,15 @@ class opensearchQuery extends queryMaker
         return $results;
     }
 
-
-
+    /** 
+	 * Determina si la consulta debe ser por subtipos o no, y luego la ejecuta
+	 * @param Boolean $all
+     * @param String $queryStandar
+     * @param Cache
+     * @param String $subtypes_selected
+     * @param Integer $max_results
+	 * @return Array  Devuelve un array con los items mapeados como objetos de la clase XMLWrapper
+	*/
     function getPublications($all, $queryStandar, $cache, $subtypes_selected, $max_results)
     {   
         if ($all) {
@@ -111,6 +118,24 @@ class opensearchQuery extends queryMaker
             $results = $this->executeQueryBySubtypes($subtypes_selected, $cache, $queryStandar);
         }
         return ($results) ? $this->order->cmpXml($results) : $results;
+    }
+
+  /** 
+	 * Chequea si un articulo tiene fecha, si no la tiene, la recupera de cache o con web Scrapping a SEDICI
+	 * @param XmlObject $document Objeto XML que tiene los datos de un item de SEDICI
+	 * @return DateObject Devuelve la fecha del articulo
+	*/
+    function checkDate($document){
+        $dc_values= $document->children('dc', TRUE);
+        // Si no esta seteada la fecha en el documento
+        if(empty($dc_values->date)){
+            $transient_dates = get_transient("dspace-dates");
+            // Si no esta el array de fechas en cache o no esta el dato que busco
+            if (!$transient_dates) {
+                $query_url =  (string) $document->link['href'][0];
+
+            }
+        }
     }
 
 

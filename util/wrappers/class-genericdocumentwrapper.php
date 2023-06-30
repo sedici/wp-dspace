@@ -18,6 +18,7 @@ abstract class genericDocumentWrapper{
 
     public function __construct($doc)
     {
+
         $this->document = $doc;
         $this->set_link();
         $this->set_authors();
@@ -39,11 +40,12 @@ abstract class genericDocumentWrapper{
     }
 
     public function get_abstract(){
-        return $this->abstract;
+        return html_entity_decode($this->abstract, ENT_COMPAT, 'UTF-8');
+
     }
 
     public function get_title(){
-        return $this->title;
+        return html_entity_decode($this->title, ENT_COMPAT, 'UTF-8');
     }
     
     public function get_date(){
