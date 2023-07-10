@@ -46,9 +46,14 @@ class xmlWrapper extends genericDocumentWrapper {
                 $abstract = substr($abstract, 0, strpos($abstract,' ', 1000));
                 $abstract = $abstract . "...";
             }
-            $this->abstract = $abstract;
+            
         }
-
+        else{
+            $abstract = $this->document->summary;
+            $abstract = explode ( "\n", $abstract );
+            $abstract = (string) $abstract[2];
+        }
+        $this->abstract = $abstract;
     }
 
     public function set_title(){
