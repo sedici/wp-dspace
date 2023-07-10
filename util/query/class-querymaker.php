@@ -5,11 +5,13 @@ abstract class queryMaker
 {
     protected $model;
     protected $order;
-    
+    protected $http_handler;
+
     public function __construct()
     {
         $this->model = new \Wp_dspace\Model\SimpleXMLModel();
         $this->order = new \Wp_dspace\Util\XmlOrder();
+        $this->http_handler = new httpQuery();
     }
 
     

@@ -35,6 +35,9 @@ class opensearchQuery extends queryMaker
         $entrys = array();
         if(!empty($xpath))
             foreach ($xpath->entry as $key => $value) {
+                if ($this->dateIsEmpty($value)){
+                    $this->recoverDate($value);
+                }
                 $wrapper = new \Wp_dspace\Util\Wrappers\xmlWrapper($value);
                 array_push($entrys,$wrapper);
             }
@@ -122,19 +125,27 @@ class opensearchQuery extends queryMaker
 
   /** 
 	 * Chequea si un articulo tiene fecha, si no la tiene, la recupera de cache o con web Scrapping a SEDICI
-	 * @param XmlObject $document Objeto XML que tiene los datos de un item de SEDICI
+	 * @param SimpleXmlObject $document Objeto XML que tiene los datos de un item de SEDICI
 	 * @return DateObject Devuelve la fecha del articulo
 	*/
-    function checkDate($document){
-        $dc_values= $document->children('dc', TRUE);
-        // Si no esta seteada la fecha en el documento
-        if(empty($dc_values->date)){
+    function recoverDate($document){
             $transient_dates = get_transient("dspace-dates");
             // Si no esta el array de fechas en cache o no esta el dato que busco
             if (!$transient_dates) {
                 $query_url =  (string) $document->link['href'][0];
-
+                // FIXME : Parametrizar según repositorio
+                $tag_values = array('citation_publication_date','citation_date');
+                $date = $this->http_handler->getMetaTag($query_url,$tag_values);
             }
+        }
+
+    function dateIsEmpty($document){
+        $dc_values= $document->children('dc', TRUE);
+        if(empty($dc_values->date)){
+            return true;
+        }
+        else{
+            return false;
         }
     }
 
