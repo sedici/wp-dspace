@@ -26,6 +26,9 @@ class xmlWrapper extends genericDocumentWrapper {
         if(!empty($dc_values->date)){
             return date_create($dc_values->date);
         }
+        else{
+            return date_create($this->date);
+        }
     }
 
     public function set_authors(){
