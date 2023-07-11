@@ -87,7 +87,46 @@ abstract class genericDocumentWrapper{
     
     public abstract function set_date();
 
+    /** 
+	 * Carga directamente la información sobre la fecha (Se usa para completar desde las Query Class)
+	 * @param String $rawdate El string con información sobre la fecha
+     * @return Null
+	*/
+    public function fill_date($rawdate){
+        $date = $this->process_date($rawdate);
+        $this->date = $date;
+    }
 
+    /** 
+	 * Autocompleta campos de la fecha recibida si es necesario
+	 * @param String $rawdate El string con información sobre la fecha
+     * @return String  Devuelve la fecha con los campos faltantes
+	*/
+    public function autocomplete_date($date){
+        switch (substr_count($date,"-")){
+            case 0:
+                return $date . "-01-01";
+                break;
+            case 1:
+                return $date . "-01";
+                break;
+            default:
+                return $date;
+                break;
+        }
+    }
+
+    /** 
+	 * Se encarga de autocompletar campos de la fecha si es necesario, y devolverla formateada
+	 * @param String $rawdate El string con información sobre la fecha
+     * @return Date  Devuelve la fecha formateada como un Objeto DateTime 
+	*/
+    public function process_date($rawdate){
+        $date = $this->autocomplete_date($rawdate);
+        $date = date_create($date);
+        $date = date_format($date,"d/m/Y"); 
+        return $date;
+    }
 
         
 }

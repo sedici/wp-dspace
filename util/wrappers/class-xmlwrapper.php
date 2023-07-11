@@ -15,10 +15,11 @@ class xmlWrapper extends genericDocumentWrapper {
 
         $dc_values= $this->document->children('dc', TRUE);
         if(!empty($dc_values->date)){
-            $date = date_create($dc_values->date);
-            $this->date = date_format($date,"d/m/Y"); 
+            $date = $this->process_date($dc_values->date);
+            $this->date = $date;
         }
     }
+    
 
     public function get_raw_date(){
         $dc_values= $this->document->children('dc', TRUE);
@@ -42,11 +43,10 @@ class xmlWrapper extends genericDocumentWrapper {
         $dc_values= $this->document->children('dc', TRUE);
         if(!empty($dc_values->description)){
             $abstract = $dc_values->description;
-            if(strlen($abstract) > 1000){
-                $abstract = substr($abstract, 0, strpos($abstract,' ', 1000));
-                $abstract = $abstract . "...";
+            if(strlen($abstract) > 1100){
+              $abstract = substr($abstract, 0, strpos($abstract,' ', 1000));
+              $abstract = $abstract . "...";
             }
-            
         }
         else{
             $abstract = $this->document->summary;

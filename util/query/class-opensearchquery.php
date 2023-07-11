@@ -35,13 +35,13 @@ class opensearchQuery extends queryMaker
         $entrys = array();
         if(!empty($xpath))
             foreach ($xpath->entry as $key => $value) {
-                if ($this->dateIsEmpty($value)){
-                    $this->recoverDate($value);
-                }
                 $wrapper = new \Wp_dspace\Util\Wrappers\xmlWrapper($value);
+                // Si la fecha esta vacía, la intento recuperar
+                if (empty($wrapper->get_date())){
+                    $wrapper->fill_date($this->recoverDate($value));
+                }
                 array_push($entrys,$wrapper);
             }
-            //ACA HAY QUE RETORNAR UN VECTOR DE ITEMS
         return $entrys;
     }
 
@@ -131,12 +131,13 @@ class opensearchQuery extends queryMaker
     function recoverDate($document){
             $transient_dates = get_transient("dspace-dates");
             // Si no esta el array de fechas en cache o no esta el dato que busco
-            if (!$transient_dates) {
+            if (true) {
                 $query_url =  (string) $document->link['href'][0];
                 // FIXME : Parametrizar según repositorio
                 $tag_values = array('citation_publication_date','citation_date');
                 $date = $this->http_handler->getMetaTag($query_url,$tag_values);
             }
+            return $date;
         }
 
     function dateIsEmpty($document){

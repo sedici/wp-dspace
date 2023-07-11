@@ -33,30 +33,15 @@ class jsonWrapper extends genericDocumentWrapper {
 
     public function set_date(){      
         $date = $this->get_metadata("dcterms.issued")[0]["value"];
-        $date = $this->autocompleteDate($date);
-        $date = date_create($date);
-        $this->date = date_format($date,"d/m/Y");
+        $this->date = $this->process_date($date);
+
     }
 
     public function get_raw_date(){
         $date = $this->get_metadata("dcterms.issued")[0]["value"];
-        $date = $this->autocompleteDate($date);
+        $date = $this->autocomplete_date($date);
         return date_create($date);
         
-    }
-    
-    public function autocompleteDate($date){
-        switch (substr_count($date,"-")){
-            case 0:
-                return $date . "-01-01";
-                break;
-            case 1:
-                return $date . "-01";
-                break;
-            default:
-                return $date;
-                break;
-        }
     }
 
     public function get_metadata($metaField){
