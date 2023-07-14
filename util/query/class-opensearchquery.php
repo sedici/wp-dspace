@@ -30,8 +30,18 @@ class opensearchQuery extends queryMaker
 	 */
     function executeQuery($query, $cache)
     {   
+        
         $model = $this->get_model();
         $xpath = $model->loadPath($query, $cache);
+
+
+        // FIXME: TERMINAR. ESTO SIRVE PARA CHEQUEAR LA PAGINACIÓN. 
+            $namespaces = $xpath->getNamespaces(true);
+            // Acceder a los elementos utilizando los namespaces adecuados
+            $itemsPerPage = (int) $xpath->children($namespaces['opensearch'])->itemsPerPage;
+            $totalResults = (int) $xpath->children($namespaces['opensearch'])->totalResults;
+
+
         $entrys = array();
         if(!empty($xpath))
             foreach ($xpath->entry as $key => $value) {

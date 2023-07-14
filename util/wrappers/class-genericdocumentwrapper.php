@@ -93,6 +93,9 @@ abstract class genericDocumentWrapper{
      * @return Null
 	*/
     public function fill_date($rawdate){
+        $date = $this->autocomplete_date($rawdate);
+        $date = date_create($date);
+        $date = date_format($date,"d/m/Y"); 
         $date = $this->process_date($rawdate);
         $this->date = $date;
     }

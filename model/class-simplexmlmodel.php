@@ -36,9 +36,9 @@ class SimpleXMLModel
 	{
         $transient_data = $this->saveData($str, $duration);
 		// FIXME: Sería mejor incorporar una libreria, esta solución no considera muchos caracteres especiales
-			$some_special_chars = array("√");
-			$transient_data = str_replace($some_special_chars, "", $transient_data);
-			$xml = simplexml_load_string($transient_data, 'SimpleXMLElement');
+		$some_special_chars = array("√");
+		$transient_data = str_replace($some_special_chars, "", $transient_data);
+		$xml = simplexml_load_string($transient_data, 'SimpleXMLElement');
 		return ($xml);
 	}
 
