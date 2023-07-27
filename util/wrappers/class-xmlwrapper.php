@@ -22,12 +22,14 @@ class xmlWrapper extends genericDocumentWrapper {
     
 
     public function get_raw_date(){
+        // Si la fecha no se encontraba en el item, y se recupero mediante HTTPQuery
+        if (isset($this->raw_date)){
+            return date_create($this->raw_date);
+        }
+        // Si la fecha si esta en el documento
         $dc_values= $this->document->children('dc', TRUE);
         if(!empty($dc_values->date)){
             return date_create($dc_values->date);
-        }
-        else{
-            return date_create($this->date);
         }
     }
 

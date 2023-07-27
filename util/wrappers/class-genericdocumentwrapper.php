@@ -10,7 +10,10 @@ abstract class genericDocumentWrapper{
     
     public $link;
     public $authors;
+
     public $date;
+    public $raw_date;
+
     public $abstract;
     public $title;
 
@@ -94,6 +97,7 @@ abstract class genericDocumentWrapper{
 	*/
     public function fill_date($rawdate){
         $date = $this->autocomplete_date($rawdate);
+        $this->raw_date = $date;
         $date = date_create($date);
         $date = date_format($date,"d/m/Y"); 
         $date = $this->process_date($rawdate);
