@@ -4,9 +4,6 @@ namespace Wp_dspace\Util\Query;
 use SimpleXMLElement;
 use Wp_dspace\Model\SimpleXMLModel;
 
-define('DEFAULT_URL' ,"https://host170.sedici.unlp.edu.ar");
-define('ENDPOINT', "/server/api/discover/search/objects?");
-
 
 class httpQuery{    
 
