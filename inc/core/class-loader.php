@@ -61,6 +61,7 @@ class Loader
      * @param    int    $accepted_args    Opcional. El número de argumentos que se deben pasar a la devolución de llamada $. El valor predeterminado es 1.
      */
     public function add_filter($hook, $component, $callback, $priority = 10, $accepted_args = 1)
+    //FIXME: no se están agregando estos filtros actualmente
     {
         $this->filters = $this->add($this->filters, $hook, $component, $callback, $priority, $accepted_args);
     }

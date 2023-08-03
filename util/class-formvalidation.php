@@ -42,6 +42,10 @@ class FormValidation {
         }
 
     public function maxResults($max_results){
+            //Si no es un entero, pongo un valor default
+            if(gettype($max_results) != "integer"){
+               return 100;
+            }
             if ( $max_results < min_results()) { $max_results = min_results();}
             else { if ( $max_results > max_results()) { $max_results = max_results();} }
             return $max_results;

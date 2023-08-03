@@ -98,11 +98,19 @@ class Dspace_Widget extends \WP_Widget
         $show_author = ('on' == $this->validKey('show_author',$instance)); // $show_author: if ON, then $show_author = true
         $date = ('on' == $this->validKey('date',$instance)); // $date: if checkbox date is ON, $date=true
         $max_results = apply_filters('max_results', $instance['max_results']); //$max_results: total results of subtype
+        $max_results = $this->check_max_results($max_results);
         $cache = apply_filters('cache', $instance['cache']); //$cache: duration in seconds of cache
         $show_subtypes = ('on' == $this->validKey('show_subtype',$instance)); //$show_subtypes: if checkbox show_subtype is ON, $show_subtypes=true
         $show_subtypes = $this->configuration->is_label_true($show_subtypes);
         $all = ('on' == $this->validKey('all',$instance)); //$all: all publications without subtype filter
         $all = $this->configuration->instance_all($all);
+    }
+
+    public function check_max_results($max_results){
+        if(gettype($max_results) != "integer"){
+            return 100;
+        }
+        return $max_results;
     }
 
     public function sanitizar($key, $instance)

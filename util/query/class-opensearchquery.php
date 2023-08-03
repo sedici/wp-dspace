@@ -140,12 +140,22 @@ class opensearchQuery extends queryMaker
 	*/
     function recoverDate($document){
             $transient_dates = get_transient("dspace-dates");
+            $url =  (string) $document->link['href'][0];
+
             // Si no esta el array de fechas en cache o no esta el dato que busco
-            if (true) {
-                $query_url =  (string) $document->link['href'][0];
+            if ((!$transient_dates) or (empty($transient_dates[$url])) ) {
                 // FIXME : Parametrizar según repositorio
                 $tag_values = array('citation_publication_date','citation_date');
-                $date = $this->http_handler->getMetaTag($query_url,$tag_values);
+                $date = $this->http_handler->getMetaTag($url,$tag_values);
+                // Si no existe el array en cache, lo creo
+                if(!is_array($transient_dates)){
+                    $transient_dates = array();
+                }
+                $transient_dates[$url] = $date;
+                set_transient("dspace-dates", $transient_dates);
+            }
+            else{
+                $date = $transient_dates[$url];
             }
             return $date;
         }
@@ -155,9 +165,7 @@ class opensearchQuery extends queryMaker
         if(empty($dc_values->date)){
             return true;
         }
-        else{
-            return false;
-        }
+        return false;
     }
 
 

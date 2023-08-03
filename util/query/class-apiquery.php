@@ -68,7 +68,7 @@ class apiQuery extends queryMaker{
       $items = $json['_embedded']['searchResult']['_embedded']['objects'];
       $pages = $json['_embedded']['searchResult']['page'];
       if ($this->needsPagination($pages,$max_results)){
-        $items = $this->addPages($pages,$items,$model,$query,$cache);
+        $items = $this->addPages($pages,$items,$model,$query,$cache,$max_results);
       }
       foreach ($items as $item){
 
@@ -125,13 +125,19 @@ class apiQuery extends queryMaker{
      * 
      * @return Array Devuelve el listado de items modificado.
     */
-    function addPages($pages,$items,$model,$query, $cache){
-      // Obtengo la cantidad de páginas que tengo que procesar
-      $totalPages = $pages["totalPages"];
-      for ($i = 1; $i < $totalPages ; $i++){
-        $queryAux = $query . "&page=" . strval($i);
+    function addPages($pages,$items,$model,$query, $cache, $max_results){
+      // Obtengo la cantidad de páginas que la consulta tiene disponibles
+      $total_pages = $pages["totalPages"];
+      // Comparo la cantidad de páginas que necesito con las que tengo disponibles
+      $pages_requiered = intdiv($max_results,100);
+      if($pages_requiered < $total_pages){
+        $total_pages = $pages_requiered;
+      }
+
+      for ($i = 1; $i < $total_pages ; $i++){
+        $query_aux = $query . "&page=" . strval($i);
         //Ejecuto la consulta para la página actual
-        $new_items = $model->loadJsonPath($queryAux,$cache);
+        $new_items = $model->loadJsonPath($query_aux,$cache);
         $new_items = $new_items['_embedded']['searchResult']['_embedded']['objects'];
         $items = array_merge($items, $new_items);
       }
