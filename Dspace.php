@@ -14,7 +14,7 @@
 namespace Wp_dspace;
 define( __NAMESPACE__ . '\DS', __NAMESPACE__ . '\\' );
 define( DS . 'PLUGIN_NAME', 'wp-dspace' );
-define( DS . 'PLUGIN_VERSION', '2.1-0' );
+define( DS . 'PLUGIN_VERSION', '2.2-0' );
 define( DS . 'PLUGIN_NAME_DIR', plugin_dir_path( __FILE__ ) );
 define( DS . 'PLUGIN_NAME_URL', plugin_dir_url( __FILE__ ) );
 define( DS . 'PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
