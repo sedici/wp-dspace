@@ -192,29 +192,9 @@ function updateSubtype(repo_name){
 			let search = "widget-dspace["+obj.value+"][config]";
 			let obj2 = targetForm.find(o => o.name === search);
 
-			console.log(obj2);
-
 			updateSubtype(obj2.value);		
 			get_data_and_template('POST', data_params, 'view-Shortcode');			
 
-			/*
-			let search2 = "widget-dspace["+obj.value+"][group_subtype]";
-			let obj3 = targetForm.find(o => o.name === search2);
-			if (obj3 == undefined){
-				console.log("No esta marcado :c");
-			}
-			else{
-				console.log("Si esta marcado");
-			}
-			*/
-
-//			if(obj2.value == 'conicet'){
-				//Find checkboxes
-//	
-//				//Hide checkboxes founded
-//					jQuery('checkbox1').hide;
-//					jQuery('checkbox2').hide;
-//			}
 		});
 
 		

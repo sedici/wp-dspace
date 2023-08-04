@@ -151,10 +151,12 @@ class opensearchQuery extends queryMaker
                 if(!is_array($transient_dates)){
                     $transient_dates = array();
                 }
+                // Actualizo el array en cache
                 $transient_dates[$url] = $date;
                 set_transient("dspace-dates", $transient_dates);
             }
             else{
+                // Si el dato estaba en cache, lo obtengo de ahí.
                 $date = $transient_dates[$url];
             }
             return $date;

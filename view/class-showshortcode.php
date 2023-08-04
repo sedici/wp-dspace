@@ -71,7 +71,8 @@ class ShowShortcode {
         if ( array_key_exists('all',$instance) and !('on' == $instance ['all'])){
             $subtypes = $this->filter->vectorSubtypes();
             foreach ($subtypes as $key => $subtype){    
-                $shortcode_aux= $shortcode_aux . $this->is_on($key, isset($instance[$subtype])?$instance[$subtype]:"");
+            
+                $shortcode_aux= $shortcode_aux . $this->is_on($key, isset($instance[$subtype])?$instance[$subtype]:"X");
             }
             $shortcode_aux= $shortcode_aux . $this->show_thesis($instance);
         }
@@ -136,18 +137,34 @@ class ShowShortcode {
         }
     }
 
+     /**
+     * Crea el string para buscar valores en el widget, en base al número aleatorio que WP le brindo al form
+     * @param Integer $numeroDeWidget Número otorgado al form del widget
+     * @param Integer $name Nombre del campo a buscar
+     * 
+     * @return String String de busqueda para el campo $name del Widget
+    */
     private function buildSearchString($numeroDeWidget,$name) {
         return "widget-dspace[" .$numeroDeWidget. "][$name]";
-    } 
-    // La funcion usa 2 parametros:
-    // $form_array -> Parámetro utilizado en  Jquery, es un arreglo serializado que debe transformarse en una instancia ($instance).
-    // $instance es la instancia con la que se construye el shortcode, al invocarse desde PHP se envia pero desde jquery no, por eso se inicializa en null.
+    }
+    
+
+    /**
+     * Se encarga de generar el código del Shortcode en base a los valores del Widget
+     * @param Array $form_array Parámetro solo desde Jquery, son los valores del Widget sin formato. Debe formatearse a $Instance
+     * @param Array $instance Son los valores del Widget ya formateados, al invocarse desde PHP se envia pero desde jquery no.
+     *
+     * @return String Devuelve el Shortcode.
+    */
     public function show_shortcode($form_array, $instance = null){
+
         if ($instance == null) { 
+        // Si $instance es Null, obtuve el formulario desde Jquery por lo que debo formatearlo a $instance.
             $instance = array();
-          //Aca convierto el array de objetos en un $instance que acepte la función
           $numeroDeWidget = $this->search_Widget_Number($form_array);
           $keywords = ['config','handle','author','keywords','description','share','date','subject','degree','max_results','group_subtype','group_year','show_author','show_videos','maxlenght','cache','max_results','show_subtype','all'];
+          $subtypes = ['Documento de trabajo', 'Articulo', 'Documento de conferencia', 'Informe tecnico', 'Libro', 'Objeto de conferencia', 'Preprint', 'Revision', 'Tesis de doctorado', 'Tesis de grado', 'Tesis de maestria', 'Trabajo de especializacion'];
+          $keywords = array_merge($keywords, $subtypes);
           foreach($keywords as $keyword){
               $instance[$keyword] = $this->get_Elements( $this->buildSearchString($numeroDeWidget,$keyword)  ,$form_array);
           }

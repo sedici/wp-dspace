@@ -4,30 +4,6 @@ function justNumbers(e) {
     return /\d/.test(String.fromCharCode(keynum));
 }
 
-// jQuery(".checkSupport").live('change', do_onchange);
-
-// function do_onchange() {
-//     support_subtype(this);
-// }
-
-// function support_subtype(item){
-//     var $item = jQuery(item);
-//     var id = $item.attr('id');
-    
-//     var elem = jQuery(`input[name='${id}[subtype]']`);
-//     var campo = jQuery(`.${id}.subtype`);
-//     if ($item.is(':checked')) {
-//         if (elem.val() == "false")
-//             elem.attr("value", "");
-//         campo.show();
-//     }
-//     else {
-//         campo.hide();
-//         elem.attr("value", false);
-//     }
-
-
-// }
 
 (function( $ ) {
 	'use strict';
