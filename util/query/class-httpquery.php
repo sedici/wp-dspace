@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Wp_dspace\Util\Query;
 
 use SimpleXMLElement;
@@ -23,7 +23,7 @@ class httpQuery{
     }
 
      /** 
-	 * Obtiene los tags <meta> de una URL
+	 * Obtiene los tags meta de una URL
 	 * @param String $url Url a consultar
      * @param Array $tag_values Contiene los posibles nombres del meta tag  
 	 * @return String/XmlObject  Devuelve el valor del meta tag correspondiente.
