@@ -129,7 +129,7 @@ class Init {
 			2 => "updateRepoArray"
 		];
 		$storedVersion = get_option($option_name);
-		if (!$storedVersion or $storedVersion){
+		if (!$storedVersion){
 			$storedVersion = 1;
 			add_option($option_name, $storedVersion);
 		}
