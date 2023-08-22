@@ -10,6 +10,13 @@ class opensearchQuery extends queryMaker
     protected $order;
     protected $subtype_query;
 
+    public function __construct()
+    {
+        $this->model = new \Wp_dspace\Model\SimpleXMLModel();
+        $this->order = new \Wp_dspace\Util\XmlOrder();
+        $this->http_handler = new httpQuery();
+    }
+
     public function concatenarCondiciones($words)
     {
         $conditions = array();
