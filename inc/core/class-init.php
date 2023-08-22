@@ -115,7 +115,7 @@ class Init {
 		add_shortcode ( 'get_publications', array($plugin_admin,'DspaceShortcode' ));
 		
 		// Se encarga de hacer todas las actualizaciones necesarias para la versión actual
-		$this->check_updates(2);
+		$this->check_updates(3);
 	}
 
 	/* 
@@ -147,7 +147,7 @@ class Init {
 		$args = array( 'repositorios' => array());
 
         array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'sedici',
-            'domain' => 'MARIO7.unlp.edu.ar','support'=>true,'protocol'=>'http','subtype' =>'sedici.subtype:','queryMethod'=>false,'handle'=>'scope','author'=>'author:','subject'=>'subject:','degree'=>'thesis.degree.name','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"")
+            'domain' => 'sedici.unlp.edu.ar','support'=>true,'protocol'=>'http','subtype' =>'sedici.subtype:','queryMethod'=>false,'handle'=>'scope','author'=>'author:','subject'=>'subject:','degree'=>'thesis.degree.name','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"")
         );
         array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'cic',
             'domain' => 'digital.cic.gba.gob.ar','support'=>true,'protocol'=>'https','subtype' =>'dc.type:','queryMethod'=>true, 'apiUrl'=>'https://host170.sedici.unlp.edu.ar/server/api' ,'handle'=>'scope','author'=>'author:','subject'=>'subject:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"" )
