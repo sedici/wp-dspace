@@ -23,10 +23,10 @@ class httpQuery{
     }
 
      /** 
-	 * Obtiene los tags <meta> de una URL
+	 * Obtiene los tags meta de una URL
 	 * @param String $url Url a consultar
      * @param Array $tag_values Contiene los posibles nombres del meta tag  
-	 * @return StringOrXmlObject  Devuelve el valor del meta tag correspondiente.
+	 * @return String  Devuelve el valor del meta tag correspondiente.
 	*/
     public function getMetaTag($url,$tag_values){
         $tags = get_meta_tags($url);
