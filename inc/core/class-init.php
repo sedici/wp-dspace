@@ -115,7 +115,7 @@ class Init {
 		add_shortcode ( 'get_publications', array($plugin_admin,'DspaceShortcode' ));
 		
 		// Se encarga de hacer todas las actualizaciones necesarias para la versión actual
-		$this->check_updates(3);
+		$this->check_updates(2);
 	}
 
 	/* 
@@ -129,7 +129,7 @@ class Init {
 			2 => "updateRepoArray"
 		];
 		$storedVersion = get_option($option_name);
-		if (!$storedVersion){
+		if (!$storedVersion or $storedVersion){
 			$storedVersion = 1;
 			add_option($option_name, $storedVersion);
 		}
