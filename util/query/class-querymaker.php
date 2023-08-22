@@ -11,7 +11,7 @@ abstract class queryMaker
     {
         $this->model = new \Wp_dspace\Model\SimpleXMLModel();
         $this->order = new \Wp_dspace\Util\XmlOrder();
-        $this->http_handler = new httpQuery();
+        $this->http_handler = new \Wp_dspace\Util\Query\httpQuery();
     }
 
     
