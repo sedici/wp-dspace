@@ -113,8 +113,52 @@ class Init {
         $this->loader->add_action('init',$plugin_admin,'createFilterGetRepositorios');
 		// Incio shorcode
 		add_shortcode ( 'get_publications', array($plugin_admin,'DspaceShortcode' ));
-
+		
+		// Se encarga de hacer todas las actualizaciones necesarias para la versión actual
+		$this->check_updates(2);
 	}
+
+	/* 
+	* Se encarga de realizar actualizaciones para configurar las options, DB o lo que sea necesario para la versión actual
+	*@param $latestVersion Indica la versión hasta la que se debe actualizar 
+	* @return Null
+   */
+	private function check_updates($latestVersion){
+		$option_name = 'latestWPDSPACE';
+		$updates = [
+			2 => "updateRepoArray"
+		];
+		$storedVersion = get_option($option_name);
+		if (!$storedVersion){
+			$storedVersion = 1;
+			add_option($option_name, $storedVersion);
+		}
+		if ( ($storedVersion != $latestVersion) ){
+			foreach ($updates as $version=>$update_function){
+				if ($version > $storedVersion){
+					call_user_func(array($this,$update_function));
+				}
+			}
+			update_option($option_name, $latestVersion);
+		}
+	}
+
+	private function updateRepoArray(){
+		$args = array( 'repositorios' => array());
+
+        array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'sedici',
+            'domain' => 'MARIO7.unlp.edu.ar','support'=>true,'protocol'=>'http','subtype' =>'sedici.subtype:','queryMethod'=>false,'handle'=>'scope','author'=>'author:','subject'=>'subject:','degree'=>'thesis.degree.name','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"")
+        );
+        array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'cic',
+            'domain' => 'digital.cic.gba.gob.ar','support'=>true,'protocol'=>'https','subtype' =>'dc.type:','queryMethod'=>true, 'apiUrl'=>'https://host170.sedici.unlp.edu.ar/server/api' ,'handle'=>'scope','author'=>'author:','subject'=>'subject:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"" )
+		);
+		array_push($args['repositorios'],array('id'=>uniqid(), 'name' => 'conicet',
+            'domain' => 'ri.conicet.gov.ar','support'=>false,'protocol'=>'https','subtype' =>'','queryMethod'=>false,'handle'=>'scope','author'=>'dc.contributor.author:','base_path'=>'/open-search/discover','format' => 'atom','query'=>'query','default_query'=>"*" )
+        );
+
+        update_option('config_repositorios',$args);
+	}
+
 	/**
 	 * Registrar hooks parte pública. 
 	 *
@@ -168,5 +212,6 @@ class Init {
 	public function get_plugin_text_domain() {
 		return $this->plugin_text_domain;
 	}
+
 
 }
