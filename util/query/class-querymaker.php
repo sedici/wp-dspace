@@ -1,6 +1,8 @@
 <?php
 namespace Wp_dspace\Util\Query;
 
+use Wp_dspace\Util\Query\httpQuery;
+
 abstract class queryMaker
 {
     protected $model;

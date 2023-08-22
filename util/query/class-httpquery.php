@@ -5,7 +5,7 @@ use SimpleXMLElement;
 use Wp_dspace\Model\SimpleXMLModel;
 
 
-class httpQuery{    
+class HttpQuery{    
 
     /** 
 	 * Ejecuta una consulta Http y devuelve el resultado como XML
