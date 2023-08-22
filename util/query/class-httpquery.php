@@ -1,4 +1,4 @@
-<?
+<?php
 namespace Wp_dspace\Util\Query;
 
 use SimpleXMLElement;
