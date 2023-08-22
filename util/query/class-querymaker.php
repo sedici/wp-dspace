@@ -11,7 +11,9 @@ abstract class queryMaker
 
     public function __construct()
     {
-
+        $this->model = new \Wp_dspace\Model\SimpleXMLModel();
+        $this->order = new \Wp_dspace\Util\XmlOrder();
+        $this->http_handler = new httpQuery();
     }
 
     
