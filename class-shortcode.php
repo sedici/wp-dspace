@@ -69,7 +69,7 @@ class Shortcode {
                         $group_subtype = $this->configuration->is_label_true( $group_subtype);
                         $cmp=$this->validation->getOrder($group_subtype,$instance ['group_date']);
                         $this->util->setCmp($cmp);
-                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share, $show_videos);
+                        $attributes = $this->util->group_attributes ( $description, $date, $show_author, $maxlenght, $show_subtypes,$share, $show_videos, $max_results);
                         $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject,$degree,$max_results,$this->configuration);
                         $results= $this->util->getPublications($all, $queryStandar, $cache, $subtypes, $max_results );
                         if (!empty($results)){

@@ -10,8 +10,11 @@ class ShortcodeValidation extends FormValidation {
 
     function maxResults($max_results){
             //Si no es un entero, pongo un valor default
-            if(gettype($max_results) != "integer"){
+            if( (gettype($max_results) != "integer") and (!is_numeric($max_results)) ){
                 return 100;
+            }
+            if (is_numeric($max_results)){
+                $max_results = intval($max_results);
             }
             if ( $max_results < min_results()) { $max_results = min_results();}
             else { if ( $max_results > max_results()) { $max_results = max_results();} }

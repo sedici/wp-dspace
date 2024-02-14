@@ -70,7 +70,7 @@ class Dspace_Widget extends \WP_Widget
             if ($this->configuration->all_documents()) {
                 $subtypes_selected = $this->filter->selectedSubtypes($instance, $all); //$subtypes: all selected documents subtypes
             } 
-            $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share); 
+            $attributes = $this->util->group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share, $max_results); 
             
             $queryStandar = $this->util->buildQuery($handle, $author, $keywords, $subject, $degree, $max_results, $this->configuration);
             $results = $this->util->getPublications($all, $queryStandar, $cache, $subtypes_selected, $max_results);
