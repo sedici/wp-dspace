@@ -23,7 +23,6 @@ class SimpleXMLModel
 				$transient_data = get_transient($transient_data_permanent_id);
 			}
 			else {
-				var_dump('Ejecuto un nuevo request y cacheo el resultado');
 				$transient_data = wp_remote_retrieve_body($request);
 				// Guardamos los datos en el transient
 				set_transient($transient_data_id, $transient_data, $duration * WEEK_IN_SECONDS);
