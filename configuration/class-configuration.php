@@ -208,6 +208,13 @@ public function get_api_url(){
     return $this->config["apiUrl"];
 }
 
+/**
+ * Obtiene el método de consulta configurado.
+ * Este método verifica si el valor de la clave `queryMethod` en la configuración está establecido como `true`.
+ * Si es así, retorna "api" como el método de consulta. De lo contrario, retorna "opensearch" como el método de consulta predeterminado.
+ * 
+ * @return string Retorna el método de consulta: "api" o "opensearch".
+ */
 public function get_query_method(){
     if ((isset($this->config["queryMethod"])) && ( $this->config["queryMethod"] == "true")){
         return "api";
