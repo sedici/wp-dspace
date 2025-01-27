@@ -27,7 +27,18 @@ class Shortcode {
             $this->filter = new Util\ShortcodeFilter();
             $this->validation = new Util\ShortcodeValidation();
         }   
+    
         
+    /**
+     * Procesa un shortcode para obtener y mostrar publicaciones obtenidas de algun repositorio.
+     *
+     * Este método valida los parámetros del shortcode, configura las opciones del plugin,
+     * construye la consulta correspondiente y obtiene los resultados.
+     * Si se encuentran resultados, los renderiza; de lo contrario, muestra un mensaje de error.
+     *
+     *  @param array $atts Atributos del shortcode proporcionados por el usuario.
+     * @return void
+     */
 	function plugin_sedici($atts) {
             $instance = shortcode_atts ($this->filter->default_shortcode (), $atts );
             $handle = $instance ['handle'] ;
