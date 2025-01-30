@@ -1,6 +1,8 @@
 <?php
 namespace Wp_dspace\Util\Query;
 
+use Wp_dspace\Util\Query\httpQuery;
+
 abstract class queryMaker
 {
     protected $model;
@@ -38,7 +40,7 @@ abstract class queryMaker
         return explode(';', $imput);
     }
 
-    function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share, $show_videos = false)
+    function group_attributes($description, $date, $show_author, $maxlenght, $show_subtypes, $share, $show_videos = false, $max_results = null)
     {
         return (array(
             'description' => $description,
@@ -47,7 +49,10 @@ abstract class queryMaker
             'show_subtypes' => $show_subtypes,
             'share' => $share,
             'date' => $date,
-            'show_videos' => $show_videos
+            'show_videos' => $show_videos,
+            'max_results' => $max_results,
+
+
         ));
     }
     

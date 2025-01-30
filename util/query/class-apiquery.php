@@ -12,13 +12,8 @@ class apiQuery extends queryMaker{
     protected $order;
     protected $subtype_query;
 
-
-    public function splitImputs($input)
-    {
-        return explode(';', $input);
-    }
-
     // TODO : Falta parametrizar los campos author, subject, keyword para que se puedan configurar desde el formulario externo
+    
     function buildQuery($handle, $author, $keywords , $subject , $degree , $max_results, $configuration, $all = true, $subtypes_selected= ""){
       //Falta agregar $all y $subtypes_selected a la lista de parametros reales
       $baseURL = $configuration->get_api_url();
@@ -144,4 +139,11 @@ class apiQuery extends queryMaker{
 
       return $items; 
     }
-}
+
+    public function splitImputs($input)
+    {
+        return explode(';', $input);
+    }
+
+
+ }

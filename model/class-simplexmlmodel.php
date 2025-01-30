@@ -25,15 +25,19 @@ class SimpleXMLModel
 			else {
 				$transient_data = wp_remote_retrieve_body($request);
 				// Guardamos los datos en el transient
-				set_transient($transient_data_id, $transient_data, $duration * HOUR_IN_SECONDS);
+				set_transient($transient_data_id, $transient_data, $duration * WEEK_IN_SECONDS);
 				set_transient($transient_data_permanent_id, $transient_data);
 			}
 		}
 		return $transient_data;
 	}
 
+	# Fixme : cuando se envia el parametro duration, tiene un valor muy alto que no se de dónde sale
 	public function loadPath($str, $duration = 1)
 	{
+		// Por eso lo seteo aca a mano
+		$duration = 1;
+
         $transient_data = $this->saveData($str, $duration);
 		// FIXME: Sería mejor incorporar una libreria, esta solución no considera muchos caracteres especiales
 		$some_special_chars = array("√");

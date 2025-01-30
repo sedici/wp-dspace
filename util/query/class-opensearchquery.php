@@ -133,7 +133,7 @@ class opensearchQuery extends queryMaker
         return ($results) ? $this->order->cmpXml($results) : $results;
     }
 
-  /** 
+    /** 
 	 * Chequea si un articulo tiene fecha, si no la tiene, la recupera de cache o con web Scrapping a SEDICI
 	 * @param SimpleXmlObject $document Objeto XML que tiene los datos de un item de SEDICI
 	 * @return DateObject Devuelve la fecha del articulo
