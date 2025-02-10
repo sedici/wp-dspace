@@ -8,7 +8,11 @@ class SimpleXMLModel
 	const PREFIJO_TRANSIENT = 'wp_dspace_';
 
 	/**
-	 *   @return SimpleXMLElement of result  OpenSearch. 
+	 * Guarda en caché los datos obtenidos de una URL para optimizar consultas repetidas.
+	 * 
+	 * @param string $str URL de la que se obtendrán los datos.
+	 * @param int $duration Duración en semanas para mantener los datos en caché (por defecto, 1 semana).
+	 * @return SimpleXMLElement of result  OpenSearch. 
 	 */
 
 	public function saveData($str, $duration = 1){
@@ -32,9 +36,16 @@ class SimpleXMLModel
 		return $transient_data;
 	}
 
-	# Fixme : cuando se envia el parametro duration, tiene un valor muy alto que no se de dónde sale
+	/**
+	 * Carga datos desde una URL, los limpia de caracteres especiales y los convierte en un objeto SimpleXMLElement.
+	 * 
+	 * @param string $str URL de la cual se obtendrán los datos.
+	 * @param int $duration Duración en semanas para mantener los datos en caché (no se utiliza directamente, siempre se fija en 1).
+	 * @return SimpleXMLElement Objeto XML generado a partir de los datos obtenidos de la URL.
+	 */
 	public function loadPath($str, $duration = 1)
 	{
+		# Fixme : cuando se envia el parametro duration, tiene un valor muy alto que no se de dónde sale
 		// Por eso lo seteo aca a mano
 		$duration = 1;
 
@@ -46,6 +57,13 @@ class SimpleXMLModel
 		return ($xml);
 	}
 
+	/**
+	 * Carga datos desde una URL, los decodifica desde formato JSON y los retorna como un array asociativo.
+	 * 
+	 * @param string $str URL de la cual se obtendrán los datos.
+	 * @param int $duration Duración en semanas para mantener los datos en caché (por defecto, 1 semana).
+	 * @return array|null Datos decodificados en un array asociativo, o null si la decodificación falla.
+	 */
     public function loadJsonPath($str, $duration = 1)
 	{
         $transient_data = $this->saveData($str, $duration);

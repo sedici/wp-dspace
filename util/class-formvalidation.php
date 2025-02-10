@@ -17,6 +17,11 @@ class FormValidation {
                  );
     }   
     
+    /**
+     * Crea una instancia de configuración basada en el parámetro proporcionado.
+     *      * 
+     * @return \Wp_dspace\Configuration\Configuration Retorna una instancia de la clase de configuración correspondiente.
+     */
     public function create_configuration($configuration){
         // $config = ucfirst($configuration)."_config";
         // if (class_exists($config,true)){
@@ -31,6 +36,14 @@ class FormValidation {
         $config= $this-> create_configuration($configuration);
         return $config->get_support_subtype();
     }
+
+    /**
+     * Valida que al menos uno de los parámetros necesarios (author, handle, keywords, subject) esté presente.
+     * Este método asegura que se haya proporcionado al menos un valor válido para realizar una búsqueda o consulta.
+     * Si todos los parámetros están vacíos o nulos, se muestra un mensaje de error y se retorna false.
+     * 
+     * @return bool Retorna true si al menos uno de los parámetros tiene un valor válido, false en caso contrario.
+     */
     public function labelValidation($author,$handle,$keywords,$subject){
             if (( is_null($author) && is_null($handle) && is_null($keywords)) && is_null($subject)||
                 ( empty($author) && empty($handle) && empty($subject) && empty($keywords)) ){

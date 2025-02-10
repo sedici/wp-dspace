@@ -285,12 +285,22 @@ class Admin
         $response['result'] = array('notificacion' => $_GET['notificacion']);
         wp_send_json($response);
     }
-
+    
     public function load_widget_dspace()
     {
         register_widget('\Wp_dspace\Dspace_Widget');
     }
 
+    /**
+     * Carga y procesa el shortcode de SEDICI.
+     *
+     * Este método instancia la clase Shortcode, ejecuta el método `plugin_sedici` con los
+     * atributos proporcionados y captura el contenido generado. Finalmente, devuelve el resultado
+     * procesado para su uso en WordPress.
+     *
+     * @param array $atts Atributos del shortcode.
+     * @return string Resultado renderizado del shortcode.
+     */
     public function LoadShortcode($atts)
     {
         $shortcode = new \Wp_dspace\Shortcode();

@@ -31,6 +31,9 @@ class Init {
 	 */
 	protected $plugin_text_domain;
 	//Define la funcionalidad del plugin
+
+	public $plugin_name;
+
 	public function __construct() {
 
 		$this->plugin_name = DS\PLUGIN_NAME;

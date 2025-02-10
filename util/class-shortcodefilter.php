@@ -3,6 +3,12 @@ namespace Wp_dspace\Util;
 //require_once 'class-filter.php';
 class ShortcodeFilter extends \Wp_dspace\Util\Filter {
 
+    /**
+     * Devuelve un array con los valores por defecto para los parámetros del shortcode.
+     * Los valores devueltos son configuraciones relacionadas con la búsqueda, visualización y filtrado de publicaciones.
+     * 
+     * @return array Valores predeterminados para el shortcode
+     */
     function default_shortcode(){
 	return ( array (
 		'handle' => null,
