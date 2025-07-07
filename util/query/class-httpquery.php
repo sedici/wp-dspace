@@ -13,9 +13,15 @@ class HttpQuery{
      * @param Boolean $parseXML False si debemos devolver el resultado plano o TRUE para transformalo a XML Object
 	 * @return String/XmlObject  Devuelve la respuesta a la consulta, como Html o XML
 	*/
-    public function executeQuery($url,$parseXML=false){
-        //Ejecuta la consulta
-        $data = file_get_contents($url);
+     public function executeQuery($url,$parseXML=false){
+        $options = [
+            "http" => [
+                "method" => "GET",
+                "header" => "Referer: https://sedici.unlp.edu.ar\r\n"
+            ]
+        ];
+         $context = stream_context_create($options);
+        $data = file_get_contents($url,false, $context);
         if($parseXML){
             $data = simplexml_load_string($data);
         }

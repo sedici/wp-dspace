@@ -21,7 +21,14 @@ class SimpleXMLModel
 		$transient_data_permanent_id = $transient_data_id . '_permanent';
 		$transient_data = get_transient($transient_data_id);
 		if (empty($transient_data)) {
-			$request = wp_remote_get($str,array('sslverify' => FALSE));
+			  $args = [
+      			  'sslverify' => false,
+        			'headers'   => [
+            		'Referer' => get_site_url(), // <-- AÑADIMOS LA CABECERA AQUÍ
+        ],
+    ];
+
+			$request = wp_remote_get($str, $args);
 			if (is_wp_error($request)){
 				// Guardo un resultado de forma permanente por si hay algún error en el repositorio a la hora de devolver los datos
 				$transient_data = get_transient($transient_data_permanent_id);
@@ -48,8 +55,9 @@ class SimpleXMLModel
 		# Fixme : cuando se envia el parametro duration, tiene un valor muy alto que no se de dónde sale
 		// Por eso lo seteo aca a mano
 		$duration = 1;
-
+	
         $transient_data = $this->saveData($str, $duration);
+		
 		// FIXME: Sería mejor incorporar una libreria, esta solución no considera muchos caracteres especiales
 		$some_special_chars = array("√");
 		$transient_data = str_replace($some_special_chars, "", $transient_data);
