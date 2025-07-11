@@ -36,6 +36,9 @@ class SimpleXMLModel
 			else {
 				// La conexión fue exitosa, ahora validamos el cuerpo de la respuesta.
             	$body = wp_remote_retrieve_body($request);
+
+				libxml_use_internal_errors(true);
+
 				$xml = simplexml_load_string($body);
 				if ($xml === false) {
 					// el cuerpo no es un XML valido
@@ -52,6 +55,11 @@ class SimpleXMLModel
 				set_transient($transient_data_id, $transient_data, $duration * WEEK_IN_SECONDS);
 				set_transient($transient_data_permanent_id, $transient_data);
 			}
+			libxml_clear_errors();
+			libxml_use_internal_errors(false);
+
+
+
 		}
 		return $transient_data;
 		} 

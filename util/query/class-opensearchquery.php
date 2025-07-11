@@ -36,7 +36,7 @@ class opensearchQuery extends queryMaker
 
             if ($xpath === false) {
             // Registramos el problema para futura referencia.
-            error_log('WP-DSpace: Datos corruptos en caché detectados para: ' . $query . '. Limpiando caché.');
+            error_log('WP-DSpace: Datos corruptos en cache detectados para: ' . $query . '. Limpiando cache.');
             
             // Le pedimos al modelo que elimine la caché para esta URL específica.
             $model->deleteCacheByUrl($query);
