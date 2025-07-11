@@ -34,6 +34,20 @@ class opensearchQuery extends queryMaker
         $model = $this->get_model();
         $xpath = $model->loadPath($query, $cache);
 
+            if ($xpath === false) {
+            // Registramos el problema para futura referencia.
+            error_log('WP-DSpace: Datos corruptos en caché detectados para: ' . $query . '. Limpiando caché.');
+            
+            // Le pedimos al modelo que elimine la caché para esta URL específica.
+            $model->deleteCacheByUrl($query);
+            
+            // Devolvemos un array vacío para que el resto de la página no se rompa.
+            return array(); 
+        }
+
+
+
+
 
         // FIXME: TERMINAR. ESTO SIRVE PARA CHEQUEAR LA PAGINACIÓN. 
             $namespaces = $xpath->getNamespaces(true);

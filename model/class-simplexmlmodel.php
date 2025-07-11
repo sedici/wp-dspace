@@ -34,15 +34,50 @@ class SimpleXMLModel
 				$transient_data = get_transient($transient_data_permanent_id);
 			}
 			else {
-				$transient_data = wp_remote_retrieve_body($request);
+				// La conexión fue exitosa, ahora validamos el cuerpo de la respuesta.
+            	$body = wp_remote_retrieve_body($request);
+				$xml = simplexml_load_string($body);
+				if ($xml === false) {
+					// el cuerpo no es un XML valido
+					//no lo cacheamos y en su lugar buscamos el resultado permanente
+					$transient_data = get_transient($transient_data_permanent_id);
+				} else {
+					// El cuerpo es un XML valido, lo guardamos en la caché
+					$transient_data = $body;
+					set_transient($transient_data_id, $transient_data, $duration * WEEK_IN_SECONDS);
+					set_transient($transient_data_permanent_id, $transient_data);
+
+				
 				// Guardamos los datos en el transient
 				set_transient($transient_data_id, $transient_data, $duration * WEEK_IN_SECONDS);
 				set_transient($transient_data_permanent_id, $transient_data);
 			}
 		}
 		return $transient_data;
+		} 
 	}
 
+	/**
+     * Elimina una entrada de caché específica basada en la URL de la consulta.
+     * @param string $url La URL de la consulta cuya caché se va a eliminar.
+     */
+    public function deleteCacheByUrl($url)
+    {
+        $transient_data_id = self::PREFIJO_TRANSIENT . hash('md5', $url);
+        
+        // Elimina el transient normal
+        delete_transient($transient_data_id);
+
+        // Elimina también el transient de respaldo permanente
+        $transient_data_permanent_id = $transient_data_id . '_permanent';
+        delete_transient($transient_data_permanent_id);
+    }
+
+
+
+
+
+	
 	/**
 	 * Carga datos desde una URL, los limpia de caracteres especiales y los convierte en un objeto SimpleXMLElement.
 	 * 
