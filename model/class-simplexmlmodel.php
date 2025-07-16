@@ -15,54 +15,40 @@ class SimpleXMLModel
 	 * @return SimpleXMLElement of result  OpenSearch. 
 	 */
 
-	public function saveData($str, $duration = 1){
+	 public function saveData($str, $duration = 1){
+		
 		// Genero el id para guardar la consulta en la caché de wordpress. Aplico un hash a la url de consulta. 
+
 		$transient_data_id = self::PREFIJO_TRANSIENT . hash('md5', $str);
 		$transient_data_permanent_id = $transient_data_id . '_permanent';
+
 		$transient_data = get_transient($transient_data_id);
+
 		if (empty($transient_data)) {
-			  $args = [
-      			  'sslverify' => false,
-        			'headers'   => [
-            		'Referer' => get_site_url(), // <-- AÑADIMOS LA CABECERA AQUÍ
-        ],
-    ];
+			$args = [
+				'sslverify' => false,
+				'headers'   => [
+					'Referer' => get_site_url(), // <-- AÑADIMOS LA CABECERA AQUÍ
+				],
+			];
 
 			$request = wp_remote_get($str, $args);
-			if (is_wp_error($request)){
+
+			if (is_wp_error($request)) {
 				// Guardo un resultado de forma permanente por si hay algún error en el repositorio a la hora de devolver los datos
 				$transient_data = get_transient($transient_data_permanent_id);
 			}
 			else {
 				// La conexión fue exitosa, ahora validamos el cuerpo de la respuesta.
             	$body = wp_remote_retrieve_body($request);
-
-				libxml_use_internal_errors(true);
-
-				$xml = simplexml_load_string($body);
-				if ($xml === false) {
-					// el cuerpo no es un XML valido
-					//no lo cacheamos y en su lugar buscamos el resultado permanente
-					$transient_data = get_transient($transient_data_permanent_id);
-				} else {
-					// El cuerpo es un XML valido, lo guardamos en la caché
-					$transient_data = $body;
-					set_transient($transient_data_id, $transient_data, $duration * WEEK_IN_SECONDS);
-					set_transient($transient_data_permanent_id, $transient_data);
-
-				
-				// Guardamos los datos en el transient
-				set_transient($transient_data_id, $transient_data, $duration * WEEK_IN_SECONDS);
+				$transient_data = $body;
+				set_transient($transient_data_id, $transient_data, WEEK_IN_SECONDS * $duration);
 				set_transient($transient_data_permanent_id, $transient_data);
 			}
-			libxml_clear_errors();
-			libxml_use_internal_errors(false);
-
-
 
 		}
+
 		return $transient_data;
-		} 
 	}
 
 	/**
