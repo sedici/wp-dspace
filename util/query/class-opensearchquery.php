@@ -10,15 +10,16 @@ class opensearchQuery extends queryMaker
     protected $order;
     protected $subtype_query;
 
-    public function concatenarCondiciones($words)
-    {
-        $conditions = array();
-        $filterPrefix = '';
-        foreach ($words as $word) {
-            $conditions[] = $filterPrefix . "\"" . $word . "\"";
-        }
-        return "(" . implode('%20OR%20', $conditions) . ")";
+   public function concatenarCondiciones($words)
+{
+    $conditions = array();
+    $filterPrefix = '';
+    foreach ($words as $word) {
+        // rawurlencode transforma "Gómez" en "G%C3%B3mez" de forma segura en UTF-8
+        $conditions[] = $filterPrefix . '"' . rawurlencode(trim($word)) . '"';
     }
+    return "(" . implode('%20OR%20', $conditions) . ")";
+}
 
     public function splitImputs($imput)
     {

@@ -94,13 +94,33 @@ class Configuration
         return $this->get_base_url() . $this->get_standar_query($max_results);
     }
 
-    final public function author($words)
+ final public function author($words)
     {
         $Authors = $this->queryAuthor($words);
         $conditions = array();
-        foreach ($Authors as $author) {
-            $conditions[] = $this->config['author'] . "\"" . $author . "\"";
+        
+        // 1. Detectamos el prefijo que viene guardado en el .ini / opción de base de datos
+        $prefix = $this->config['author'];
+        
+        // 2. Parche de compatibilidad específico si estamos consultando a CONICET Digital
+        if (strpos($this->get_base_url(), 'ri.conicet.gov.ar') !== false && $prefix === 'dc.contributor.author:') {
+            $prefix = 'author:';
         }
+
+        foreach ($Authors as $author) {
+            // Limpiamos espacios fantasmas al inicio y final
+            $clean_author = trim($author);
+            
+            // 3. Aplicamos rawurlencode para transformar "Gómez" en "G%C3%B3mez" de forma segura.
+            // Es vital que las comillas queden FUERA del encode para que Solr entienda el delimitador de frase.
+            $conditions[] = $prefix . '"' . rawurlencode($clean_author) . '"';
+        }
+        
+        // 4. Si hay un solo autor, evitamos envolver en paréntesis para que OpenSearch de CONICET no falle
+        if (count($conditions) === 1) {
+            return $conditions[0];
+        }
+
         return "(" . implode('%20OR%20', $conditions) . ")";
     }
     
