@@ -40,7 +40,10 @@ class View {
                     array_push ($names, "<author><name>".$this->link_author($author)."</name></author>");
                 }
             }//end foreach autores
+
+            $stringHtml="";
             if (!empty($names)){
+
             
             $stringHtml='<div id="sedici-title">'.
             __('Autores: ').
